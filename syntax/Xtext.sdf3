@@ -2,7 +2,7 @@ module Xtext
 
 imports
 	
-	Common
+  Common
 
 context-free start-symbols
   
@@ -10,5 +10,6 @@ context-free start-symbols
 
 context-free syntax
   
-  Start.Dummy = <>
-
+  FQN.FQN       = <<{ID "."}+>>
+  Mixin.Mixin   = <with <FQN>>
+  Start.Grammar = <grammar <FQN> <Mixin?>> 
