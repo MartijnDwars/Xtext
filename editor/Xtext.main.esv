@@ -1,0 +1,33 @@
+module Xtext.main
+
+imports
+  Xtext-Colorer
+  Xtext-Completions
+  Xtext-Folding
+  Xtext-Menus
+  Xtext-Refactorings
+  Xtext-References
+  Xtext-Syntax
+  Xtext-Views
+
+language General properties
+  
+  name:          Xtext
+  id:            Xtext
+  extends:       Root
+  
+  description:   "Spoofax-generated editor for the Xtext language"
+  url:           http://strategoxt.org
+  
+  extensions:    xtext
+  table:         include/Xtext.tbl
+  start symbols: Start
+  
+  provider:      include/xtext.ctree
+  provider:      include/xtext-java.jar
+  
+  observer:      editor-analyze (multifile)
+  
+  on save:       editor-save
+  
+  jvm opts:      -server -Xss8m -Xmx1024m

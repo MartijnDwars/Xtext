@@ -1,0 +1,13 @@
+module editor/Xtext-Outliner
+
+imports
+  
+  include/Xtext
+  lib/runtime/editor/outline-library
+  lib/runtime/editor/origins
+  editor/Xtext-Outliner.generated
+
+rules
+  
+  to-outline-label = fail
+  
