@@ -49,3 +49,8 @@ context-free restrictions
 	// LAYOUT? -/- [\/].[\/]
 	// LAYOUT? -/- [\/].[\*]
 
+context-free syntax
+
+  Cardinality.Optional = <?>
+  Cardinality.Multiple = <+>
+  Cardinality.Any = <*>

@@ -1,0 +1,53 @@
+module ParserRule
+
+imports
+  
+  Common
+
+context-free start-symbols
+  
+  // These sorts are only added to allow testing:
+  AbstractRule
+  
+context-free syntax
+  
+  Operator.Assignment = "="
+  Operator.AddAssignment = "+="
+  Operator.BooleanAssignment = "?="
+  
+  TypeRef.TypeRef = ID
+  
+  AbstractRule.ParserRule = <<ID> : <Alternatives> ;>
+  
+  Alternatives.Alternatives = <<{UnorderedGroup "|"}+>>
+  
+  UnorderedGroup.UnorderedGroup = <<{Group "&"}+>>
+  
+  Group.Group = AbstractToken+
+  
+  AbstractToken.AbstractTokenWithCardinality = AbstractTokenWithCardinality
+  AbstractToken.Action = Action
+  
+  AbstractTokenWithCardinality.Assignment = Assignment Cardinality?
+  AbstractTokenWithCardinality.AbstractTerminal = AbstractTerminal Cardinality?
+  
+  Assignment.Assignment = <<ID> <Operator> <AssignableTerminal>>
+  
+  AssignableTerminal.Keyword = STRING
+  AssignableTerminal.RuleCall = RuleCall
+  AssignableTerminal.ParenthesizedAssignableElement = ParenthesizedAssignableElement
+  AssignableTerminal.CrossReference = <[ <TypeRef> ]>
+  
+  RuleCall.RuleCall = ID
+  
+  ParenthesizedAssignableElement.ParenthesizedAssignableElement = <( <AssignableAlternatives> )>
+  
+  AssignableAlternatives.AssignableAlternatives = <<{AssignableTerminal "|"}+>>
+  
+  Action.Action = <{ <ID> <Operator> current }>
+  
+  AbstractTerminal.Keyword = STRING
+  AbstractTerminal.ParenthesizedElement = ParenthesizedElement
+  AbstractTerminal.RuleCall = RuleCall
+  
+  ParenthesizedElement.ParenthesizedElement = <( <Alternatives> )>

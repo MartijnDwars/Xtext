@@ -10,10 +10,6 @@ context-free start-symbols
   AbstractRule
   
 context-free syntax
-
-  Cardinality.Optional = <?>
-  Cardinality.Multiple = <+>
-  Cardinality.Any = <*>
   
   AbstractRule.TerminalRule = <terminal <ID> : <TerminalAlternatives+> ;>
   TerminalAlternatives.TerminalAlternatives = TerminalGroup

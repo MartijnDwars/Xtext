@@ -5,6 +5,7 @@ module Xtext
 imports
 	
   Common
+  ParserRule
   TerminalRule
   EnumRule
 
