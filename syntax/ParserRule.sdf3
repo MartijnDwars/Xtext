@@ -17,7 +17,9 @@ context-free syntax
   
   TypeRef.TypeRef = ID
   
-  AbstractRule.ParserRule = <<ID> : <Alternatives> ;>
+  AbstractRule.ParserRule = <<ID> <Returns?> : <Alternatives> ;>
+  
+  Returns.Returns = <returns <TypeRef>>
   
   Alternatives.Alternatives = <<{UnorderedGroup "|"}+>>
   
@@ -44,7 +46,8 @@ context-free syntax
   
   AssignableAlternatives.AssignableAlternatives = <<{AssignableTerminal "|"}+>>
   
-  Action.Action = <{ <ID> <Operator> current }>
+  Action.Action = <{ <TypeRef> <ActionCurrent?> }>
+  ActionCurrent.ActionCurrent = <. <ID> <Operator> current>
   
   AbstractTerminal.Keyword = STRING
   AbstractTerminal.ParenthesizedElement = ParenthesizedElement
