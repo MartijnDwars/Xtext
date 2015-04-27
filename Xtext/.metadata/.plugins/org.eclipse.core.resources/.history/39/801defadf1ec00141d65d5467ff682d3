@@ -1,0 +1,39 @@
+module ParserRule
+
+language Xtext
+start symbol AbstractRule
+
+test rule without alternatives [[
+  AbstractToken :
+  ;
+]] parse fails
+
+test x [[
+  ID :
+    { x += current }
+  ;
+]] parse succeeds
+
+test rule with single alternative [[
+  AbstractToken :
+    TokenA
+  ;
+]] parse succeeds
+
+test rule with multiple alternative [[
+  AbstractToken :
+    TokenA |
+    TokenB |
+    TokenC
+  ;
+]] parse succeeds
+
+test greeting [[
+  Greeting:
+    'Hello' name=ID '!';
+]] parse succeeds
+
+test unordered group [[
+  Modifier: 
+    static?='static'? & final?='final'? & visibility=Visibility;
+]] parse succeeds

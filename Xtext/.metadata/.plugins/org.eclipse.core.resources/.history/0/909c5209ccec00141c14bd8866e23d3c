@@ -1,0 +1,24 @@
+module example
+
+language Xtext
+start symbol ID
+
+test empty string [[
+  
+]] parse fails
+
+test start with number [[
+  0abc
+]] parse fails
+
+test start with caret [[
+  ^abc
+]] parse succeeds
+
+test start with underscore [[
+  _abc
+]] parse succeeds
+
+test alphanumeric and uppercase [[
+  abcABC_abcABC_123
+]] parse succeeds

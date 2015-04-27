@@ -1,0 +1,20 @@
+
+module src-gen/completions/Xtext-esv
+
+imports
+  src-gen/completions/Common-esv
+  src-gen/completions/ParserRule-esv
+  src-gen/completions/TerminalRule-esv
+  src-gen/completions/EnumRule-esv
+
+completions
+  completion template Mixin : "with GrammarID" =
+    "with " <GrammarID:GrammarID>                  
+  completion template Alias : "as ID" =
+    "as " <ID:ID>                                           
+  completion template Metamodel : "generate ID STRING " =
+    "generate " <ID:ID> " " <STRING:STRING> " " <:Alias>  
+  completion template Metamodel : "import STRING " =
+    "import " <STRING:STRING> " " <:Alias>     
+  completion template Start : "grammar GrammarID AbstractRule" =
+    "grammar " <GrammarID:GrammarID> " " <:Mixin> " " <:Metamodel> " " <AbstractRule:AbstractRule>  

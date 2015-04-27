@@ -1,0 +1,6 @@
+module ParserRule
+
+language Xtext
+start symbol AbstractRule
+
+test terminal without name [[

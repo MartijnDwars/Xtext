@@ -1,0 +1,17 @@
+module src-gen/signatures/TerminalRule-sig
+
+imports
+  src-gen/signatures/Common-sig
+
+
+signature
+  constructors
+    TerminalRule         : ID * List(TerminalAlternatives) -> AbstractRule
+    TerminalAlternatives : TerminalGroup -> TerminalAlternatives
+    TerminalGroup        : TerminalToken -> TerminalGroup
+    TerminalToken        : TerminalTokenElement * Option(Cardinality) -> TerminalToken
+    Keyword              : STRING -> TerminalTokenElement
+    CharacterRange       : STRING * STRING -> TerminalTokenElement
+    Wildcard             : WILDCARD -> TerminalTokenElement
+    TerminalTokenElement : EOF -> TerminalTokenElement
+    EOF                  : EOF

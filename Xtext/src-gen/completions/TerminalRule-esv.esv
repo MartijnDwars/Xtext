@@ -1,0 +1,14 @@
+module src-gen/completions/TerminalRule-esv
+
+imports
+  src-gen/completions/Common-esv
+
+completions
+  completion template AbstractRule : "terminal ID : TerminalAlternatives ;" =
+    "terminal " <ID:ID> " : " <TerminalAlternatives:TerminalAlternatives> " ;"  
+  completion template TerminalToken : "TerminalTokenElement " =
+    <TerminalTokenElement:TerminalTokenElement> " " <:Cardinality>  
+  completion template TerminalTokenElement : "STRING .. STRING" =
+    <STRING:STRING> " .. " <STRING:STRING>  
+  completion template EOF : "EOF" =
+    "EOF"                                   

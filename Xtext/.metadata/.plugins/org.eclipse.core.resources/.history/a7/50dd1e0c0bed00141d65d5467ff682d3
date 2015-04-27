@@ -1,0 +1,48 @@
+module example
+
+language Xtext
+start symbol Start
+
+test grammar missing name [[
+  grammar
+]] parse fails
+
+test grammar with simple name [[
+  grammar lang
+  
+  terminal ID: '1';
+]] parse succeeds
+
+test grammar with qualified name [[
+  grammar nl.tudelft.lang
+  
+  terminal ID: '1';
+]] parse succeeds
+
+test grammar with simple name and simple mixin [[
+  grammar lang
+     with another
+     
+  terminal ID: '1';
+]] parse succeeds
+
+test grammar with qualified name and qualified mixin [[
+  grammar nl.tudelft.lang
+     with nl.tudelft.another
+  
+  terminal ID: '1';
+]] parse succeeds
+
+test grammar with multiple mixin [[
+  grammar lang
+     with one, two, three
+  
+  terminal ID: '1';
+]] parse succeeds
+
+test grammar with metamodel declaration [[
+  grammar lang
+     with terminals
+  
+  generate abc "abc"
+]]

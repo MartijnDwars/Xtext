@@ -1,0 +1,22 @@
+module ParserRule
+
+language Xtext
+start symbol AbstractRule
+
+test parserrule without alternatives [[
+  AbstractToken :
+  ;
+]] parse fails
+
+test terminal without name [[
+  AbstractToken :
+    TokenA |
+    TokenB |
+    TokenC
+  ;
+]] parse succeeds
+
+test unordered group [[
+  Modifier: 
+    static?='static'? & final?='final'? & visibility=Visibility;
+]] parse succeeds

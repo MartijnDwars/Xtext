@@ -1,0 +1,22 @@
+module TerminalRule
+
+imports
+  
+  Common
+
+context-free start-symbols
+  
+  // These sorts are only added to allow testing:
+  AbstractRule
+  
+context-free syntax
+  
+  AbstractRule.TerminalRule = <terminal <ID> : <TerminalAlternatives+> ;>
+  TerminalAlternatives.TerminalAlternatives = TerminalGroup
+  TerminalGroup.TerminalGroup = TerminalToken
+  TerminalToken.TerminalToken = TerminalTokenElement Cardinality?
+  TerminalTokenElement.Keyword = STRING
+  TerminalTokenElement.CharacterRange = <<STRING> .. <STRING>>
+  TerminalTokenElement.Wildcard = WILDCARD
+  TerminalTokenElement.TerminalTokenElement = EOF
+  EOF.EOF = "EOF"

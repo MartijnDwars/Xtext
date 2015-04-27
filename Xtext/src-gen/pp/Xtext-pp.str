@@ -1,0 +1,150 @@
+module src-gen/pp/Xtext-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  src-gen/signatures/Xtext-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+  src-gen/signatures/ParserRule-sig
+  src-gen/signatures/TerminalRule-sig
+  src-gen/signatures/EnumRule-sig
+
+
+imports
+  src-gen/pp/Common-pp
+  src-gen/pp/ParserRule-pp
+  src-gen/pp/TerminalRule-pp
+  src-gen/pp/EnumRule-pp
+
+
+strategies
+  prettyprint-SDF-start-symbols =
+    prettyprint-Start
+
+  prettyprint-SDF-start-symbols =
+    prettyprint-ID
+
+
+strategies
+  prettyprint-example =
+    prettyprint-GrammarID
+
+  prettyprint-example =
+    prettyprint-Mixin
+
+  prettyprint-example =
+    prettyprint-Alias
+
+  prettyprint-example =
+    prettyprint-Metamodel
+
+  prettyprint-example =
+    prettyprint-Start
+
+  prettyprint-GrammarID :
+    GrammarID(t1__) -> [ H(
+                           [SOpt(HS(), "0")]
+                         , [t1__']
+                         )
+                       ]
+    with t1__' := <pp-H-list(prettyprint-ID|".")> t1__
+
+  is-GrammarID =
+    ?GrammarID(_)
+
+  prettyprint-Mixin :
+    Mixin(t1__) -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [S("with "), t1__']
+                     )
+                   ]
+    with t1__' := <pp-H-list(prettyprint-GrammarID|",")> t1__
+
+  is-Mixin =
+    ?Mixin(_)
+
+  prettyprint-Alias :
+    Alias(t1__) -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [S("as "), t1__']
+                     )
+                   ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+
+  is-Alias =
+    ?Alias(_)
+
+  prettyprint-Metamodel :
+    GeneratedMetamodel(t1__, t2__, t3__) -> [ H(
+                                                [SOpt(HS(), "0")]
+                                              , [ S("generate ")
+                                                , t1__'
+                                                , S(" ")
+                                                , t2__'
+                                                , S(" ")
+                                                , t3__'
+                                                ]
+                                              )
+                                            ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    with t2__' := <pp-one-Z(prettyprint-STRING)> t2__
+    with t3__' := <pp-option(pp-one-Z(prettyprint-Alias))> t3__
+
+  is-Metamodel =
+    ?GeneratedMetamodel(_, _, _)
+
+  prettyprint-Metamodel :
+    ReferencedMetamodel(t1__, t2__) -> [ H(
+                                           [SOpt(HS(), "0")]
+                                         , [ S("import ")
+                                           , t1__'
+                                           , S(" ")
+                                           , t2__'
+                                           ]
+                                         )
+                                       ]
+    with t1__' := <pp-one-Z(prettyprint-STRING)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Alias))> t2__
+
+  is-Metamodel =
+    ?ReferencedMetamodel(_, _)
+
+  prettyprint-Start :
+    Grammar(t1__, t2__, t3__, t4__) -> [ H(
+                                           [SOpt(HS(), "0")]
+                                         , [ S("grammar ")
+                                           , t1__'
+                                           , S(" ")
+                                           , t2__'
+                                           , S(" ")
+                                           , t3__'
+                                           , S(" ")
+                                           , t4__'
+                                           ]
+                                         )
+                                       ]
+    with t1__' := <pp-one-Z(prettyprint-GrammarID)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Mixin))> t2__
+    with t3__' := <pp-H-list(prettyprint-Metamodel)> t3__
+    with t4__' := <pp-H-list(prettyprint-AbstractRule)> t4__
+
+  is-Start =
+    ?Grammar(_, _, _, _)
+
+  is-GrammarID =
+    fail
+
+  is-Mixin =
+    fail
+
+  is-Alias =
+    fail
+
+  is-Metamodel =
+    fail
+
+  is-Start =
+    fail

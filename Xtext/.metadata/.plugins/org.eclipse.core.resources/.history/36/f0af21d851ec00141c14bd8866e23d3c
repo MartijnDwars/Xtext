@@ -1,0 +1,25 @@
+module example
+
+language Xtext
+start symbol Start
+
+test grammar missing name [[
+  grammar
+]] parse fails
+
+test grammar with simple name [[
+  grammar lang
+]] parse succeeds
+
+test grammar with qualified name [[
+  grammar nl.tudelft.lang
+]] parse succeeds
+
+test grammar with simple name and simple mixin [[
+  grammar lang with another
+]] parse succeeds
+
+test grammar with qualified name and qualified mixin [[
+  grammar nl.tudelft.lang
+     with nl.tudelft.another
+]] parse succeeds

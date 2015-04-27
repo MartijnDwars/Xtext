@@ -1,0 +1,33 @@
+
+module src-gen/completions/ParserRule-esv
+
+imports
+  src-gen/completions/Common-esv
+
+completions
+  completion template Operator : "=" =
+    "="                                   
+  completion template Operator : "+=" =
+    "+="                                 
+  completion template Operator : "?=" =
+    "?="                                 
+  completion template AbstractRule : "ID : Alternatives ;" =
+    <ID:ID> " " <:Returns> " : " <Alternatives:Alternatives> " ;"  
+  completion template Returns : "returns TypeRef" =
+    "returns " <TypeRef:TypeRef>  
+  completion template AbstractTokenWithCardinality : "Assignment " =
+    <Assignment:Assignment> " " <:Cardinality>  
+  completion template AbstractTokenWithCardinality : "AbstractTerminal " =
+    <AbstractTerminal:AbstractTerminal> " " <:Cardinality>  
+  completion template Assignment : "ID Operator AssignableTerminal" =
+    <ID:ID> " " <Operator:Operator> " " <AssignableTerminal:AssignableTerminal>  
+  completion template AssignableTerminal : "[ TypeRef ]" =
+    "[ " <TypeRef:TypeRef> " ]"  
+  completion template ParenthesizedAssignableElement : "( AssignableAlternatives )" =
+    "( " <AssignableAlternatives:AssignableAlternatives> " )"  
+  completion template Action : "{ TypeRef }" =
+    "{ " <TypeRef:TypeRef> " " <:ActionCurrent> " }"  
+  completion template ActionCurrent : ". ID Operator current" =
+    ". " <ID:ID> " " <Operator:Operator> " current"  
+  completion template ParenthesizedElement : "( Alternatives )" =
+    "( " <Alternatives:Alternatives> " )"  

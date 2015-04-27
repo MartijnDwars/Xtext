@@ -1,0 +1,12 @@
+module example
+
+language Xtext
+start symbol Start
+
+test Featerweight Java [[
+	grammar org.eclipse.xtext.example.FJ with org.eclipse.xtext.common.Terminals
+	
+	generate fj "http://example.xtext.org/FJ"
+	
+
+]] parse succeeds

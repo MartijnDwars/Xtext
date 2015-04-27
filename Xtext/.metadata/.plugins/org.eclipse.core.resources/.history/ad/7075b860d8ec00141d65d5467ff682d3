@@ -1,0 +1,10 @@
+module EnumRule
+
+language Xtext
+start symbol AbstractRule
+
+test simple enum [[
+  enum ChangeKind :
+    ADD | MOVE | REMOVE
+  ;
+]] parse succeeds

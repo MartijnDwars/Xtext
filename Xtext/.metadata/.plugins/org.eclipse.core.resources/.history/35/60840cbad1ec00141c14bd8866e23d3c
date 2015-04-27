@@ -1,0 +1,36 @@
+module example
+
+language Xtext
+start symbol AbstractRule
+
+test terminal without name [[
+  terminal
+]] parse fails
+
+test terminal name not an ID [[
+  terminal ID.NAME: 'a';
+]] parse fails
+
+test terminal without alternatives [[
+  terminal ID: ;
+]] parse fails
+
+test terminal without closing semicolon [[
+  terminal ID: 'a'
+]] parse fails
+
+test character range [[
+  terminal ID: '0'..'9';
+]] parse succeeds
+
+test character range with cardinality [[
+  terminal ID: '0'..'9'*;
+]] parse succeeds
+
+test wildcard [[
+  terminal ID: .;
+]] parse succeeds
+
+test simple terminal [[
+  terminal ID: 'a'..'b'*;
+]] parse succeeds

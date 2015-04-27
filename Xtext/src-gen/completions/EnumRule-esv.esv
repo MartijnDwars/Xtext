@@ -1,0 +1,10 @@
+module src-gen/completions/EnumRule-esv
+
+imports
+  src-gen/completions/Common-esv
+
+completions
+  completion template AbstractRule : "enum ID : EnumLiteral ;" =
+    "enum " <ID:ID> " : " <EnumLiteral:EnumLiteral> " ;"  
+  completion template EnumLiteral : "ID = STRING" =
+    <ID:ID> " = " <STRING:STRING>  

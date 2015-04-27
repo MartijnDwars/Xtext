@@ -1,0 +1,16 @@
+module EnumRule
+
+language Xtext
+start symbol AbstractRule
+
+test enum with single literal [[
+  enum MOOD :
+    HAPPY
+  ;
+]] parse succeeds
+
+test enum with multiple literal [[
+  enum MOOD :
+    HAPPY | SAD | CONFUSED
+  ;
+]] parse succeeds

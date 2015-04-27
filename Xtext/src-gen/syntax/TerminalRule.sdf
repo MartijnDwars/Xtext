@@ -1,0 +1,22 @@
+
+module TerminalRule
+imports Common
+
+exports
+  context-free start-symbols
+    AbstractRule
+
+  context-free syntax
+    "terminal" ID ":" TerminalAlternatives+ ";" -> AbstractRule         {cons("TerminalRule")}
+    TerminalGroup                               -> TerminalAlternatives {cons("TerminalAlternatives")}
+    TerminalToken                               -> TerminalGroup        {cons("TerminalGroup")}
+    TerminalTokenElement Cardinality?           -> TerminalToken        {cons("TerminalToken")}
+    STRING                                      -> TerminalTokenElement {cons("Keyword")}
+    STRING ".." STRING                          -> TerminalTokenElement {cons("CharacterRange")}
+    WILDCARD                                    -> TerminalTokenElement {cons("Wildcard")}
+    EOF                                         -> TerminalTokenElement {cons("TerminalTokenElement")}
+    "EOF"                                       -> EOF                  {cons("EOF")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> AbstractRule         {cons("COMPLETION-AbstractRule")}
+    CONTENTCOMPLETE -> TerminalTokenElement {cons("COMPLETION-TerminalTokenElement")}

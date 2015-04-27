@@ -1,0 +1,11 @@
+module example
+
+language Xtext
+start symbol AbstractRule
+
+test simple terminal [[
+  terminal
+]] parse succeeds
+
+// terminal ID : 
+//   ('^')?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;

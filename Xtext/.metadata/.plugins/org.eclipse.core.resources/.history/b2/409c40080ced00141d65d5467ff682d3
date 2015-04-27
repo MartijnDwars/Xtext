@@ -1,0 +1,55 @@
+module example
+
+language Xtext
+start symbol Start
+
+test Featerweight Java [[
+	grammar org.eclipse.xtext.example.FJ with org.eclipse.xtext.common.Terminals
+	
+	generate fj "http://example.xtext.org/FJ"
+	
+	Program :
+	  (classes += Class)*
+	  (main = Expression)? 
+	;
+	
+	Type: BasicType | ClassType;
+	
+	BasicType : basic=('int' | 'boolean' | 'String');
+	
+	ClassType : classref=[Class];
+	
+	TypedElement:
+	  Field | Parameter;
+	
+	Class:
+	  'class' name=ID ('extends' extends=[Class])? '{'
+	    (fields += Field)*
+	    (methods += Method)*
+	  '}'
+	;
+	
+	Field:
+	  type=Type name=ID ';'
+	;
+	
+	Parameter:
+	  type=Type name=ID
+	;
+	
+	Method:
+	  returntype=Type name=ID '(' (params+=Parameter (',' params+=Parameter)*)? ')' '{'
+	    body=MethodBody
+	  '}'
+	;
+	
+	MethodBody:
+	  'return' expression=Expression ';'
+	;
+	
+	Expression:
+	  TerminalExpression ({Selection.receiver=current} '.' message=Message )*
+	;
+	
+
+]] parse succeeds

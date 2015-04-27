@@ -1,7 +1,0 @@
-module Xtext-Refactorings
-
-imports Xtext-Refactorings.generated
-
-refactorings
-
-  text reconstruction : construct-textual-change
