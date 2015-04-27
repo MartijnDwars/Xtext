@@ -18,6 +18,9 @@ context-free start-symbols
 
 context-free syntax
 
-  GrammarID.GrammarID       = <<{ID "."}+>>
-  Mixin.Mixin               = <with <GrammarID>>
-  Start.Grammar             = <grammar <GrammarID> <Mixin?> <AbstractRule+>>
+  GrammarID.GrammarID           = <<{ID "."}+>>
+  Mixin.Mixin                   = <with <{GrammarID ","}+>>
+  Alias.Alias                   = <as <ID>>
+  Metamodel.GeneratedMetamodel  = <generate <ID> <STRING> <Alias?>>
+  Metamodel.ReferencedMetamodel = <import <STRING> <Alias?>>
+  Start.Grammar                 = <grammar <GrammarID> <Mixin?> <Metamodel*> <AbstractRule+>>
