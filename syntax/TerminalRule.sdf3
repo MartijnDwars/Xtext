@@ -6,15 +6,8 @@ imports
 
 context-free start-symbols
   
+  // These sorts are only added to allow testing:
   AbstractRule
-
-lexical syntax
-
-  WILDCARD = [\.]
-
-lexical restrictions
-  
-  WILDCARD -/- [\.]
   
 context-free syntax
 
