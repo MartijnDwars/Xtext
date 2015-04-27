@@ -1,15 +1,18 @@
+%% See https://github.com/eclipse/xtext/blob/v2.8.0/plugins/org.eclipse.xtext/src/org/eclipse/xtext/Xtext.xtext
+
 module Xtext
 
 imports
 	
   Common
+  TerminalRule
 
 context-free start-symbols
   
   Start
 
 context-free syntax
-  
-  FQN.FQN       = <<{ID "."}+>>
-  Mixin.Mixin   = <with <FQN>>
-  Start.Grammar = <grammar <FQN> <Mixin?>> 
+
+  GrammarID.GrammarID       = <<{ID "."}+>>
+  Mixin.Mixin               = <with <GrammarID>>
+  Start.Grammar             = <grammar <GrammarID> <Mixin?> <AbstractRule+>> 
