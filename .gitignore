@@ -1,6 +1,7 @@
 bin
 target
 .cache
+include
 include/Xtext.def
 include/Xtext-parenthesize.str
 include/Xtext-Permissive.def
