@@ -3,5 +3,8 @@ module generate
 imports
 	
 	include/Xtext
+
 rules 
 
+	generate-sdf:
+		(selected, position, ast, path, project-path) -> None()
