@@ -1,21 +1,27 @@
 
 module TerminalRule
-imports Common
+imports Common ParserRule
 
 exports
   context-free start-symbols
     AbstractRule
 
   context-free syntax
-    "terminal" ID ":" TerminalAlternatives+ ";" -> AbstractRule         {cons("TerminalRule")}
-    TerminalGroup                               -> TerminalAlternatives {cons("TerminalAlternatives")}
-    TerminalToken                               -> TerminalGroup        {cons("TerminalGroup")}
-    TerminalTokenElement Cardinality?           -> TerminalToken        {cons("TerminalToken")}
-    STRING                                      -> TerminalTokenElement {cons("Keyword")}
-    STRING ".." STRING                          -> TerminalTokenElement {cons("CharacterRange")}
-    WILDCARD                                    -> TerminalTokenElement {cons("Wildcard")}
-    EOF                                         -> TerminalTokenElement {cons("TerminalTokenElement")}
-    "EOF"                                       -> EOF                  {cons("EOF")}
+    "terminal" TerminalName ":" TerminalAlternatives+ ";" -> AbstractRule         {cons("TerminalRule")}
+    "fragment" ID                                         -> TerminalName         {cons("Fragment")}
+    ID Returns?                                           -> TerminalName         {cons("Returns")}
+    TerminalGroup                                         -> TerminalAlternatives {cons("TerminalAlternatives")}
+    TerminalToken                                         -> TerminalGroup        {cons("TerminalGroup")}
+    TerminalTokenElement Cardinality?                     -> TerminalToken        {cons("TerminalToken")}
+    "(" TerminalAlternatives ")"                          -> TerminalTokenElement {cons("ParenthesizedTerminalElement")}
+    STRING                                                -> TerminalTokenElement {cons("Keyword")}
+    RuleCall                                              -> TerminalTokenElement {cons("RuleCall")}
+    STRING ".." STRING                                    -> TerminalTokenElement {cons("CharacterRange")}
+    WILDCARD                                              -> TerminalTokenElement {cons("Wildcard")}
+    "!" TerminalTokenElement                              -> TerminalTokenElement {cons("NegatedToken")}
+    "->" TerminalTokenElement                             -> TerminalTokenElement {cons("UntilToken")}
+    EOF                                                   -> TerminalTokenElement {cons("TerminalTokenElement")}
+    "EOF"                                                 -> EOF                  {cons("EOF")}
 
   context-free syntax
     CONTENTCOMPLETE -> AbstractRule         {cons("COMPLETION-AbstractRule")}
