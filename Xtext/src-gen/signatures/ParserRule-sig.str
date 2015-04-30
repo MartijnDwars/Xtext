@@ -10,9 +10,13 @@ signature
     AddAssignment                  : Operator
     BooleanAssignment              : Operator
     TypeRef                        : Option(AbstractMetaModelReference) * ID -> TypeRef
+    MetaModelDeclaration           : Classifier -> TypeRef
     AbstractMetaModelReference     : STRING -> AbstractMetaModelReference
-    ParserRule                     : ID * Option(Returns) * Alternatives -> AbstractRule
+    Classifier                     : Classifier
+    ParserRule                     : ID * Option(Returns) * Option(HiddenToken) * Alternatives -> AbstractRule
     Returns                        : TypeRef -> Returns
+    HiddenToken                    : List(Temp) -> HiddenToken
+    temp                           : ID -> Temp
     Alternatives                   : List(UnorderedGroup) -> Alternatives
     UnorderedGroup                 : List(Group) -> UnorderedGroup
     Group                          : List(AbstractToken) -> Group
