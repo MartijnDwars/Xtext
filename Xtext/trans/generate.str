@@ -7,4 +7,9 @@ imports
 rules 
 
 	generate-sdf:
-		(selected, position, ast, path, project-path) -> None()
+		(selected, position, ast, path, project-path) -> (filename, <generate-grammar> selected)
+		where
+			filename := $[[<remove-extension> path].sdf3]
+	
+	generate-grammar:
+		Grammar(_, _, [GeneratedMetamodel(name, url, alias)], _) -> $[module [name]]

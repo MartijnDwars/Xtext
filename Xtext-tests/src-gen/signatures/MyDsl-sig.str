@@ -1,0 +1,3 @@
+module src-gen/signatures/MyDsl-sig
+
+signature
