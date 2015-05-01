@@ -9,9 +9,13 @@ signature
     Assignment                     : Operator
     AddAssignment                  : Operator
     BooleanAssignment              : Operator
-    TypeRef                        : ID -> TypeRef
-    ParserRule                     : ID * Option(Returns) * Alternatives -> AbstractRule
+    TypeRef                        : Option(AbstractMetaModelReference) * ID -> TypeRef
+    MetaModelDeclaration           : Classifier -> TypeRef
+    AbstractMetaModelReference     : STRING -> AbstractMetaModelReference
+    Classifier                     : Classifier
+    ParserRule                     : ID * Option(Returns) * Option(HiddenToken) * Alternatives -> AbstractRule
     Returns                        : TypeRef -> Returns
+    HiddenToken                    : List(RuleCall) -> HiddenToken
     Alternatives                   : List(UnorderedGroup) -> Alternatives
     UnorderedGroup                 : List(Group) -> UnorderedGroup
     Group                          : List(AbstractToken) -> Group
@@ -19,7 +23,9 @@ signature
     Action                         : Action -> AbstractToken
     Assignment                     : Assignment * Option(Cardinality) -> AbstractTokenWithCardinality
     AbstractTerminal               : AbstractTerminal * Option(Cardinality) -> AbstractTokenWithCardinality
-    Assignment                     : ID * Operator * AssignableTerminal -> Assignment
+    Assignment                     : Option(Predicated) * ID * Operator * AssignableTerminal -> Assignment
+    Predicated                     : Predicated
+    FirstSetPredicated             : Predicated
     Keyword                        : STRING -> AssignableTerminal
     RuleCall                       : RuleCall -> AssignableTerminal
     ParenthesizedAssignableElement : ParenthesizedAssignableElement -> AssignableTerminal
@@ -32,4 +38,7 @@ signature
     Keyword                        : STRING -> AbstractTerminal
     ParenthesizedElement           : ParenthesizedElement -> AbstractTerminal
     RuleCall                       : RuleCall -> AbstractTerminal
+    PredicatedKeyword              : Predicated * STRING -> AbstractTerminal
+    PredicatedRuleCall             : Predicated * RuleCall -> AbstractTerminal
+    PredicatedGroup                : Predicated * Alternatives -> AbstractTerminal
     ParenthesizedElement           : Alternatives -> ParenthesizedElement

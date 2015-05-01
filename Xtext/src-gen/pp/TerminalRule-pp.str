@@ -8,10 +8,12 @@ imports
 
 imports
   src-gen/signatures/Common-sig
+  src-gen/signatures/ParserRule-sig
 
 
 imports
   src-gen/pp/Common-pp
+  src-gen/pp/ParserRule-pp
 
 
 strategies
@@ -22,6 +24,9 @@ strategies
 strategies
   prettyprint-example =
     prettyprint-AbstractRule
+
+  prettyprint-example =
+    prettyprint-TerminalName
 
   prettyprint-example =
     prettyprint-TerminalAlternatives
@@ -49,11 +54,34 @@ strategies
                                     ]
                                   )
                                 ]
-    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    with t1__' := <pp-one-Z(prettyprint-TerminalName)> t1__
     with t2__' := <pp-H-list(prettyprint-TerminalAlternatives)> t2__
 
   is-AbstractRule =
     ?TerminalRule(_, _)
+
+  prettyprint-TerminalName :
+    Fragment(t1__) -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [S("fragment "), t1__']
+                        )
+                      ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+
+  is-TerminalName =
+    ?Fragment(_)
+
+  prettyprint-TerminalName :
+    Returns(t1__, t2__) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [t1__', S(" "), t2__']
+                             )
+                           ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Returns))> t2__
+
+  is-TerminalName =
+    ?Returns(_, _)
 
   prettyprint-TerminalAlternatives :
     TerminalAlternatives(t1__) -> [ H(
@@ -90,6 +118,20 @@ strategies
     ?TerminalToken(_, _)
 
   prettyprint-TerminalTokenElement :
+    ParenthesizedTerminalElement(t1__) -> [ H(
+                                              [SOpt(HS(), "0")]
+                                            , [ S("( ")
+                                              , t1__'
+                                              , S(" )")
+                                              ]
+                                            )
+                                          ]
+    with t1__' := <pp-one-Z(prettyprint-TerminalAlternatives)> t1__
+
+  is-TerminalTokenElement =
+    ?ParenthesizedTerminalElement(_)
+
+  prettyprint-TerminalTokenElement :
     Keyword(t1__) -> [ H(
                          [SOpt(HS(), "0")]
                        , [t1__']
@@ -99,6 +141,17 @@ strategies
 
   is-TerminalTokenElement =
     ?Keyword(_)
+
+  prettyprint-TerminalTokenElement :
+    RuleCall(t1__) -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [t1__']
+                        )
+                      ]
+    with t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
+
+  is-TerminalTokenElement =
+    ?RuleCall(_)
 
   prettyprint-TerminalTokenElement :
     CharacterRange(t1__, t2__) -> [ H(
@@ -124,6 +177,28 @@ strategies
     ?Wildcard(_)
 
   prettyprint-TerminalTokenElement :
+    NegatedToken(t1__) -> [ H(
+                              [SOpt(HS(), "0")]
+                            , [S("! "), t1__']
+                            )
+                          ]
+    with t1__' := <pp-one-Z(prettyprint-TerminalTokenElement)> t1__
+
+  is-TerminalTokenElement =
+    ?NegatedToken(_)
+
+  prettyprint-TerminalTokenElement :
+    UntilToken(t1__) -> [ H(
+                            [SOpt(HS(), "0")]
+                          , [S("-> "), t1__']
+                          )
+                        ]
+    with t1__' := <pp-one-Z(prettyprint-TerminalTokenElement)> t1__
+
+  is-TerminalTokenElement =
+    ?UntilToken(_)
+
+  prettyprint-TerminalTokenElement :
     TerminalTokenElement(t1__) -> [ H(
                                       [SOpt(HS(), "0")]
                                     , [t1__']
@@ -145,6 +220,9 @@ strategies
     ?EOF()
 
   is-AbstractRule =
+    fail
+
+  is-TerminalName =
     fail
 
   is-TerminalAlternatives =

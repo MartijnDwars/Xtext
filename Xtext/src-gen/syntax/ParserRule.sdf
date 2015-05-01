@@ -7,37 +7,50 @@ exports
     AbstractRule
 
   context-free syntax
-    "="                              -> Operator                       {cons("Assignment")}
-    "+="                             -> Operator                       {cons("AddAssignment")}
-    "?="                             -> Operator                       {cons("BooleanAssignment")}
-    ID                               -> TypeRef                        {cons("TypeRef")}
-    ID Returns? ":" Alternatives ";" -> AbstractRule                   {cons("ParserRule")}
-    "returns" TypeRef                -> Returns                        {cons("Returns")}
-    {UnorderedGroup "|"}+            -> Alternatives                   {cons("Alternatives")}
-    {Group "&"}+                     -> UnorderedGroup                 {cons("UnorderedGroup")}
-    AbstractToken+                   -> Group                          {cons("Group")}
-    AbstractTokenWithCardinality     -> AbstractToken                  {cons("AbstractTokenWithCardinality")}
-    Action                           -> AbstractToken                  {cons("Action")}
-    Assignment Cardinality?          -> AbstractTokenWithCardinality   {cons("Assignment")}
-    AbstractTerminal Cardinality?    -> AbstractTokenWithCardinality   {cons("AbstractTerminal")}
-    ID Operator AssignableTerminal   -> Assignment                     {cons("Assignment")}
-    STRING                           -> AssignableTerminal             {cons("Keyword")}
-    RuleCall                         -> AssignableTerminal             {cons("RuleCall")}
-    ParenthesizedAssignableElement   -> AssignableTerminal             {cons("ParenthesizedAssignableElement")}
-    "[" TypeRef "]"                  -> AssignableTerminal             {cons("CrossReference")}
-    ID                               -> RuleCall                       {cons("RuleCall")}
-    "(" AssignableAlternatives ")"   -> ParenthesizedAssignableElement {cons("ParenthesizedAssignableElement")}
-    {AssignableTerminal "|"}+        -> AssignableAlternatives         {cons("AssignableAlternatives")}
-    "{" TypeRef ActionCurrent? "}"   -> Action                         {cons("Action")}
-    "." ID Operator "current"        -> ActionCurrent                  {cons("ActionCurrent")}
-    STRING                           -> AbstractTerminal               {cons("Keyword")}
-    ParenthesizedElement             -> AbstractTerminal               {cons("ParenthesizedElement")}
-    RuleCall                         -> AbstractTerminal               {cons("RuleCall")}
-    "(" Alternatives ")"             -> ParenthesizedElement           {cons("ParenthesizedElement")}
+    "="                                           -> Operator                       {cons("Assignment")}
+    "+="                                          -> Operator                       {cons("AddAssignment")}
+    "?="                                          -> Operator                       {cons("BooleanAssignment")}
+    AbstractMetaModelReference? ID                -> TypeRef                        {cons("TypeRef")}
+    "ecore" "::" Classifier                       -> TypeRef                        {cons("MetaModelDeclaration")}
+    STRING "::"                                   -> AbstractMetaModelReference     {cons("AbstractMetaModelReference")}
+    "EClassifier"                                 -> Classifier                     {cons("Classifier")}
+    ID Returns? HiddenToken? ":" Alternatives ";" -> AbstractRule                   {cons("ParserRule")}
+    "returns" TypeRef                             -> Returns                        {cons("Returns")}
+    "hidden" "(" {RuleCall ","}+ ")"              -> HiddenToken                    {cons("HiddenToken")}
+    {UnorderedGroup "|"}+                         -> Alternatives                   {cons("Alternatives")}
+    {Group "&"}+                                  -> UnorderedGroup                 {cons("UnorderedGroup")}
+    AbstractToken+                                -> Group                          {cons("Group")}
+    AbstractTokenWithCardinality                  -> AbstractToken                  {cons("AbstractTokenWithCardinality")}
+    Action                                        -> AbstractToken                  {cons("Action")}
+    Assignment Cardinality?                       -> AbstractTokenWithCardinality   {cons("Assignment")}
+    AbstractTerminal Cardinality?                 -> AbstractTokenWithCardinality   {cons("AbstractTerminal")}
+    Predicated? ID Operator AssignableTerminal    -> Assignment                     {cons("Assignment")}
+    "=>"                                          -> Predicated                     {cons("Predicated")}
+    "->"                                          -> Predicated                     {cons("FirstSetPredicated")}
+    STRING                                        -> AssignableTerminal             {cons("Keyword")}
+    RuleCall                                      -> AssignableTerminal             {cons("RuleCall")}
+    ParenthesizedAssignableElement                -> AssignableTerminal             {cons("ParenthesizedAssignableElement")}
+    "[" TypeRef "]"                               -> AssignableTerminal             {cons("CrossReference")}
+    ID                                            -> RuleCall                       {cons("RuleCall")}
+    "(" AssignableAlternatives ")"                -> ParenthesizedAssignableElement {cons("ParenthesizedAssignableElement")}
+    {AssignableTerminal "|"}+                     -> AssignableAlternatives         {cons("AssignableAlternatives")}
+    "{" TypeRef ActionCurrent? "}"                -> Action                         {cons("Action")}
+    "." ID Operator "current"                     -> ActionCurrent                  {cons("ActionCurrent")}
+    STRING                                        -> AbstractTerminal               {cons("Keyword")}
+    ParenthesizedElement                          -> AbstractTerminal               {cons("ParenthesizedElement")}
+    RuleCall                                      -> AbstractTerminal               {cons("RuleCall")}
+    Predicated STRING                             -> AbstractTerminal               {cons("PredicatedKeyword")}
+    Predicated RuleCall                           -> AbstractTerminal               {cons("PredicatedRuleCall")}
+    Predicated "(" Alternatives ")"               -> AbstractTerminal               {cons("PredicatedGroup")}
+    "(" Alternatives ")"                          -> ParenthesizedElement           {cons("ParenthesizedElement")}
 
   context-free syntax
+    CONTENTCOMPLETE -> TypeRef                        {cons("COMPLETION-TypeRef")}
+    CONTENTCOMPLETE -> AbstractMetaModelReference     {cons("COMPLETION-AbstractMetaModelReference")}
+    CONTENTCOMPLETE -> Classifier                     {cons("COMPLETION-Classifier")}
     CONTENTCOMPLETE -> AbstractRule                   {cons("COMPLETION-AbstractRule")}
     CONTENTCOMPLETE -> Returns                        {cons("COMPLETION-Returns")}
+    CONTENTCOMPLETE -> HiddenToken                    {cons("COMPLETION-HiddenToken")}
     CONTENTCOMPLETE -> Alternatives                   {cons("COMPLETION-Alternatives")}
     CONTENTCOMPLETE -> UnorderedGroup                 {cons("COMPLETION-UnorderedGroup")}
     CONTENTCOMPLETE -> Assignment                     {cons("COMPLETION-Assignment")}
@@ -46,4 +59,5 @@ exports
     CONTENTCOMPLETE -> AssignableAlternatives         {cons("COMPLETION-AssignableAlternatives")}
     CONTENTCOMPLETE -> Action                         {cons("COMPLETION-Action")}
     CONTENTCOMPLETE -> ActionCurrent                  {cons("COMPLETION-ActionCurrent")}
+    CONTENTCOMPLETE -> AbstractTerminal               {cons("COMPLETION-AbstractTerminal")}
     CONTENTCOMPLETE -> ParenthesizedElement           {cons("COMPLETION-ParenthesizedElement")}

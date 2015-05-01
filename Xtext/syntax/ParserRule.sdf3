@@ -15,11 +15,18 @@ context-free syntax
   Operator.AddAssignment = "+="
   Operator.BooleanAssignment = "?="
   
-  TypeRef.TypeRef = ID
+  TypeRef.TypeRef = AbstractMetaModelReference? ID
+  TypeRef.MetaModelDeclaration = < ecore :: <Classifier> >
   
-  AbstractRule.ParserRule = <<ID> <Returns?> : <Alternatives> ;>
+  AbstractMetaModelReference.AbstractMetaModelReference = <<STRING> ::>
+  
+  Classifier.Classifier = <EClassifier>
+  	
+  AbstractRule.ParserRule = <<ID> <Returns?> <HiddenToken?>: <Alternatives> ;>
   
   Returns.Returns = <returns <TypeRef>>
+  
+  HiddenToken.HiddenToken = <hidden ( <{RuleCall ","}+> )>  
   
   Alternatives.Alternatives = <<{UnorderedGroup "|"}+>>
   
@@ -33,7 +40,10 @@ context-free syntax
   AbstractTokenWithCardinality.Assignment = Assignment Cardinality?
   AbstractTokenWithCardinality.AbstractTerminal = AbstractTerminal Cardinality?
   
-  Assignment.Assignment = <<ID> <Operator> <AssignableTerminal>>
+  Assignment.Assignment = <<Predicated?> <ID> <Operator> <AssignableTerminal>>
+  
+  Predicated.Predicated = "=>"
+  Predicated.FirstSetPredicated = "->"
   
   AssignableTerminal.Keyword = STRING
   AssignableTerminal.RuleCall = RuleCall
@@ -52,5 +62,8 @@ context-free syntax
   AbstractTerminal.Keyword = STRING
   AbstractTerminal.ParenthesizedElement = ParenthesizedElement
   AbstractTerminal.RuleCall = RuleCall
+  AbstractTerminal.PredicatedKeyword = Predicated STRING
+  AbstractTerminal.PredicatedRuleCall = Predicated RuleCall
+  AbstractTerminal.PredicatedGroup = <<Predicated> ( <Alternatives> )>
   
   ParenthesizedElement.ParenthesizedElement = <( <Alternatives> )>
