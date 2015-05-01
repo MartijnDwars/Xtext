@@ -1,9 +1,0 @@
-module src-gen/completions/Common-esv
-
-completions
-  completion template Cardinality : "?" =
-    "?"  
-  completion template Cardinality : "+" =
-    "+"  
-  completion template Cardinality : "*" =
-    "*"  
