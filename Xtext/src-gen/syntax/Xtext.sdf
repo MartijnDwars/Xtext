@@ -6,16 +6,18 @@ exports
     Start ID
 
   context-free syntax
-    {ID "."}+                                           -> GrammarID {cons("GrammarID")}
-    "with" {GrammarID ","}+                             -> Mixin     {cons("Mixin")}
-    "as" ID                                             -> Alias     {cons("Alias")}
-    "generate" ID STRING Alias?                         -> Metamodel {cons("GeneratedMetamodel")}
-    "import" STRING Alias?                              -> Metamodel {cons("ReferencedMetamodel")}
-    "grammar" GrammarID Mixin? Metamodel* AbstractRule+ -> Start     {cons("Grammar")}
+    {ID "."}+                                                        -> GrammarID   {cons("GrammarID")}
+    "with" {GrammarID ","}+                                          -> Mixin       {cons("Mixin")}
+    "hidden" "(" {RuleCall ","}+ ")"                                 -> HiddenToken {cons("HiddenToken")}
+    "as" ID                                                          -> Alias       {cons("Alias")}
+    "generate" ID STRING Alias?                                      -> Metamodel   {cons("GeneratedMetamodel")}
+    "import" STRING Alias?                                           -> Metamodel   {cons("ReferencedMetamodel")}
+    "grammar" GrammarID Mixin? HiddenToken? Metamodel* AbstractRule+ -> Start       {cons("Grammar")}
 
   context-free syntax
-    CONTENTCOMPLETE -> GrammarID {cons("COMPLETION-GrammarID")}
-    CONTENTCOMPLETE -> Mixin     {cons("COMPLETION-Mixin")}
-    CONTENTCOMPLETE -> Alias     {cons("COMPLETION-Alias")}
-    CONTENTCOMPLETE -> Metamodel {cons("COMPLETION-Metamodel")}
-    CONTENTCOMPLETE -> Start     {cons("COMPLETION-Start")}
+    CONTENTCOMPLETE -> GrammarID   {cons("COMPLETION-GrammarID")}
+    CONTENTCOMPLETE -> Mixin       {cons("COMPLETION-Mixin")}
+    CONTENTCOMPLETE -> HiddenToken {cons("COMPLETION-HiddenToken")}
+    CONTENTCOMPLETE -> Alias       {cons("COMPLETION-Alias")}
+    CONTENTCOMPLETE -> Metamodel   {cons("COMPLETION-Metamodel")}
+    CONTENTCOMPLETE -> Start       {cons("COMPLETION-Start")}

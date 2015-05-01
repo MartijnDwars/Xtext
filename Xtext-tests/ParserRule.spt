@@ -103,3 +103,23 @@ test Example 5 [[
 	  (many ?= 'many')? name = ID ':' type = [Type]
 	;
 ]] parse succeeds
+
+// Testing hidden token
+
+test hiddenToken with no token [[
+	Person hidden():
+		name="abc"
+	;
+]] parse fails
+
+test hiddenToken with one token [[
+	Person hidden(WS):
+		name="abc"
+	;
+]] parse succeeds
+
+test hiddenToken with multiple tokens [[
+	Person hidden(WS, ML_COMMENT, SL_COMMENT):
+		name="abc"
+	;
+]] parse succeeds

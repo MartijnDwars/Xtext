@@ -13,12 +13,18 @@ completions
     "?="                                                   
   completion template TypeRef : " ID" =
     <:AbstractMetaModelReference> " " <ID:ID>              
+  completion template TypeRef : " ecore :: Classifier " =
+    " ecore :: " <Classifier:Classifier> " "  
   completion template AbstractMetaModelReference : "STRING ::" =
     <STRING:STRING> " ::"         
+  completion template Classifier : "EClassifier" =
+    "EClassifier"                               
   completion template AbstractRule : "ID : Alternatives ;" =
-    <ID:ID> " " <:Returns> " : " <Alternatives:Alternatives> " ;"  
+    <ID:ID> " " <:Returns> " " <:HiddenToken> ": " <Alternatives:Alternatives> " ;"  
   completion template Returns : "returns TypeRef" =
     "returns " <TypeRef:TypeRef>               
+  completion template HiddenToken : "hidden ( RuleCall )" =
+    "hidden ( " <RuleCall:RuleCall> " )"  
   completion template AbstractTokenWithCardinality : "Assignment " =
     <Assignment:Assignment> " " <:Cardinality>  
   completion template AbstractTokenWithCardinality : "AbstractTerminal " =
