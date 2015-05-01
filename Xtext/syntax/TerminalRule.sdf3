@@ -20,7 +20,7 @@ context-free syntax
   TerminalToken.TerminalToken = TerminalTokenElement Cardinality?
   TerminalTokenElement.ParenthesizedTerminalElement = "(" TerminalAlternatives ")"
   TerminalTokenElement.Keyword = STRING
-  TerminalTokenElement.RuleCall = RuleCall
+  TerminalTokenElement = RuleCall
   TerminalTokenElement.CharacterRange = <<STRING> .. <STRING>>
   TerminalTokenElement.Wildcard = WILDCARD
   TerminalTokenElement.NegatedToken = "!" TerminalTokenElement

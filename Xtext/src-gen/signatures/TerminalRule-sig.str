@@ -15,7 +15,7 @@ signature
     TerminalToken                : TerminalTokenElement * Option(Cardinality) -> TerminalToken
     ParenthesizedTerminalElement : TerminalAlternatives -> TerminalTokenElement
     Keyword                      : STRING -> TerminalTokenElement
-    RuleCall                     : RuleCall -> TerminalTokenElement
+                                 : RuleCall -> TerminalTokenElement
     CharacterRange               : STRING * STRING -> TerminalTokenElement
     Wildcard                     : WILDCARD -> TerminalTokenElement
     NegatedToken                 : TerminalTokenElement -> TerminalTokenElement

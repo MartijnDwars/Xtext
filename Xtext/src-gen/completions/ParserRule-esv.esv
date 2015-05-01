@@ -6,47 +6,45 @@ imports
 
 completions
   completion template Operator : "=" =
-    "="                                                     
+    "="                                                                        
   completion template Operator : "+=" =
-    "+="                                                   
+    "+="                                                                      
   completion template Operator : "?=" =
-    "?="                                                   
+    "?="                                                                      
   completion template TypeRef : " ID" =
-    <:AbstractMetaModelReference> " " <ID:ID>              
+    <:AbstractMetaModelReference> " " <ID:ID>                                 
   completion template TypeRef : " ecore :: Classifier " =
-    " ecore :: " <Classifier:Classifier> " "  
+    " ecore :: " <Classifier:Classifier> " "                
   completion template AbstractMetaModelReference : "STRING ::" =
-    <STRING:STRING> " ::"         
+    <STRING:STRING> " ::"                            
   completion template Classifier : "EClassifier" =
-    "EClassifier"                               
+    "EClassifier"                                                  
   completion template AbstractRule : "ID : Alternatives ;" =
     <ID:ID> " " <:Returns> " " <:HiddenToken> ": " <Alternatives:Alternatives> " ;"  
   completion template Returns : "returns TypeRef" =
-    "returns " <TypeRef:TypeRef>               
+    "returns " <TypeRef:TypeRef>                                  
   completion template HiddenToken : "hidden ( RuleCall )" =
-    "hidden ( " <RuleCall:RuleCall> " )"  
-  completion template AbstractToken : "Assignment " =
-    <Assignment:Assignment> " " <:Cardinality>  
+    "hidden ( " <RuleCall:RuleCall> " )"                  
+  completion template AbstractToken : " ID Operator AssignableTerminal " =
+    <:Predicated> " " <ID:ID> " " <Operator:Operator> " " <AssignableTerminal:AssignableTerminal> " " <:Cardinality>  
   completion template AbstractToken : "AbstractTerminal " =
     <AbstractTerminal:AbstractTerminal> " " <:Cardinality>  
-  completion template Assignment : " ID Operator AssignableTerminal" =
-    <:Predicated> " " <ID:ID> " " <Operator:Operator> " " <AssignableTerminal:AssignableTerminal>  
   completion template Predicated : "=>" =
-    "=>"                                                 
+    "=>"                                                                    
   completion template Predicated : "->" =
-    "->"                                                 
+    "->"                                                                    
   completion template AssignableTerminal : "[ TypeRef ]" =
-    "[ " <TypeRef:TypeRef> " ]"         
+    "[ " <TypeRef:TypeRef> " ]"                            
   completion template ParenthesizedAssignableElement : "( AssignableAlternatives )" =
     "( " <AssignableAlternatives:AssignableAlternatives> " )"  
   completion template Action : "{ TypeRef }" =
-    "{ " <TypeRef:TypeRef> " " <:ActionCurrent> " }"  
+    "{ " <TypeRef:TypeRef> " " <:ActionCurrent> " }"                   
   completion template ActionCurrent : ". ID Operator current" =
-    ". " <ID:ID> " " <Operator:Operator> " current"  
+    ". " <ID:ID> " " <Operator:Operator> " current"   
   completion template AbstractTerminal : "( Alternatives )" =
-    "( " <Alternatives:Alternatives> " )"  
+    "( " <Alternatives:Alternatives> " )"               
   completion template AbstractTerminal : "Predicated STRING" =
-    <Predicated:Predicated> " " <STRING:STRING>  
+    <Predicated:Predicated> " " <STRING:STRING>        
   completion template AbstractTerminal : "Predicated RuleCall" =
     <Predicated:Predicated> " " <RuleCall:RuleCall>  
   completion template AbstractTerminal : "Predicated ( Alternatives )" =

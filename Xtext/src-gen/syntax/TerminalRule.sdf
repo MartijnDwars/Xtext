@@ -15,7 +15,7 @@ exports
     TerminalTokenElement Cardinality?                     -> TerminalToken        {cons("TerminalToken")}
     "(" TerminalAlternatives ")"                          -> TerminalTokenElement {cons("ParenthesizedTerminalElement")}
     STRING                                                -> TerminalTokenElement {cons("Keyword")}
-    RuleCall                                              -> TerminalTokenElement {cons("RuleCall")}
+    RuleCall                                              -> TerminalTokenElement 
     STRING ".." STRING                                    -> TerminalTokenElement {cons("CharacterRange")}
     WILDCARD                                              -> TerminalTokenElement {cons("Wildcard")}
     "!" TerminalTokenElement                              -> TerminalTokenElement {cons("NegatedToken")}

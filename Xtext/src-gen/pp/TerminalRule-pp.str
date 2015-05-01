@@ -143,15 +143,13 @@ strategies
     ?Keyword(_)
 
   prettyprint-TerminalTokenElement :
-    RuleCall(t1__) -> [ H(
-                          [SOpt(HS(), "0")]
-                        , [t1__']
-                        )
-                      ]
-    with t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
-
-  is-TerminalTokenElement =
-    ?RuleCall(_)
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [t1__']
+              )
+            ]
+    where not(is-TerminalTokenElement)
+    where t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
 
   prettyprint-TerminalTokenElement :
     CharacterRange(t1__, t2__) -> [ H(

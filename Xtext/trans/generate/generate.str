@@ -13,24 +13,39 @@ rules
 			filename := $[[<remove-extension> path].sdf3]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-parser-rule + gen-alternatives + gen-abstract-terminal> selected
+		selected -> <gen-grammar + gen-parser-rule + gen-alternatives + gen-abstract-token> selected
 	
 	gen-grammar:
-		Grammar(_, _, _, [GeneratedMetamodel(name, url, alias)], _) -> $[module [name]]
+		Grammar(GrammarID(names), _, _, _, _) -> $[module [name]]
+		where
+			name := <id-to-name> names
 	
 	gen-parser-rule:
-		ParserRule(ID, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
-		where
-			name := <id-to-name> ID
+		ParserRule(name, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
 	
 	gen-alternatives:
-		Alternatives([UnorderedGroup([Group([abstract-terminal])])]) -> <gen-abstract-terminal> abstract-terminal
+		Alternatives([UnorderedGroup([Group([abstract-token | _])])]) -> $[<[<gen-abstract-token> abstract-token]>] // TODO: tail is ignored
+	
+	gen-abstract-token:
+		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
+	
+	gen-abstract-token:
+		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> $[[gen-abstract-terminal] [gen-cardinality]]
+		with
+			gen-abstract-terminal := <gen-abstract-terminal> abstract-terminal;
+			gen-cardinality       := <gen-cardinality-opt> cardinality-opt
+	
+	gen-abstract-token:
+		ActionAbstractToken(_) -> $[]
 	
 	gen-abstract-terminal:
-		AbstractTerminal(Keyword(ID), None()) -> $[[ID]]
+		Keyword(ID) -> $[[ID]]
 		
 	gen-abstract-terminal:
-		AbstractTerminal(RuleCall(ID), CardinalityOpt) -> $[[ID] [<gen-cardinality-opt> CardinalityOpt]]
-	
+		RuleCall(ID) -> $[[ID]]
+
 	gen-abstract-terminal:
-		AbstractTerminal(x@Alternatives(_), CardinalityOpt) -> <gen-alternatives> x
+		x@Alternatives(_) -> <gen-alternatives> x
+	
+	gen-assignable-terminal:
+		RuleCall(ID) -> $[<[ID]>]

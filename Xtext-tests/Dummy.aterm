@@ -4,18 +4,9 @@ ParserRule(
 , None()
 , Alternatives(
     [ UnorderedGroup(
-        [ Group(
-            [ Assignment(
-                Assignment(None(), "name", Assignment(), RuleCall(RuleCall("ID")))
-              , None()
-              )
-            , Assignment(
-                Assignment(None(), "code", Assignment(), RuleCall(RuleCall("ID")))
-              , None()
-              )
-            ]
-          )
-        ]
+        [Group(
+           [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+         )]
       )
     ]
   )
