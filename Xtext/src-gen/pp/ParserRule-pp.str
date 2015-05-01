@@ -27,6 +27,9 @@ strategies
     prettyprint-TypeRef
 
   prettyprint-example =
+    prettyprint-AbstractMetaModelReference
+
+  prettyprint-example =
     prettyprint-AbstractRule
 
   prettyprint-example =
@@ -49,6 +52,9 @@ strategies
 
   prettyprint-example =
     prettyprint-Assignment
+
+  prettyprint-example =
+    prettyprint-Predicated
 
   prettyprint-example =
     prettyprint-AssignableTerminal
@@ -105,15 +111,27 @@ strategies
     ?BooleanAssignment()
 
   prettyprint-TypeRef :
-    TypeRef(t1__) -> [ H(
-                         [SOpt(HS(), "0")]
-                       , [t1__']
-                       )
-                     ]
-    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    TypeRef(t1__, t2__) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [t1__', S(" "), t2__']
+                             )
+                           ]
+    with t1__' := <pp-option(pp-one-Z(prettyprint-AbstractMetaModelReference))> t1__
+    with t2__' := <pp-one-Z(prettyprint-ID)> t2__
 
   is-TypeRef =
-    ?TypeRef(_)
+    ?TypeRef(_, _)
+
+  prettyprint-AbstractMetaModelReference :
+    AbstractMetaModelReference(t1__) -> [ H(
+                                            [SOpt(HS(), "0")]
+                                          , [t1__', S(" ::")]
+                                          )
+                                        ]
+    with t1__' := <pp-one-Z(prettyprint-STRING)> t1__
+
+  is-AbstractMetaModelReference =
+    ?AbstractMetaModelReference(_)
 
   prettyprint-AbstractRule :
     ParserRule(t1__, t2__, t3__) -> [ H(
@@ -225,22 +243,45 @@ strategies
     ?AbstractTerminal(_, _)
 
   prettyprint-Assignment :
-    Assignment(t1__, t2__, t3__) -> [ H(
-                                        [SOpt(HS(), "0")]
-                                      , [ t1__'
-                                        , S(" ")
-                                        , t2__'
-                                        , S(" ")
-                                        , t3__'
-                                        ]
-                                      )
-                                    ]
-    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
-    with t2__' := <pp-one-Z(prettyprint-Operator)> t2__
-    with t3__' := <pp-one-Z(prettyprint-AssignableTerminal)> t3__
+    Assignment(t1__, t2__, t3__, t4__) -> [ H(
+                                              [SOpt(HS(), "0")]
+                                            , [ t1__'
+                                              , S(" ")
+                                              , t2__'
+                                              , S(" ")
+                                              , t3__'
+                                              , S(" ")
+                                              , t4__'
+                                              ]
+                                            )
+                                          ]
+    with t1__' := <pp-option(pp-one-Z(prettyprint-Predicated))> t1__
+    with t2__' := <pp-one-Z(prettyprint-ID)> t2__
+    with t3__' := <pp-one-Z(prettyprint-Operator)> t3__
+    with t4__' := <pp-one-Z(prettyprint-AssignableTerminal)> t4__
 
   is-Assignment =
-    ?Assignment(_, _, _)
+    ?Assignment(_, _, _, _)
+
+  prettyprint-Predicated :
+    Predicated() -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [S("=>")]
+                      )
+                    ]
+
+  is-Predicated =
+    ?Predicated()
+
+  prettyprint-Predicated :
+    FirstSetPredicated() -> [ H(
+                                [SOpt(HS(), "0")]
+                              , [S("->")]
+                              )
+                            ]
+
+  is-Predicated =
+    ?FirstSetPredicated()
 
   prettyprint-AssignableTerminal :
     Keyword(t1__) -> [ H(
@@ -392,6 +433,46 @@ strategies
   is-AbstractTerminal =
     ?RuleCall(_)
 
+  prettyprint-AbstractTerminal :
+    PredicatedKeyword(t1__, t2__) -> [ H(
+                                         [SOpt(HS(), "0")]
+                                       , [t1__', S(" "), t2__']
+                                       )
+                                     ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-STRING)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedKeyword(_, _)
+
+  prettyprint-AbstractTerminal :
+    PredicatedRuleCall(t1__, t2__) -> [ H(
+                                          [SOpt(HS(), "0")]
+                                        , [t1__', S(" "), t2__']
+                                        )
+                                      ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-RuleCall)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedRuleCall(_, _)
+
+  prettyprint-AbstractTerminal :
+    PredicatedGroup(t1__, t2__) -> [ H(
+                                       [SOpt(HS(), "0")]
+                                     , [ t1__'
+                                       , S(" ( ")
+                                       , t2__'
+                                       , S(" )")
+                                       ]
+                                     )
+                                   ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-Alternatives)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedGroup(_, _)
+
   prettyprint-ParenthesizedElement :
     ParenthesizedElement(t1__) -> [ H(
                                       [SOpt(HS(), "0")]
@@ -410,6 +491,9 @@ strategies
     fail
 
   is-TypeRef =
+    fail
+
+  is-AbstractMetaModelReference =
     fail
 
   is-AbstractRule =
@@ -434,6 +518,9 @@ strategies
     fail
 
   is-Assignment =
+    fail
+
+  is-Predicated =
     fail
 
   is-AssignableTerminal =

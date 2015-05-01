@@ -19,6 +19,10 @@ test terminal without closing semicolon [[
   terminal ID: 'a'
 ]] parse fails
 
+test terminal fragment returns [[
+	terminal fragment ID returns ID: .;
+]] parse fails
+
 test character range [[
   terminal ID: '0'..'9';
 ]] parse succeeds
@@ -33,4 +37,20 @@ test wildcard [[
 
 test simple terminal [[
   terminal ID: 'a';
+]] parse succeeds
+
+test terminal fragment [[
+	terminal fragment ID: .;	
+]] parse succeeds
+
+test terminal returns [[
+	terminal ID returns ID: .;
+]] parse succeeds
+
+test negated token [[
+	terminal ID: !'a';
+]] parse succeeds
+
+test untiltoken [[
+	terminal ID: -> 'a';
 ]] parse succeeds

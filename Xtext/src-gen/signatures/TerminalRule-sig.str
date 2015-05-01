@@ -2,16 +2,23 @@ module src-gen/signatures/TerminalRule-sig
 
 imports
   src-gen/signatures/Common-sig
+  src-gen/signatures/ParserRule-sig
 
 
 signature
   constructors
-    TerminalRule         : ID * List(TerminalAlternatives) -> AbstractRule
-    TerminalAlternatives : TerminalGroup -> TerminalAlternatives
-    TerminalGroup        : TerminalToken -> TerminalGroup
-    TerminalToken        : TerminalTokenElement * Option(Cardinality) -> TerminalToken
-    Keyword              : STRING -> TerminalTokenElement
-    CharacterRange       : STRING * STRING -> TerminalTokenElement
-    Wildcard             : WILDCARD -> TerminalTokenElement
-    TerminalTokenElement : EOF -> TerminalTokenElement
-    EOF                  : EOF
+    TerminalRule                 : TerminalName * List(TerminalAlternatives) -> AbstractRule
+    Fragment                     : ID -> TerminalName
+    Returns                      : ID * Option(Returns) -> TerminalName
+    TerminalAlternatives         : TerminalGroup -> TerminalAlternatives
+    TerminalGroup                : TerminalToken -> TerminalGroup
+    TerminalToken                : TerminalTokenElement * Option(Cardinality) -> TerminalToken
+    ParenthesizedTerminalElement : TerminalAlternatives -> TerminalTokenElement
+    Keyword                      : STRING -> TerminalTokenElement
+    RuleCall                     : RuleCall -> TerminalTokenElement
+    CharacterRange               : STRING * STRING -> TerminalTokenElement
+    Wildcard                     : WILDCARD -> TerminalTokenElement
+    NegatedToken                 : TerminalTokenElement -> TerminalTokenElement
+    UntilToken                   : TerminalTokenElement -> TerminalTokenElement
+    TerminalTokenElement         : EOF -> TerminalTokenElement
+    EOF                          : EOF
