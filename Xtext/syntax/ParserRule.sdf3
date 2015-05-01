@@ -26,9 +26,7 @@ context-free syntax
   
   Returns.Returns = <returns <TypeRef>>
   
-  HiddenToken.HiddenToken = <hidden ( <{Temp ","}+> )>
-  
-  Temp.temp = ID
+  HiddenToken.HiddenToken = <hidden ( <{RuleCall ","}+> )>  
   
   Alternatives.Alternatives = <<{UnorderedGroup "|"}+>>
   

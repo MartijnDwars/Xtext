@@ -15,8 +15,7 @@ signature
     Classifier                     : Classifier
     ParserRule                     : ID * Option(Returns) * Option(HiddenToken) * Alternatives -> AbstractRule
     Returns                        : TypeRef -> Returns
-    HiddenToken                    : List(Temp) -> HiddenToken
-    temp                           : ID -> Temp
+    HiddenToken                    : List(RuleCall) -> HiddenToken
     Alternatives                   : List(UnorderedGroup) -> Alternatives
     UnorderedGroup                 : List(Group) -> UnorderedGroup
     Group                          : List(AbstractToken) -> Group

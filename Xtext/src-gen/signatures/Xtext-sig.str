@@ -11,7 +11,7 @@ signature
   constructors
     GrammarID           : List(ID) -> GrammarID
     Mixin               : List(GrammarID) -> Mixin
-    HiddenToken         : List(AbstractRule) -> HiddenToken
+    HiddenToken         : List(RuleCall) -> HiddenToken
     Alias               : ID -> Alias
     GeneratedMetamodel  : ID * STRING * Option(Alias) -> Metamodel
     ReferencedMetamodel : STRING * Option(Alias) -> Metamodel

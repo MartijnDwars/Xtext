@@ -16,8 +16,7 @@ exports
     "EClassifier"                                 -> Classifier                     {cons("Classifier")}
     ID Returns? HiddenToken? ":" Alternatives ";" -> AbstractRule                   {cons("ParserRule")}
     "returns" TypeRef                             -> Returns                        {cons("Returns")}
-    "hidden" "(" {Temp ","}+ ")"                  -> HiddenToken                    {cons("HiddenToken")}
-    ID                                            -> Temp                           {cons("temp")}
+    "hidden" "(" {RuleCall ","}+ ")"              -> HiddenToken                    {cons("HiddenToken")}
     {UnorderedGroup "|"}+                         -> Alternatives                   {cons("Alternatives")}
     {Group "&"}+                                  -> UnorderedGroup                 {cons("UnorderedGroup")}
     AbstractToken+                                -> Group                          {cons("Group")}

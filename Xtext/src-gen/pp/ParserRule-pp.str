@@ -42,9 +42,6 @@ strategies
     prettyprint-HiddenToken
 
   prettyprint-example =
-    prettyprint-Temp
-
-  prettyprint-example =
     prettyprint-Alternatives
 
   prettyprint-example =
@@ -208,21 +205,10 @@ strategies
                              ]
                            )
                          ]
-    with t1__' := <pp-H-list(prettyprint-Temp|",")> t1__
+    with t1__' := <pp-H-list(prettyprint-RuleCall|",")> t1__
 
   is-HiddenToken =
     ?HiddenToken(_)
-
-  prettyprint-Temp :
-    temp(t1__) -> [ H(
-                      [SOpt(HS(), "0")]
-                    , [t1__']
-                    )
-                  ]
-    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
-
-  is-Temp =
-    ?temp(_)
 
   prettyprint-Alternatives :
     Alternatives(t1__) -> [ H(
@@ -567,9 +553,6 @@ strategies
     fail
 
   is-HiddenToken =
-    fail
-
-  is-Temp =
     fail
 
   is-Alternatives =

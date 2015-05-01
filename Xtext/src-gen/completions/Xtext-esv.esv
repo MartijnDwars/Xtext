@@ -10,8 +10,8 @@ imports
 completions
   completion template Mixin : "with GrammarID" =
     "with " <GrammarID:GrammarID>                                     
-  completion template HiddenToken : "hidden ( AbstractRule )" =
-    "hidden ( " <AbstractRule:AbstractRule> " )"       
+  completion template HiddenToken : "hidden ( RuleCall )" =
+    "hidden ( " <RuleCall:RuleCall> " )"                   
   completion template Alias : "as ID" =
     "as " <ID:ID>                                                              
   completion template Metamodel : "generate ID STRING " =

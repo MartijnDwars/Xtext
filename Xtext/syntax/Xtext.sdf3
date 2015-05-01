@@ -20,7 +20,7 @@ context-free syntax
 
   GrammarID.GrammarID           = <<{ID "."}+>>
   Mixin.Mixin                   = <with <{GrammarID ","}+>>
-  HiddenToken.HiddenToken		= <hidden ( <{AbstractRule ","}+> )>
+  HiddenToken.HiddenToken		= <hidden ( <{RuleCall ","}+> )>
   Alias.Alias                   = <as <ID>>
   Metamodel.GeneratedMetamodel  = <generate <ID> <STRING> <Alias?>>
   Metamodel.ReferencedMetamodel = <import <STRING> <Alias?>>

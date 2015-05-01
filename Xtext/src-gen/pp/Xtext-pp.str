@@ -78,7 +78,7 @@ strategies
                              ]
                            )
                          ]
-    with t1__' := <pp-H-list(prettyprint-AbstractRule|",")> t1__
+    with t1__' := <pp-H-list(prettyprint-RuleCall|",")> t1__
 
   is-HiddenToken =
     ?HiddenToken(_)

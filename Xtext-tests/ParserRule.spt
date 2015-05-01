@@ -105,6 +105,13 @@ test Example 5 [[
 ]] parse succeeds
 
 // Testing hidden token
+
+test hiddenToken with no token [[
+	Person hidden():
+		name="abc"
+	;
+]] parse fails
+
 test hiddenToken with one token [[
 	Person hidden(WS):
 		name="abc"

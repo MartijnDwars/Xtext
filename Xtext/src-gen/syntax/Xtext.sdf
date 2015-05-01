@@ -8,7 +8,7 @@ exports
   context-free syntax
     {ID "."}+                                                        -> GrammarID   {cons("GrammarID")}
     "with" {GrammarID ","}+                                          -> Mixin       {cons("Mixin")}
-    "hidden" "(" {AbstractRule ","}+ ")"                             -> HiddenToken {cons("HiddenToken")}
+    "hidden" "(" {RuleCall ","}+ ")"                                 -> HiddenToken {cons("HiddenToken")}
     "as" ID                                                          -> Alias       {cons("Alias")}
     "generate" ID STRING Alias?                                      -> Metamodel   {cons("GeneratedMetamodel")}
     "import" STRING Alias?                                           -> Metamodel   {cons("ReferencedMetamodel")}
