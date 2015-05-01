@@ -24,7 +24,7 @@ rules
 		ParserRule(name, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
 	
 	gen-alternatives:
-		Alternatives([UnorderedGroup([Group([abstract-token | _])])]) -> $[<[<gen-abstract-token> abstract-token]>] // TODO: tail is ignored
+		Alternatives([UnorderedGroup([Group(abstract-tokens)])]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
