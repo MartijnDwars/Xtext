@@ -25,9 +25,9 @@ completions
     "returns " <TypeRef:TypeRef>               
   completion template HiddenToken : "hidden ( RuleCall )" =
     "hidden ( " <RuleCall:RuleCall> " )"  
-  completion template AbstractTokenWithCardinality : "Assignment " =
+  completion template AbstractToken : "Assignment " =
     <Assignment:Assignment> " " <:Cardinality>  
-  completion template AbstractTokenWithCardinality : "AbstractTerminal " =
+  completion template AbstractToken : "AbstractTerminal " =
     <AbstractTerminal:AbstractTerminal> " " <:Cardinality>  
   completion template Assignment : " ID Operator AssignableTerminal" =
     <:Predicated> " " <ID:ID> " " <Operator:Operator> " " <AssignableTerminal:AssignableTerminal>  
@@ -43,11 +43,11 @@ completions
     "{ " <TypeRef:TypeRef> " " <:ActionCurrent> " }"  
   completion template ActionCurrent : ". ID Operator current" =
     ". " <ID:ID> " " <Operator:Operator> " current"  
+  completion template AbstractTerminal : "( Alternatives )" =
+    "( " <Alternatives:Alternatives> " )"  
   completion template AbstractTerminal : "Predicated STRING" =
     <Predicated:Predicated> " " <STRING:STRING>  
   completion template AbstractTerminal : "Predicated RuleCall" =
     <Predicated:Predicated> " " <RuleCall:RuleCall>  
   completion template AbstractTerminal : "Predicated ( Alternatives )" =
     <Predicated:Predicated> " ( " <Alternatives:Alternatives> " )"  
-  completion template ParenthesizedElement : "( Alternatives )" =
-    "( " <Alternatives:Alternatives> " )"  

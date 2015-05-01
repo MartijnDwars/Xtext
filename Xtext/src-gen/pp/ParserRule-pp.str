@@ -54,9 +54,6 @@ strategies
     prettyprint-AbstractToken
 
   prettyprint-example =
-    prettyprint-AbstractTokenWithCardinality
-
-  prettyprint-example =
     prettyprint-Assignment
 
   prettyprint-example =
@@ -82,9 +79,6 @@ strategies
 
   prettyprint-example =
     prettyprint-AbstractTerminal
-
-  prettyprint-example =
-    prettyprint-ParenthesizedElement
 
   prettyprint-Operator :
     Assignment() -> [ H(
@@ -244,15 +238,28 @@ strategies
     ?Group(_)
 
   prettyprint-AbstractToken :
-    AbstractTokenWithCardinality(t1__) -> [ H(
-                                              [SOpt(HS(), "0")]
-                                            , [t1__']
-                                            )
-                                          ]
-    with t1__' := <pp-one-Z(prettyprint-AbstractTokenWithCardinality)> t1__
+    Assignment(t1__, t2__) -> [ H(
+                                  [SOpt(HS(), "0")]
+                                , [t1__', S(" "), t2__']
+                                )
+                              ]
+    with t1__' := <pp-one-Z(prettyprint-Assignment)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t2__
 
   is-AbstractToken =
-    ?AbstractTokenWithCardinality(_)
+    ?Assignment(_, _)
+
+  prettyprint-AbstractToken :
+    AbstractTerminal(t1__, t2__) -> [ H(
+                                        [SOpt(HS(), "0")]
+                                      , [t1__', S(" "), t2__']
+                                      )
+                                    ]
+    with t1__' := <pp-one-Z(prettyprint-AbstractTerminal)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t2__
+
+  is-AbstractToken =
+    ?AbstractTerminal(_, _)
 
   prettyprint-AbstractToken :
     Action(t1__) -> [ H(
@@ -264,30 +271,6 @@ strategies
 
   is-AbstractToken =
     ?Action(_)
-
-  prettyprint-AbstractTokenWithCardinality :
-    Assignment(t1__, t2__) -> [ H(
-                                  [SOpt(HS(), "0")]
-                                , [t1__', S(" "), t2__']
-                                )
-                              ]
-    with t1__' := <pp-one-Z(prettyprint-Assignment)> t1__
-    with t2__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t2__
-
-  is-AbstractTokenWithCardinality =
-    ?Assignment(_, _)
-
-  prettyprint-AbstractTokenWithCardinality :
-    AbstractTerminal(t1__, t2__) -> [ H(
-                                        [SOpt(HS(), "0")]
-                                      , [t1__', S(" "), t2__']
-                                      )
-                                    ]
-    with t1__' := <pp-one-Z(prettyprint-AbstractTerminal)> t1__
-    with t2__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t2__
-
-  is-AbstractTokenWithCardinality =
-    ?AbstractTerminal(_, _)
 
   prettyprint-Assignment :
     Assignment(t1__, t2__, t3__, t4__) -> [ H(
@@ -459,15 +442,16 @@ strategies
     ?Keyword(_)
 
   prettyprint-AbstractTerminal :
-    ParenthesizedElement(t1__) -> [ H(
-                                      [SOpt(HS(), "0")]
-                                    , [t1__']
-                                    )
-                                  ]
-    with t1__' := <pp-one-Z(prettyprint-ParenthesizedElement)> t1__
-
-  is-AbstractTerminal =
-    ?ParenthesizedElement(_)
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [ S("( ")
+                , t1__'
+                , S(" )")
+                ]
+              )
+            ]
+    where not(is-AbstractTerminal)
+    where t1__' := <pp-one-Z(prettyprint-Alternatives)> t1__
 
   prettyprint-AbstractTerminal :
     RuleCall(t1__) -> [ H(
@@ -520,20 +504,6 @@ strategies
   is-AbstractTerminal =
     ?PredicatedGroup(_, _)
 
-  prettyprint-ParenthesizedElement :
-    ParenthesizedElement(t1__) -> [ H(
-                                      [SOpt(HS(), "0")]
-                                    , [ S("( ")
-                                      , t1__'
-                                      , S(" )")
-                                      ]
-                                    )
-                                  ]
-    with t1__' := <pp-one-Z(prettyprint-Alternatives)> t1__
-
-  is-ParenthesizedElement =
-    ?ParenthesizedElement(_)
-
   is-Operator =
     fail
 
@@ -567,9 +537,6 @@ strategies
   is-AbstractToken =
     fail
 
-  is-AbstractTokenWithCardinality =
-    fail
-
   is-Assignment =
     fail
 
@@ -595,7 +562,4 @@ strategies
     fail
 
   is-AbstractTerminal =
-    fail
-
-  is-ParenthesizedElement =
     fail
