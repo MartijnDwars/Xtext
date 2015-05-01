@@ -13,7 +13,7 @@ rules
 			filename := $[[<remove-extension> path].sdf3]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-parser-rule + gen-alternatives + gen-abstract-token> selected
+		selected -> <gen-grammar + gen-rule + gen-alternatives + gen-abstract-token> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
@@ -21,11 +21,12 @@ rules
 			<is-list> selected
 	
 	gen-grammar:
-		Grammar(GrammarID(names), _, _, _, _) -> $[module [name]]
+		Grammar(GrammarID(names), _, _, _, abstract-rules) -> $[module [name]  [gen-abstract-rules]]
 		where
-			name := <id-to-name> names
+			name               := <id-to-name> names;
+			gen-abstract-rules := <map(gen-rule)> abstract-rules
 	
-	gen-parser-rule:
+	gen-rule:
 		ParserRule(name, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
 	
 	gen-alternatives:
