@@ -34,11 +34,9 @@ context-free syntax
   
   Group.Group = AbstractToken+
   
-  AbstractToken.AbstractTokenWithCardinality = AbstractTokenWithCardinality
+  AbstractToken.Assignment = Assignment Cardinality?
+  AbstractToken.AbstractTerminal = AbstractTerminal Cardinality?
   AbstractToken.Action = Action
-  
-  AbstractTokenWithCardinality.Assignment = Assignment Cardinality?
-  AbstractTokenWithCardinality.AbstractTerminal = AbstractTerminal Cardinality?
   
   Assignment.Assignment = <<Predicated?> <ID> <Operator> <AssignableTerminal>>
   
@@ -60,10 +58,8 @@ context-free syntax
   ActionCurrent.ActionCurrent = <. <ID> <Operator> current>
   
   AbstractTerminal.Keyword = STRING
-  AbstractTerminal.ParenthesizedElement = ParenthesizedElement
+  AbstractTerminal = <( <Alternatives> )>
   AbstractTerminal.RuleCall = RuleCall
   AbstractTerminal.PredicatedKeyword = Predicated STRING
   AbstractTerminal.PredicatedRuleCall = Predicated RuleCall
   AbstractTerminal.PredicatedGroup = <<Predicated> ( <Alternatives> )>
-  
-  ParenthesizedElement.ParenthesizedElement = <( <Alternatives> )>

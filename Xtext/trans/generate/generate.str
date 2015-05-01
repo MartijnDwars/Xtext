@@ -1,0 +1,36 @@
+module generate
+
+imports
+	
+	include/Xtext
+	generate/terminals
+
+rules 
+
+	gen-sdf:
+		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
+		where
+			filename := $[[<remove-extension> path].sdf3]
+	
+	gen-sdf-debug:
+		selected -> <gen-grammar + gen-parser-rule + gen-alternatives + gen-abstract-terminal> selected
+	
+	gen-grammar:
+		Grammar(_, _, _, [GeneratedMetamodel(name, url, alias)], _) -> $[module [name]]
+	
+	gen-parser-rule:
+		ParserRule(ID, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
+		where
+			name := <id-to-name> ID
+	
+	gen-alternatives:
+		Alternatives([UnorderedGroup([Group([abstract-terminal])])]) -> <gen-abstract-terminal> abstract-terminal
+	
+	gen-abstract-terminal:
+		AbstractTerminal(Keyword(ID), None()) -> $[[ID]]
+		
+	gen-abstract-terminal:
+		AbstractTerminal(RuleCall(ID), CardinalityOpt) -> $[[ID] [<gen-cardinality-opt> CardinalityOpt]]
+	
+	gen-abstract-terminal:
+		AbstractTerminal(x@Alternatives(_), CardinalityOpt) -> <gen-alternatives> x

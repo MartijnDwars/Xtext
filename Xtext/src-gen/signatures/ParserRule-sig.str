@@ -19,10 +19,9 @@ signature
     Alternatives                   : List(UnorderedGroup) -> Alternatives
     UnorderedGroup                 : List(Group) -> UnorderedGroup
     Group                          : List(AbstractToken) -> Group
-    AbstractTokenWithCardinality   : AbstractTokenWithCardinality -> AbstractToken
+    Assignment                     : Assignment * Option(Cardinality) -> AbstractToken
+    AbstractTerminal               : AbstractTerminal * Option(Cardinality) -> AbstractToken
     Action                         : Action -> AbstractToken
-    Assignment                     : Assignment * Option(Cardinality) -> AbstractTokenWithCardinality
-    AbstractTerminal               : AbstractTerminal * Option(Cardinality) -> AbstractTokenWithCardinality
     Assignment                     : Option(Predicated) * ID * Operator * AssignableTerminal -> Assignment
     Predicated                     : Predicated
     FirstSetPredicated             : Predicated
@@ -36,9 +35,8 @@ signature
     Action                         : TypeRef * Option(ActionCurrent) -> Action
     ActionCurrent                  : ID * Operator -> ActionCurrent
     Keyword                        : STRING -> AbstractTerminal
-    ParenthesizedElement           : ParenthesizedElement -> AbstractTerminal
+                                   : Alternatives -> AbstractTerminal
     RuleCall                       : RuleCall -> AbstractTerminal
     PredicatedKeyword              : Predicated * STRING -> AbstractTerminal
     PredicatedRuleCall             : Predicated * RuleCall -> AbstractTerminal
     PredicatedGroup                : Predicated * Alternatives -> AbstractTerminal
-    ParenthesizedElement           : Alternatives -> ParenthesizedElement

@@ -20,10 +20,9 @@ exports
     {UnorderedGroup "|"}+                         -> Alternatives                   {cons("Alternatives")}
     {Group "&"}+                                  -> UnorderedGroup                 {cons("UnorderedGroup")}
     AbstractToken+                                -> Group                          {cons("Group")}
-    AbstractTokenWithCardinality                  -> AbstractToken                  {cons("AbstractTokenWithCardinality")}
+    Assignment Cardinality?                       -> AbstractToken                  {cons("Assignment")}
+    AbstractTerminal Cardinality?                 -> AbstractToken                  {cons("AbstractTerminal")}
     Action                                        -> AbstractToken                  {cons("Action")}
-    Assignment Cardinality?                       -> AbstractTokenWithCardinality   {cons("Assignment")}
-    AbstractTerminal Cardinality?                 -> AbstractTokenWithCardinality   {cons("AbstractTerminal")}
     Predicated? ID Operator AssignableTerminal    -> Assignment                     {cons("Assignment")}
     "=>"                                          -> Predicated                     {cons("Predicated")}
     "->"                                          -> Predicated                     {cons("FirstSetPredicated")}
@@ -37,12 +36,11 @@ exports
     "{" TypeRef ActionCurrent? "}"                -> Action                         {cons("Action")}
     "." ID Operator "current"                     -> ActionCurrent                  {cons("ActionCurrent")}
     STRING                                        -> AbstractTerminal               {cons("Keyword")}
-    ParenthesizedElement                          -> AbstractTerminal               {cons("ParenthesizedElement")}
+    "(" Alternatives ")"                          -> AbstractTerminal               
     RuleCall                                      -> AbstractTerminal               {cons("RuleCall")}
     Predicated STRING                             -> AbstractTerminal               {cons("PredicatedKeyword")}
     Predicated RuleCall                           -> AbstractTerminal               {cons("PredicatedRuleCall")}
     Predicated "(" Alternatives ")"               -> AbstractTerminal               {cons("PredicatedGroup")}
-    "(" Alternatives ")"                          -> ParenthesizedElement           {cons("ParenthesizedElement")}
 
   context-free syntax
     CONTENTCOMPLETE -> TypeRef                        {cons("COMPLETION-TypeRef")}
@@ -60,4 +58,3 @@ exports
     CONTENTCOMPLETE -> Action                         {cons("COMPLETION-Action")}
     CONTENTCOMPLETE -> ActionCurrent                  {cons("COMPLETION-ActionCurrent")}
     CONTENTCOMPLETE -> AbstractTerminal               {cons("COMPLETION-AbstractTerminal")}
-    CONTENTCOMPLETE -> ParenthesizedElement           {cons("COMPLETION-ParenthesizedElement")}
