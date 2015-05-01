@@ -1,7 +1,0 @@
-module example
-
-language Xtext
-start symbol Start
-
-test double digit   [[Abc]]  parse succeeds
-test floating point [[Abcd]] parse fails

@@ -4,11 +4,10 @@ lexical syntax
 
 	ID             = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
 	
-	// INT            = "-"? [0-9]+ 
-	STRING         = "\"" DoubleStringChar* "\""
-	STRING         = "'" SingleStringChar* "'" 
+	// INT            = "-"? [0-9]+  
 	DoubleStringChar     = ~[\"\n]
-	SingleStringChar     = ~[\'\n] 
+	SingleStringChar     = ~[\'\n]
+	 
 	// StringChar     = "\\\"" 
 	// StringChar     = BackSlashChar 
 	// BackSlashChar  = "\\" 
@@ -54,3 +53,6 @@ context-free syntax
   Cardinality.Optional = <?>
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
+  
+  STRING = <" <DoubleStringChar*> ">
+  STRING = <' <SingleStringChar*> '>

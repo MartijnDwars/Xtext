@@ -1,5 +1,0 @@
-module example
-
-language Xtext
-start symbol AbstractRule
-

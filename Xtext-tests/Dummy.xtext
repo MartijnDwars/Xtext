@@ -18,6 +18,9 @@ Statemachine :
 Event :
   name=ID code=ID;
  
+Event :
+  name=ID;
+  
 Command :
   name=ID code=ID;
  

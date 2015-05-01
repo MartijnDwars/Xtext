@@ -34,17 +34,15 @@ context-free syntax
   
   Group.Group = AbstractToken+
   
-  AbstractToken.Assignment = Assignment Cardinality?
-  AbstractToken.AbstractTerminal = AbstractTerminal Cardinality?
-  AbstractToken.Action = Action
-  
-  Assignment.Assignment = <<Predicated?> <ID> <Operator> <AssignableTerminal>>
+  AbstractToken.AssignmentAbstractToken = Predicated? ID Operator AssignableTerminal Cardinality?
+  AbstractToken.AbstractTerminalAbstractToken = AbstractTerminal Cardinality?
+  AbstractToken.ActionAbstractToken = Action
   
   Predicated.Predicated = "=>"
   Predicated.FirstSetPredicated = "->"
   
   AssignableTerminal.Keyword = STRING
-  AssignableTerminal.RuleCall = RuleCall
+  AssignableTerminal = RuleCall
   AssignableTerminal.ParenthesizedAssignableElement = ParenthesizedAssignableElement
   AssignableTerminal.CrossReference = <[ <TypeRef> ]>
   
@@ -59,7 +57,7 @@ context-free syntax
   
   AbstractTerminal.Keyword = STRING
   AbstractTerminal = <( <Alternatives> )>
-  AbstractTerminal.RuleCall = RuleCall
+  AbstractTerminal = RuleCall
   AbstractTerminal.PredicatedKeyword = Predicated STRING
   AbstractTerminal.PredicatedRuleCall = Predicated RuleCall
   AbstractTerminal.PredicatedGroup = <<Predicated> ( <Alternatives> )>
