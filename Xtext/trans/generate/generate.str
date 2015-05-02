@@ -13,7 +13,7 @@ rules
 			filename := $[[<remove-extension> path].sdf3]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-rule + gen-alternatives + gen-abstract-token> selected
+		selected -> <gen-grammar + gen-rule + gen-abstract-token> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
@@ -24,13 +24,21 @@ rules
 		Grammar(GrammarID(names), _, _, _, abstract-rules) -> $[module [name]  [gen-abstract-rules]]
 		where
 			name               := <id-to-name> names;
-			gen-abstract-rules := <map(gen-rule)> abstract-rules
-	
+			gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
+
 	gen-rule:
-		ParserRule(name, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
+		ParserRule(name, _, _, alternatives) -> gen-alternatives
+		where
+			gen-alternatives := <gen-alternatives(|name)> alternatives
 	
-	gen-alternatives:
-		Alternatives([UnorderedGroup([Group(abstract-tokens)])]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+	gen-alternatives(|name):
+		Alternatives(unordered-groups) -> $[[<map(gen-unordered-group ; add-name(|name)) ; separate-by(|"\n")> unordered-groups]]
+	
+	add-name(|name):
+		unordered-group -> $[[name] = [unordered-group]]
+	
+	gen-unordered-group:
+		UnorderedGroup([Group(abstract-tokens)]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
