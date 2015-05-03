@@ -12,18 +12,24 @@ context-free start-symbols
   
 context-free syntax
   
-  AbstractRule.TerminalRule = <terminal <TerminalName> : <TerminalAlternatives+> ;>
-  TerminalName.Fragment = "fragment" ID
+  AbstractRule.TerminalRule = <terminal <TerminalName> : <TerminalAlternatives> ;>
+  
+  TerminalName.Fragment = <fragment <ID>>
   TerminalName.Returns = ID Returns?
-  TerminalAlternatives.TerminalAlternatives = TerminalGroup
-  TerminalGroup.TerminalGroup = TerminalToken
+  
+  TerminalAlternatives.TerminalAlternatives = {TerminalGroup "|"}+
+  
+  TerminalGroup.TerminalGroup = TerminalToken+
+  
   TerminalToken.TerminalToken = TerminalTokenElement Cardinality?
-  TerminalTokenElement.ParenthesizedTerminalElement = "(" TerminalAlternatives ")"
+  
+  TerminalTokenElement = <( <TerminalAlternatives> )>
   TerminalTokenElement.Keyword = STRING
   TerminalTokenElement = RuleCall
   TerminalTokenElement.CharacterRange = <<STRING> .. <STRING>>
   TerminalTokenElement.Wildcard = WILDCARD
-  TerminalTokenElement.NegatedToken = "!" TerminalTokenElement
+  TerminalTokenElement.NegatedToken = <! <TerminalTokenElement>>
   TerminalTokenElement.UntilToken = "->" TerminalTokenElement
   TerminalTokenElement.TerminalTokenElement = EOF
-  EOF.EOF = "EOF"
+  
+  EOF.EOF = <EOF>

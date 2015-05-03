@@ -4,13 +4,11 @@ lexical syntax
 
 	ID               = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
 	
-	DoubleString     = DoubleStringChar*
+	STRING           = "\"" DoubleStringChar* "\""
+	STRING           = "'" SingleStringChar* "'" 
 	DoubleStringChar = ~[\"\n]
+	SingleStringChar = ~[\'\n] 
 	
-	SingleString     = SingleStringChar*
-	SingleStringChar = ~[\'\n]
-	
-	 
 	// StringChar     = "\\\"" 
 	// StringChar     = BackSlashChar 
 	// BackSlashChar  = "\\" 
@@ -24,6 +22,9 @@ lexical syntax
 	// NewLineEOF     = EOF 
 	// EOF            =  
   WILDCARD = [\.]
+
+  // Reserved keywords
+  //ID = "terminal" {reject}
 
 lexical restrictions
 
@@ -57,5 +58,3 @@ context-free syntax
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
   
-  STRING = <" <DoubleString> ">
-  STRING = <' <SingleString> '>

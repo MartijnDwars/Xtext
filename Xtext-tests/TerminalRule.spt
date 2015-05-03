@@ -31,6 +31,12 @@ test character range with cardinality [[
   terminal ID: '0'..'9'*;
 ]] parse succeeds
 
+test terminal with alternatives [[
+  terminal CHOICE: 
+    ('a'|'b'|'c')
+  ;
+]] parse succeeds
+
 test wildcard [[
   terminal ID: .;
 ]] parse succeeds
