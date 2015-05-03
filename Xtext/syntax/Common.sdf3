@@ -2,11 +2,14 @@ module Common
 
 lexical syntax
 
-	ID             = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
+	ID               = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
 	
-	// INT            = "-"? [0-9]+  
-	DoubleStringChar     = ~[\"\n]
-	SingleStringChar     = ~[\'\n]
+	DoubleString     = DoubleStringChar*
+	DoubleStringChar = ~[\"\n]
+	
+	SingleString     = SingleStringChar*
+	SingleStringChar = ~[\'\n]
+	
 	 
 	// StringChar     = "\\\"" 
 	// StringChar     = BackSlashChar 
@@ -54,5 +57,5 @@ context-free syntax
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
   
-  STRING = <" <DoubleStringChar*> ">
-  STRING = <' <SingleStringChar*> '>
+  STRING = <" <DoubleString> ">
+  STRING = <' <SingleString> '>
