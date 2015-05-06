@@ -3,7 +3,8 @@ module generate
 imports
 	
 	include/Xtext
-	generate/terminals
+	generate/common
+	generate/terminal-rule
 
 rules 
 
@@ -13,7 +14,7 @@ rules
 			filename := $[[<remove-extension> path].sdf3]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-rule + gen-alternatives + gen-abstract-token> selected
+		selected -> <gen-grammar + gen-rule + gen-abstract-token> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
@@ -24,13 +25,21 @@ rules
 		Grammar(GrammarID(names), _, _, _, abstract-rules) -> $[module [name]  [gen-abstract-rules]]
 		where
 			name               := <id-to-name> names;
-			gen-abstract-rules := <map(gen-rule)> abstract-rules
-	
+			gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
+
 	gen-rule:
-		ParserRule(name, _, _, alternatives) -> $[[name] = [<gen-alternatives> alternatives]]
+		ParserRule(name, _, _, alternatives) -> gen-alternatives
+		where
+			gen-alternatives := <gen-alternatives(|name)> alternatives
 	
-	gen-alternatives:
-		Alternatives([UnorderedGroup([Group(abstract-tokens)])]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+	gen-alternatives(|name):
+		Alternatives(unordered-groups) -> $[[<map(gen-unordered-group ; add-name(|name)) ; separate-by(|"\n")> unordered-groups]]
+	
+	add-name(|name):
+		unordered-group -> $[[name] = [unordered-group]]
+	
+	gen-unordered-group:
+		UnorderedGroup([Group(abstract-tokens)]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
@@ -50,11 +59,14 @@ rules
 	gen-abstract-terminal:
 		RuleCall(ID) -> $[[ID]]
 
-	gen-abstract-terminal:
-		x@Alternatives(_) -> <gen-alternatives> x
+	// gen-abstract-terminal:
+	// 	x@Alternatives(_) -> <gen-alternatives> x
 	
 	gen-assignable-terminal:
 		RuleCall(ID) -> $[<[ID]>]
+	
+	gen-assignable-terminal:
+		AssignableAlternatives(assignable-terminal) -> $[] //<map(gen-assignable-terminal)> assignable-terminal
 	
 	// TODO: For now, just use the type. Eventually, this should be a reference (i.e. ID that is linked to `type`)
 	gen-assignable-terminal:

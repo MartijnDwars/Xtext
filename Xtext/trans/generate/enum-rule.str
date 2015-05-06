@@ -1,0 +1,20 @@
+module enum-rule
+
+imports
+	
+	include/Xtext
+	generate/common
+
+rules
+	
+	gen-rule:
+		EnumRule(name, enum-literals) -> $[
+			lexical syntax
+		    	[<map(gen-enum-literal ; prefix(|name)) ; separate-by(|"\n") ; concat-strings> enum-literals]
+		]
+	
+	gen-enum-literal:
+		EnumLiteral(name) -> $["[name]"]
+	
+	prefix(|name):
+		result -> $[[name] = [result]]
