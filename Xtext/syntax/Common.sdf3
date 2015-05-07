@@ -57,4 +57,3 @@ context-free syntax
   Cardinality.Optional = <?>
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
-  

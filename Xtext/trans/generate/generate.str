@@ -22,10 +22,22 @@ rules
 			<is-list> selected
 	
 	gen-grammar:
-		Grammar(GrammarID(names), _, _, _, abstract-rules) -> $[module [name]  [gen-abstract-rules]]
+		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> $[module [name] [gen-mixin] context-free syntax [gen-abstract-rules]]
 		where
 			name               := <id-to-name> names;
+			gen-mixin		   := <gen-imports> mixin;
 			gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
+
+	gen-imports:
+		None() -> $[]
+		
+	gen-imports:
+		Some(Mixin(imports)) -> $[imports [<map(gen-import-name) ; separate-by(|"\n")> imports]]
+		
+	gen-import-name:
+		GrammarID(names) -> $[[name]]
+		where
+			name			:= <id-to-name> names
 
 	gen-rule:
 		ParserRule(name, _, _, alternatives) -> gen-alternatives
@@ -39,7 +51,10 @@ rules
 		unordered-group -> $[[name] = [unordered-group]]
 	
 	gen-unordered-group:
-		UnorderedGroup([Group(abstract-tokens)]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+		UnorderedGroup(groups) -> $[[<map(gen-group) ; separate-by(|"\n")> groups]]
+		
+	gen-group:
+		Group(abstract-tokens) -> $[<[<map(gen-abstract-token)> abstract-tokens]>]
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
@@ -65,8 +80,8 @@ rules
 	gen-assignable-terminal:
 		RuleCall(ID) -> $[<[ID]>]
 	
-	gen-assignable-terminal:
-		AssignableAlternatives(assignable-terminal) -> $[] //<map(gen-assignable-terminal)> assignable-terminal
+	//gen-assignable-terminal:
+	//	AssignableAlternatives(assignable-terminal) -> $[] //<map(gen-assignable-terminal)> assignable-terminal
 	
 	// TODO: For now, just use the type. Eventually, this should be a reference (i.e. ID that is linked to `type`)
 	gen-assignable-terminal:
