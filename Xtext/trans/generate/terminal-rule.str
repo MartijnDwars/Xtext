@@ -32,13 +32,19 @@ rules
 	gen-terminal-alternative:
 		TerminalGroup(terminal-group) -> gen-terminal-group
 		where
-			gen-terminal-group := <map(gen-terminal-group)> terminal-group
+			gen-terminal-group := <map(gen-terminal-group) ; list-to-sequence> terminal-group
+	
+	list-to-sequence:
+		[singleton] -> singleton
+	
+	list-to-sequence:
+		[h|t] -> Sequence(h, t)
 	
 	// gen-terminal-group:
 	// 	TerminalToken(terminal-token-element, cardinality-opt) -> $[[<gen-terminal-token-element> terminal-token-element][<gen-cardinality-opt> cardinality-opt]]
 
 	gen-terminal-group:
-		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality-opt> (cardinality-opt, <gen-terminal-token-element> terminal-token-element)
+		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality-opt> (cardinality-opt, CharClass(Simple(Present(<gen-terminal-token-element> terminal-token-element))))
 	
 	gen-cardinality-opt:
 		(None(), terminal-token-element) -> terminal-token-element
@@ -61,9 +67,14 @@ rules
 	// 		gen-terminal-alternative := <map(gen-terminal-alternative) ; flatten-list ; concat-strings> terminal-alternatives
 	
 	gen-terminal-token-element:
-		TerminalAlternatives(terminal-alternatives) -> CharClass(Simple(Present(gen-terminal-alternative)))
-		where
-			gen-terminal-alternative := <map(gen-terminal-alternative) ; flatten-list ; list-to-conc> terminal-alternatives
+		TerminalAlternatives(terminal-alternatives) -> <map(gen-terminal-alternative) ; list-to-alt> terminal-alternatives
+	
+	// Turn [a, b, c, ...] into Alt(a, Alt(b, Alt(c, ...)))
+	list-to-alt:
+		[singleton] -> singleton
+	
+	list-to-alt:
+		[head | tail] -> Alt(head, <list-to-alt> tail)
 	
 	// gen-terminal-token-element:
 	// 	Keyword(s) -> s

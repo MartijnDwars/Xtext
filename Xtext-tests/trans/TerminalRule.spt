@@ -43,15 +43,52 @@ test terminal that accepts a range [[
 
 test terminal with two alternatives [[
 	terminal ID:
-		'a'|'b'
+		'a' | 'b'
 	;
 ]] run gen-sdf-debug to LexicalSyntax([
 	SdfProduction(
         SortDef("ID")
       , Rhs([
-        	CharClass(Simple(Present(Conc(Short("a"), Short("b")))))
+        	Alt(
+              CharClass(Simple(Present(Short("a"))))
+            , CharClass(Simple(Present(Short("b"))))
+            )
         ])
       , NoAttrs()
 	)
 ])
 
+test terminal with kleene star [[
+	terminal ID : 
+		'a'..'z'*
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+		SortDef("ID")
+      , Rhs([
+        	IterStar(CharClass(Simple(Present(Range(Short("a"), Short("z"))))))
+        ])
+      , NoAttrs()
+	)
+])
+
+test terminal with two groups [[
+	terminal ID : 
+		'a'..'z' '0'..'9'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+		SortDef("ID")
+      , Rhs([Sequence(
+          CharClass(Simple(Present(Range(Short("a"), Short("z")))))
+        , [CharClass(Simple(Present(Range(Short("0"), Short("9")))))]
+        )])
+      , NoAttrs()
+	)
+])
+
+test complex terminal [[
+	terminal ID : 
+	  ('^')?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+	;
+]] run gen-sdf-debug to LexicalSyntax()
