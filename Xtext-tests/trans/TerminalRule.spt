@@ -1,0 +1,57 @@
+module TerminalRule
+
+language Xtext
+start symbol AbstractRule
+
+test correct sort name [[
+	terminal FancyName:
+		'a'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+        SortDef("FancyName")
+      , _
+      , _
+	)
+])
+
+test terminal that accepts a single character [[
+	terminal ID:
+		'a'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+        SortDef("ID")
+      , Rhs([CharClass(Simple(Present(Short("a"))))])
+      , NoAttrs()
+	)
+])
+
+test terminal that accepts a range [[
+	terminal ID:
+		'a'..'z'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+		SortDef("ID")
+      , Rhs([
+        	CharClass(Simple(Present(Range(Short("a"), Short("z")))))
+        ])
+      , NoAttrs()
+	)
+])
+
+test terminal with two alternatives [[
+	terminal ID:
+		'a'|'b'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+        SortDef("ID")
+      , Rhs([
+        	CharClass(Simple(Present(Conc(Short("a"), Short("b")))))
+        ])
+      , NoAttrs()
+	)
+])
+

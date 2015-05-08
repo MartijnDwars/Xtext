@@ -11,14 +11,14 @@ rules
 	
 	// Cardinality
 	
-	gen-cardinality-opt:
-		Some(Optional()) -> $[?]
-	
-	gen-cardinality-opt:
-		Some(Multiple()) -> $[+]
-		
-	gen-cardinality-opt:
-		Some(Any()) -> $[*]
-	
-	gen-cardinality-opt:
-		None() -> $[]
+	// gen-cardinality-opt:
+	// 	Some(Optional()) -> $[?]
+	// 
+	// gen-cardinality-opt:
+	// 	Some(Multiple()) -> $[+]
+	// 	
+	// gen-cardinality-opt:
+	// 	Some(Any()) -> $[*]
+	// 
+	// gen-cardinality-opt:
+	// 	None() -> $[]

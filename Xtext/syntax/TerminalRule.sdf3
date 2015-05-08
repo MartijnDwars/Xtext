@@ -26,10 +26,12 @@ context-free syntax
   TerminalTokenElement = <( <TerminalAlternatives> )>
   TerminalTokenElement.Keyword = STRING
   TerminalTokenElement = RuleCall
-  TerminalTokenElement.CharacterRange = <<STRING> .. <STRING>>
+  TerminalTokenElement.CharacterRange = <<Keyword> .. <Keyword>>
   TerminalTokenElement.Wildcard = WILDCARD
   TerminalTokenElement.NegatedToken = <! <TerminalTokenElement>>
   TerminalTokenElement.UntilToken = "->" TerminalTokenElement
   TerminalTokenElement.TerminalTokenElement = EOF
+  
+  Keyword.Keyword = STRING
   
   EOF.EOF = <EOF>

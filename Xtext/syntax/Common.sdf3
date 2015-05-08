@@ -4,9 +4,11 @@ lexical syntax
 
 	ID               = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
 	
-	STRING           = "\"" DoubleStringChar* "\""
-	STRING           = "'" SingleStringChar* "'" 
+	// STRING           = "\"" DoubleStringChar* "\""
+	// STRING           = "'" SingleStringChar* "'"
+	DoubleStringChars =  DoubleStringChar*
 	DoubleStringChar = ~[\"\n]
+	SingleStringChars = SingleStringChar*
 	SingleStringChar = ~[\'\n] 
 	
 	// StringChar     = "\\\"" 
@@ -58,3 +60,5 @@ context-free syntax
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
   
+  STRING = <"<DoubleStringChars>">
+  STRING = <'<SingleStringChars>'>
