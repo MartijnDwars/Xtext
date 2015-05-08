@@ -54,7 +54,13 @@ rules
 		UnorderedGroup(groups) -> $[[<map(gen-group) ; separate-by(|"\n")> groups]]
 		
 	gen-group:
-		Group(abstract-tokens) -> $[<[<map(gen-abstract-token)> abstract-tokens]>]
+		Group(abstract-tokens) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+		
+	gen-abstract-token:
+		AssignmentAbstractToken(_, feature, AddAssignment(), assignable-terminal, cardinality-opt) -> $[<{ [gen-assignable-terminal] " " } [gen-cardinality]>]
+		with
+			gen-assignable-terminal := <gen-assignable-terminal> assignable-terminal;
+			gen-cardinality			:= <gen-cardinality-opt> cardinality-opt
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
@@ -74,8 +80,11 @@ rules
 	gen-abstract-terminal:
 		RuleCall(ID) -> $[[ID]]
 
-	// gen-abstract-terminal:
-	// 	x@Alternatives(_) -> <gen-alternatives> x
+	gen-abstract-terminal:
+	 	x@Alternatives(_) -> <gen-internal-alternatives> x
+	
+	gen-internal-alternatives:
+		Alternatives(unordered-groups) -> $[[<map(gen-unordered-group) ; separate-by(|"\n")> unordered-groups]]
 	
 	gen-assignable-terminal:
 		RuleCall(ID) -> $[<[ID]>]
