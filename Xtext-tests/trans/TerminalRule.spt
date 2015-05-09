@@ -112,4 +112,38 @@ test complex terminal [[
 	terminal ID : 
 	  ('^')?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
 	;
-]] run gen-sdf-debug to LexicalSyntax()
+]] run gen-sdf-debug to LexicalSyntax([
+	SdfProduction(
+	    SortDef("ID")
+	  , Rhs(
+	      [ Opt(CharClass(Simple(Present(Short("\\^")))))
+	      , CharClass(
+	          Simple(
+	            Present(
+	              Conc(
+	                Range(Short("a"), Short("z"))
+	              , Conc(Range(Short("A"), Short("Z")), Short("\\_"))
+	              )
+	            )
+	          )
+	        )
+	      , IterStar(
+	          CharClass(
+	            Simple(
+	              Present(
+	                Conc(
+	                  Range(Short("a"), Short("z"))
+	                , Conc(
+	                    Range(Short("A"), Short("Z"))
+	                  , Conc(Short("\\_"), Range(Short("0"), Short("9")))
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      ]
+	    )
+	  , NoAttrs()
+	)
+])

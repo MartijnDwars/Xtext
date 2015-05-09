@@ -22,7 +22,10 @@ rules
 	
 	gen-rule:
 		TerminalRule(Returns(terminal-name, _), terminal-token-element) ->
-			LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([<gen-terminal-token-element> terminal-token-element]), NoAttrs())])
+			LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([<gen-terminal-token-element ; innermost(post-process-terminal-rule)> terminal-token-element]), NoAttrs())])
+	
+	post-process-terminal-rule:
+		CharClass(Simple(Present(Alt(x, y)))) -> Alt(x, y)
 	
 	// gen-terminal-alternative:
 	// 	TerminalGroup(terminal-group) -> $<[<gen-terminal-group>]>
