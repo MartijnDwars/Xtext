@@ -23,5 +23,8 @@ rules
 	gen-enum-literal(|name):
 		EnumLiteral(value) -> SdfProduction(SortDef(name), Rhs([Lit(value)]), NoAttrs())
 	
+	gen-enum-literal(|name):
+		EnumLiteral(_, value) -> SdfProduction(SortDef(name), Rhs([Lit(value)]), NoAttrs())
+	
 	// prefix(|name):
 	// 	result -> $[[name] = [result]]

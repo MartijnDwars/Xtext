@@ -1,0 +1,31 @@
+module EnumRule
+
+language Xtext
+start symbol AbstractRule
+
+test enum rule with three literals [[
+	enum ChangeKind :
+		ADD | MOVE | REMOVE
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+    SdfProduction(SortDef("ChangeKind"), Rhs([Lit("ADD")]), NoAttrs())
+  , SdfProduction(SortDef("ChangeKind"), Rhs([Lit("MOVE")]), NoAttrs())
+  , SdfProduction(SortDef("ChangeKind"), Rhs([Lit("REMOVE")]), NoAttrs())
+])
+
+test enum rule with alternative literal [[
+	enum ChangeKind :
+		ADD = '+'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+    SdfProduction(SortDef("ChangeKind"), Rhs([Lit("+")]), NoAttrs())
+])
+
+test enum rule with double reference to an enum value [[
+	enum ChangeKind :
+		ADD = '+' | ADD = '++'
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+    SdfProduction(SortDef("ChangeKind"), Rhs([Lit("+")]), NoAttrs())
+  , SdfProduction(SortDef("ChangeKind"), Rhs([Lit("++")]), NoAttrs())
+])
