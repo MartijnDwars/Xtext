@@ -3,11 +3,14 @@ module generate/common
 imports
 	
 	include/Xtext
+	include/TemplateLang
 
 rules 
 
 	id-to-name:
-		ID -> <last> ID
+		ID -> Unparameterized(name)
+		where
+			name := <last> ID
 	
 	// Cardinality
 	
@@ -22,3 +25,24 @@ rules
 	
 	gen-cardinality-opt:
 		None() -> $[]
+	
+	//Permutations (Unordered-Groups)
+		
+	gen-permutations(|perm-set):
+		_ -> permutations
+		where
+			permutations := <recursive-permutations(|perm-set, perm-set, <length> perm-set)>
+			
+	recursive-permutations(|set, block, n):
+		_ -> <if(<eq> (1,n), <filter-permutations(|block)> set, recursive-permutations(|new_set, block, <dec> n))>
+		where
+			new_set := <map(flatten-list)> <list-combinations> [set, block]
+			
+	filter-permutations(|block):
+		set -> filtered-permutations
+		where
+			filtered-list := <collect-all(filter(|block))> set;
+			filtered-permutations := <map(TupleToList; last)> filtered-list
+	
+	filter(|block):
+		set -> <set-eq> (block, set)		

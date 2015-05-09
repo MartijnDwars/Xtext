@@ -5,6 +5,8 @@ imports
 	include/Xtext
 	generate/common
 	generate/terminal-rule
+	include/SDF
+	include/TemplateLang
 
 rules 
 
@@ -22,22 +24,45 @@ rules
 			<is-list> selected
 	
 	gen-grammar:
-		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> $[module [name] [gen-mixin] context-free syntax [gen-abstract-rules]]
+		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> Module(name,imports,sdf-sections)
+		//$[module [name] [gen-mixin] context-free syntax [gen-abstract-rules]]
 		where
 			name               := <id-to-name> names;
-			gen-mixin		   := <gen-imports> mixin;
-			gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
-
-	gen-imports:
-		None() -> $[]
+			imports			   := <gen-imports> mixin;
+			sdf-sections	   := <map(gen-sdf-section)> abstract-rules
+			//gen-mixin		   := <gen-imports> mixin;
+			//gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
 		
 	gen-imports:
-		Some(Mixin(imports)) -> $[imports [<map(gen-import-name) ; separate-by(|"\n")> imports]]
+		None() -> []
+		
+	gen-imports:
+		Some(Mixin(imports)) -> Imports(<map(gen-import-name)> imports)
+		//$[imports [<map(gen-import-name) ; separate-by(|"\n")> imports]]
 		
 	gen-import-name:
-		GrammarID(names) -> $[[name]]
+		GrammarID(names) -> Module(name)
 		where
 			name			:= <id-to-name> names
+
+	gen-sdf-section:
+		TerminalRule(_,_) -> []
+
+	gen-sdf-section:
+		ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(SdfProduction(SortDef(name), alts, NoAttrs())))
+		where
+			alts			:= <gen-alternatives> alternatives
+			
+	gen-alternatives:
+		Alternatives(unordered-groups) -> <map(gen-unordered-groups)> unordered-groups
+			
+	gen-unordered-groups:
+		UnorderedGroup(groups) -> <map(gen-groups)> groups
+			
+	gen-groups:
+		Group(lines) -> Rhs([])
+		//where
+		//	r			:= <map(gen-rule)> lines
 
 	gen-rule:
 		ParserRule(name, _, _, alternatives) -> gen-alternatives
