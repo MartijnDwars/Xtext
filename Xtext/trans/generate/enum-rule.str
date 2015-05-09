@@ -1,20 +1,27 @@
 module enum-rule
 
 imports
-	
+
+	include/TemplateLang
 	include/Xtext
 	generate/common
 
 rules
 	
+	// gen-rule:
+	// 	EnumRule(name, enum-literals) -> $[
+	// 		lexical syntax
+	// 	    	[<map(gen-enum-literal ; prefix(|name)) ; separate-by(|"\n") ; concat-strings> enum-literals]
+	// 	]
+		
 	gen-rule:
-		EnumRule(name, enum-literals) -> $[
-			lexical syntax
-		    	[<map(gen-enum-literal ; prefix(|name)) ; separate-by(|"\n") ; concat-strings> enum-literals]
-		]
+		EnumRule(name, enum-literals) -> LexicalSyntax(<map(gen-enum-literal(|name))> enum-literals)
 	
-	gen-enum-literal:
-		EnumLiteral(name) -> $["[name]"]
+	// gen-enum-literal:
+	// 	EnumLiteral(name) -> $["[name]"]
 	
-	prefix(|name):
-		result -> $[[name] = [result]]
+	gen-enum-literal(|name):
+		EnumLiteral(value) -> SdfProduction(SortDef(name), Rhs([Lit(value)]), NoAttrs())
+	
+	// prefix(|name):
+	// 	result -> $[[name] = [result]]
