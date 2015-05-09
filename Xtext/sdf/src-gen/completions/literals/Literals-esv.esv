@@ -1,0 +1,6 @@
+module sdf/src-gen/completions/literals/Literals-esv
+
+imports
+  sdf/src-gen/completions/kernel/Kernel-esv
+  sdf/src-gen/completions/constants/StrCon-esv
+  sdf/src-gen/completions/constants/IdentifierCon-esv

@@ -1,0 +1,84 @@
+module sdf/src-gen/pp/symbols/Start-Symbols-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/symbols/Start-Symbols-sig
+
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/symbols/Symbols-sig
+
+
+imports
+  sdf/src-gen/pp/kernel/Kernel-pp
+  sdf/src-gen/pp/symbols/Symbols-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-Grammar
+
+  prettyprint-Grammar :
+    KernelStartSymbols(t0__) -> [ H(
+                                    [SOpt(HS(), "0")]
+                                  , [S("start-symbols")]
+                                  )
+                                , H(
+                                    []
+                                  , [S("")]
+                                  )
+                                , t0__'
+                                , H(
+                                    []
+                                  , [S("")]
+                                  )
+                                ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Symbols)> t0__]
+
+  is-Grammar =
+    ?KernelStartSymbols(_)
+
+  prettyprint-Grammar :
+    LexicalStartSymbols(t0__) -> [ H(
+                                     [SOpt(HS(), "0")]
+                                   , [S("lexical start-symbols")]
+                                   )
+                                 , H(
+                                     []
+                                   , [S("")]
+                                   )
+                                 , t0__'
+                                 , H(
+                                     []
+                                   , [S("")]
+                                   )
+                                 ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Symbols)> t0__]
+
+  is-Grammar =
+    ?LexicalStartSymbols(_)
+
+  prettyprint-Grammar :
+    ContextFreeStartSymbols(t0__) -> [ H(
+                                         [SOpt(HS(), "0")]
+                                       , [S("context-free start-symbols")]
+                                       )
+                                     , H(
+                                         []
+                                       , [S("")]
+                                       )
+                                     , t0__'
+                                     , H(
+                                         []
+                                       , [S("")]
+                                       )
+                                     ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Symbols)> t0__]
+
+  is-Grammar =
+    ?ContextFreeStartSymbols(_)
+
+  is-Grammar =
+    fail

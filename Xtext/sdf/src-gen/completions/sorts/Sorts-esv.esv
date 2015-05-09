@@ -1,0 +1,17 @@
+module sdf/src-gen/completions/sorts/Sorts-esv
+
+imports
+  sdf/src-gen/completions/kernel/Kernel-esv
+  sdf/src-gen/completions/symbols/Symbols-esv
+
+completions
+  completion template Symbol : "Sort [[Symbol]]" =
+    <Sort:Sort> " [[" <Symbol:Symbol> "]]"  
+  completion template SymbolDef : "SymbolDef-CF" =
+    <SymbolDef:SymbolDef> "-CF"  
+  completion template SymbolDef : "SymbolDef-LEX" =
+    <SymbolDef:SymbolDef> "-LEX"  
+  completion template SymbolDef : "SymbolDef-VAR" =
+    <SymbolDef:SymbolDef> "-VAR"  
+  completion template Grammar : "sorts Symbols " =
+    "sorts\n\n\t" <Symbols:Symbols> "\n" (blank)  

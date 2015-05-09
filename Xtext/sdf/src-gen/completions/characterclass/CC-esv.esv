@@ -1,0 +1,5 @@
+module sdf/src-gen/completions/characterclass/CC-esv
+
+imports
+  sdf/src-gen/completions/characterclass/Character-Class-esv
+  sdf/src-gen/completions/kernel/Kernel-esv

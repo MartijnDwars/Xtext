@@ -1,0 +1,35 @@
+module sdf/src-gen/pp/characterclass/CC-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/characterclass/CC-sig
+
+
+imports
+  sdf/src-gen/signatures/characterclass/Character-Class-sig
+  sdf/src-gen/signatures/kernel/Kernel-sig
+
+
+imports
+  sdf/src-gen/pp/characterclass/Character-Class-pp
+  sdf/src-gen/pp/kernel/Kernel-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-Symbol
+
+  prettyprint-Symbol :
+    CharClass(t0__) -> [ H(
+                           [SOpt(HS(), "0")]
+                         , [t0__']
+                         )
+                       ]
+    with t0__' := <pp-one-Z(prettyprint-CharClass)> t0__
+
+  is-Symbol =
+    ?CharClass(_)
+
+  is-Symbol =
+    fail

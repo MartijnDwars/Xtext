@@ -1,0 +1,19 @@
+module sdf/src-gen/completions/kernel/Kernel-esv
+
+imports
+  sdf/src-gen/completions/aterms/Aterms-esv
+  sdf/src-gen/completions/symbols/Symbols-esv
+  sdf/src-gen/completions/grammar/Grammars-esv
+  sdf/src-gen/completions/constants/StrCon-esv
+
+completions
+  completion template Attributes : "{}" =
+    "{" <:Attribute> "}"  
+  completion template Attribute : "deprecated" =
+    "deprecated"  
+  completion template Attribute : "deprecated(StrCon)" =
+    "deprecated(" <StrCon:StrCon> ")"  
+  completion template Attribute : "case-insensitive" =
+    "case-insensitive"  
+  completion template Grammar : "syntax Productions " =
+    "syntax\n\n\t" <Productions:Productions> "\n" (blank)  

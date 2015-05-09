@@ -2,13 +2,24 @@ module generate
 
 imports
 	
+	libstratego-gpp
+	lib/runtime/editor/interop
+	lib/runtime/tmpl/pp
 	include/TemplateLang
+	sdf/src-gen/pp/TemplateLang-pp
 	include/Xtext
 	generate/common
 	generate/terminal-rule
 
 rules 
 
+	sdf-pp = prettyprint-Grammar; !V([], <id>); box2text-string(|120)
+	
+	gen-sdf-file:
+		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> <gen-sdf-debug> selected)
+		where
+			filename := $[[<remove-extension> path].sdf3]
+	
 	gen-sdf:
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where

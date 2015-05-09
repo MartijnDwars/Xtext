@@ -1,0 +1,9 @@
+module sdf/src-gen/completions/sdf2-core/SDF-esv
+
+imports
+  sdf/src-gen/completions/sdf2-core/Sdf2-esv
+  sdf/src-gen/completions/modules/Modules-esv
+
+completions
+  completion template Group : "Group." =
+    <Group:Group> "."  

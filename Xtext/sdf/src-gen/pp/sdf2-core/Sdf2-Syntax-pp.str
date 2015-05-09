@@ -1,0 +1,152 @@
+module sdf/src-gen/pp/sdf2-core/Sdf2-Syntax-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/sdf2-core/Sdf2-Syntax-sig
+
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/basic/Basic-sig
+  sdf/src-gen/signatures/modules/Modules-sig
+  sdf/src-gen/signatures/regular/Regular-sig
+  sdf/src-gen/signatures/lifting/Lifting-sig
+  sdf/src-gen/signatures/priority/Priority-sig
+  sdf/src-gen/signatures/characterclass/CC-sig
+  sdf/src-gen/signatures/sorts/Sorts-sig
+  sdf/src-gen/signatures/symbols/Start-Symbols-sig
+  sdf/src-gen/signatures/literals/Literals-sig
+  sdf/src-gen/signatures/labels/Labels-sig
+  sdf/src-gen/signatures/restrictions/Restrictions-sig
+  sdf/src-gen/signatures/aliases/Aliases-sig
+
+
+imports
+  sdf/src-gen/pp/kernel/Kernel-pp
+  sdf/src-gen/pp/basic/Basic-pp
+  sdf/src-gen/pp/modules/Modules-pp
+  sdf/src-gen/pp/regular/Regular-pp
+  sdf/src-gen/pp/lifting/Lifting-pp
+  sdf/src-gen/pp/priority/Priority-pp
+  sdf/src-gen/pp/characterclass/CC-pp
+  sdf/src-gen/pp/sorts/Sorts-pp
+  sdf/src-gen/pp/symbols/Start-Symbols-pp
+  sdf/src-gen/pp/literals/Literals-pp
+  sdf/src-gen/pp/labels/Labels-pp
+  sdf/src-gen/pp/restrictions/Restrictions-pp
+  sdf/src-gen/pp/aliases/Aliases-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-Symbol
+
+  prettyprint-example =
+    prettyprint-Grammar
+
+  prettyprint-Symbol :
+    Start() -> [ H(
+                   [SOpt(HS(), "0")]
+                 , [S("<START>")]
+                 )
+               ]
+
+  is-Symbol =
+    ?Start()
+
+  prettyprint-Symbol :
+    FileStart() -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [S("<Start>")]
+                     )
+                   ]
+
+  is-Symbol =
+    ?FileStart()
+
+  prettyprint-Grammar :
+    LexicalPriorities(t0__) -> [ H(
+                                   [SOpt(HS(), "0")]
+                                 , [S("lexical priorities")]
+                                 )
+                               , H(
+                                   []
+                                 , [S("")]
+                                 )
+                               , t0__'
+                               , H(
+                                   []
+                                 , [S("")]
+                                 )
+                               ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Priorities)> t0__]
+
+  is-Grammar =
+    ?LexicalPriorities(_)
+
+  prettyprint-Grammar :
+    ContextFreePriorities(t0__) -> [ H(
+                                       [SOpt(HS(), "0")]
+                                     , [S("context-free priorities")]
+                                     )
+                                   , H(
+                                       []
+                                     , [S("")]
+                                     )
+                                   , t0__'
+                                   , H(
+                                       []
+                                     , [S("")]
+                                     )
+                                   ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Priorities)> t0__]
+
+  is-Grammar =
+    ?ContextFreePriorities(_)
+
+  prettyprint-Grammar :
+    LexicalRestrictions(t0__) -> [ H(
+                                     [SOpt(HS(), "0")]
+                                   , [S("lexical restrictions")]
+                                   )
+                                 , H(
+                                     []
+                                   , [S("")]
+                                   )
+                                 , t0__'
+                                 , H(
+                                     []
+                                   , [S("")]
+                                   )
+                                 ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Restrictions)> t0__]
+
+  is-Grammar =
+    ?LexicalRestrictions(_)
+
+  prettyprint-Grammar :
+    ContextFreeRestrictions(t0__) -> [ H(
+                                         [SOpt(HS(), "0")]
+                                       , [S("context-free restrictions")]
+                                       )
+                                     , H(
+                                         []
+                                       , [S("")]
+                                       )
+                                     , t0__'
+                                     , H(
+                                         []
+                                       , [S("")]
+                                       )
+                                     ]
+    with t0__' := <pp-indent(|"2")> [<pp-one-Z(prettyprint-Restrictions)> t0__]
+
+  is-Grammar =
+    ?ContextFreeRestrictions(_)
+
+  is-Symbol =
+    fail
+
+  is-Grammar =
+    fail

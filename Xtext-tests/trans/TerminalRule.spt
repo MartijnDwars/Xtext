@@ -58,6 +58,27 @@ test terminal with two alternatives [[
 	)
 ])
 
+// To make this work, we need to post-process the results. Turn CharClass(Simple(Present(Alt(...)))) -> Alt(...)
+test terminal with two alternatives and optional cardinality [[
+	terminal ID:
+		('a' | 'b')?
+	;
+]] run gen-sdf-debug to LexicalSyntax([
+  SdfProduction(
+    SortDef("ID")
+  , Rhs(
+      [ Opt(
+          Alt(
+            CharClass(Simple(Present(Short("a"))))
+          , CharClass(Simple(Present(Short("b"))))
+          )
+        )
+      ]
+    )
+  , NoAttrs()
+  )
+])
+
 test terminal with kleene star [[
 	terminal ID : 
 		'a'..'z'*

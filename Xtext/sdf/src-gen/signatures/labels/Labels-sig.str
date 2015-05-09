@@ -1,0 +1,13 @@
+module sdf/src-gen/signatures/labels/Labels-sig
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/constants/StrCon-sig
+  sdf/src-gen/signatures/constants/IdentifierCon-sig
+
+
+signature
+  constructors
+    Quoted   : StrCon -> Label
+    Unquoted : IdCon -> Label
+    Label    : Label * Symbol -> Symbol

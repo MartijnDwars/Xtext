@@ -1,0 +1,19 @@
+module sdf/src-gen/signatures/sorts/Sorts-sig
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/symbols/Symbols-sig
+
+
+signature
+  constructors
+     : String -> Sort
+
+  constructors
+    Sort              : Sort -> Symbol
+    ParameterizedSort : Sort * List(Symbol) -> Symbol
+    SortDef           : Sort -> SymbolDef
+    Cf                : SymbolDef -> SymbolDef
+    Lex               : SymbolDef -> SymbolDef
+    Var               : SymbolDef -> SymbolDef
+    Sorts             : Symbols -> Grammar

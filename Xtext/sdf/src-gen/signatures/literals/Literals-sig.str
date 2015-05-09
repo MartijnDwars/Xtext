@@ -1,0 +1,20 @@
+module sdf/src-gen/signatures/literals/Literals-sig
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/constants/StrCon-sig
+  sdf/src-gen/signatures/constants/IdentifierCon-sig
+
+
+signature
+  constructors
+     : String -> SingleQuotedStrChar
+     : String -> SingleQuotedStrCon
+
+  constructors
+    UnquotedFun : IdCon -> FunctionName
+    QuotedFun   : StrCon -> FunctionName
+
+  constructors
+    Lit   : StrCon -> Symbol
+    CiLit : SingleQuotedStrCon -> Symbol

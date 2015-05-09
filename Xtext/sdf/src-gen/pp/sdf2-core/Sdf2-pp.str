@@ -1,0 +1,24 @@
+module sdf/src-gen/pp/sdf2-core/Sdf2-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/sdf2-core/Sdf2-sig
+
+
+imports
+  sdf/src-gen/signatures/sdf2-core/Sdf2-Syntax-sig
+  sdf/src-gen/signatures/constants/StrCon-sig
+  sdf/src-gen/signatures/constants/NatCon-sig
+  sdf/src-gen/signatures/priority/Priority-sig
+  sdf/src-gen/signatures/characterclass/Character-sig
+  sdf/src-gen/signatures/modules/Modules-sig
+
+
+imports
+  sdf/src-gen/pp/sdf2-core/Sdf2-Syntax-pp
+  sdf/src-gen/pp/constants/StrCon-pp
+  sdf/src-gen/pp/constants/NatCon-pp
+  sdf/src-gen/pp/priority/Priority-pp
+  sdf/src-gen/pp/characterclass/Character-pp
+  sdf/src-gen/pp/modules/Modules-pp

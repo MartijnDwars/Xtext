@@ -1,0 +1,22 @@
+module sdf/src-gen/signatures/modules/Modules-sig
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/renaming/Renaming-sig
+  sdf/src-gen/signatures/symbols/Symbols-sig
+
+
+signature
+  constructors
+     : String -> ModuleWord
+     : String -> ModuleId
+
+  constructors
+    Module          : ModuleName * List(ImpSection) * Sections -> Module
+                    : List(Section) -> Sections
+    SDFSection      : Grammar -> Section
+    Unparameterized : ModuleId -> ModuleName
+    Parameterized   : ModuleId * Symbols -> ModuleName
+    Imports         : Imports -> ImpSection
+                    : List(Import) -> Imports
+    Module          : ModuleName -> Import

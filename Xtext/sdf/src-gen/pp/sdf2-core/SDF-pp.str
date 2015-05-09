@@ -1,0 +1,35 @@
+module sdf/src-gen/pp/sdf2-core/SDF-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/sdf2-core/SDF-sig
+
+
+imports
+  sdf/src-gen/signatures/sdf2-core/Sdf2-sig
+  sdf/src-gen/signatures/modules/Modules-sig
+
+
+imports
+  sdf/src-gen/pp/sdf2-core/Sdf2-pp
+  sdf/src-gen/pp/modules/Modules-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-Group
+
+  prettyprint-Group :
+    NonTransitive(t1__) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [t1__', S(".")]
+                             )
+                           ]
+    with t1__' := <pp-one-Z(prettyprint-Group)> t1__
+
+  is-Group =
+    ?NonTransitive(_)
+
+  is-Group =
+    fail

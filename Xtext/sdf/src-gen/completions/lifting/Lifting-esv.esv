@@ -1,0 +1,4 @@
+module sdf/src-gen/completions/lifting/Lifting-esv
+
+imports
+  sdf/src-gen/completions/kernel/Kernel-esv

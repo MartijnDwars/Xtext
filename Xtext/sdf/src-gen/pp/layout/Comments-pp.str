@@ -1,0 +1,40 @@
+module sdf/src-gen/pp/layout/Comments-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/layout/Comments-sig
+
+
+imports
+  sdf/src-gen/signatures/layout/Whitespace-sig
+
+
+imports
+  sdf/src-gen/pp/layout/Whitespace-pp
+
+
+strategies
+  prettyprint-LayoutNewlineAlt =
+    ![S(<is-string>)]
+
+  prettyprint-LayoutCommentAlt =
+    ![S(<is-string>)]
+
+  prettyprint-CommentChar =
+    ![S(<is-string>)]
+
+  prettyprint-EOF =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-LayoutNewlineAlt
+
+  prettyprint-example =
+    prettyprint-LayoutCommentAlt
+
+  prettyprint-example =
+    prettyprint-CommentChar
+
+  prettyprint-example =
+    prettyprint-EOF

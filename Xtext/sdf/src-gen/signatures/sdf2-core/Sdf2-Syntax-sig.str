@@ -1,0 +1,26 @@
+module sdf/src-gen/signatures/sdf2-core/Sdf2-Syntax-sig
+
+imports
+  sdf/src-gen/signatures/kernel/Kernel-sig
+  sdf/src-gen/signatures/basic/Basic-sig
+  sdf/src-gen/signatures/modules/Modules-sig
+  sdf/src-gen/signatures/regular/Regular-sig
+  sdf/src-gen/signatures/lifting/Lifting-sig
+  sdf/src-gen/signatures/priority/Priority-sig
+  sdf/src-gen/signatures/characterclass/CC-sig
+  sdf/src-gen/signatures/sorts/Sorts-sig
+  sdf/src-gen/signatures/symbols/Start-Symbols-sig
+  sdf/src-gen/signatures/literals/Literals-sig
+  sdf/src-gen/signatures/labels/Labels-sig
+  sdf/src-gen/signatures/restrictions/Restrictions-sig
+  sdf/src-gen/signatures/aliases/Aliases-sig
+
+
+signature
+  constructors
+    Start                   : Symbol
+    FileStart               : Symbol
+    LexicalPriorities       : Priorities -> Grammar
+    ContextFreePriorities   : Priorities -> Grammar
+    LexicalRestrictions     : Restrictions -> Grammar
+    ContextFreeRestrictions : Restrictions -> Grammar

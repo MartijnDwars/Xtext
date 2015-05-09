@@ -1,0 +1,14 @@
+module sdf/src-gen/pp/constants/NatCon-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  sdf/src-gen/signatures/constants/NatCon-sig
+
+
+strategies
+  prettyprint-NatCon =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-NatCon

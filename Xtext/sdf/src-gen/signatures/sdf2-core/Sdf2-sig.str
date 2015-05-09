@@ -1,0 +1,12 @@
+module sdf/src-gen/signatures/sdf2-core/Sdf2-sig
+
+imports
+  sdf/src-gen/signatures/sdf2-core/Sdf2-Syntax-sig
+  sdf/src-gen/signatures/constants/StrCon-sig
+  sdf/src-gen/signatures/constants/NatCon-sig
+  sdf/src-gen/signatures/priority/Priority-sig
+  sdf/src-gen/signatures/characterclass/Character-sig
+  sdf/src-gen/signatures/modules/Modules-sig
+
+
+signature
