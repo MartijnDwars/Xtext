@@ -1,0 +1,60 @@
+module Test
+
+language Xtext
+start symbol AbstractRule
+
+test cited keyword [[
+	ID:
+		'a'
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([CiLit("'a'")]) , NoAttrs())]))
+
+test regular keyword [[
+	ID:
+		"a"
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([Lit("\"a\"")]) , NoAttrs())]))
+
+test optional cardinality [[
+	ID:
+		"a"?
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([Opt(Lit("\"a\""))]) , NoAttrs())]))
+
+test any cardinality [[
+	ID:
+		"a"*
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([IterStar(Lit("\"a\""))]) , NoAttrs())]))
+
+test multiple cardinality [[
+	ID:
+		"a"+
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([Iter(Lit("\"a\""))]) , NoAttrs())]))
+
+test multiple unordered groups [[
+	ID:
+		"a" | "b"
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([Lit("\"a\"")]) , NoAttrs()), SdfProduction(SortDef("ID"),Rhs([Lit("\"b\"")]) , NoAttrs())]))
+
+test multiple groups [[
+	ID:
+		"a" & "b"
+	;
+]] run gen-sdf-debug to 
+
+SDFSection(ContextFreeSyntax([SdfProduction(SortDef("ID"),Rhs([Lit("\"b\""), Lit("\"a\"")]) , NoAttrs()), SdfProduction(SortDef("ID"),Rhs([Lit("\"a\""), Lit("\"b\"")]) , NoAttrs())]))
