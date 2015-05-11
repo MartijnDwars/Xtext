@@ -3,22 +3,63 @@ module generate/common
 imports
 	
 	include/Xtext
+	include/TemplateLang
 
 rules 
 
 	id-to-name:
-		ID -> <last> ID
+		ID -> Unparameterized(name)
+		where
+			name := <last> ID
 	
 	// Cardinality
 	
-	// gen-cardinality-opt:
-	// 	Some(Optional()) -> $[?]
-	// 
-	// gen-cardinality-opt:
-	// 	Some(Multiple()) -> $[+]
-	// 	
-	// gen-cardinality-opt:
-	// 	Some(Any()) -> $[*]
-	// 
-	// gen-cardinality-opt:
-	// 	None() -> $[]
+	gen-cardinality(|abstract-terminal):
+		None() -> abstract-terminal
+	
+	gen-cardinality(|abstract-terminal):
+		Some(Any()) -> IterStar(abstract-terminal)
+	
+	gen-cardinality(|abstract-terminal):
+		Some(Multiple()) -> Iter(abstract-terminal)
+		
+	gen-cardinality(|abstract-terminal):
+		Some(Optional()) -> Opt(abstract-terminal)
+	
+	//Permutations (Unordered-Groups)
+	/*
+		Might replace this by a more functional variant:
+			
+			-- | The 'permutations' function returns the list of all permutations of the argument.
+			--
+			-- > permutations "abc" == ["abc","bac","cba","bca","cab","acb"]
+				 permutations            :: [a] -> [[a]]
+				 permutations xs0        =  xs0 : perms xs0 []
+                 where
+    			 	perms []     _  = []
+    				perms (t:ts) is = foldr interleave (perms ts (t:is)) (permutations is)
+      				where interleave    xs     r = let (_,zs) = interleave' id xs r in zs
+            			interleave' _ []     r = (ts, r)
+            			interleave' f (y:ys) r = let (us,zs) = interleave' (f . (y:)) ys r
+                                     			 in  (y:us, f (t:y:us) : zs)
+	
+	*/
+		
+	gen-permutations(|perm-set):
+		_ -> permutations
+		where
+			permutations := <recursive-permutations(|perm-set, perm-set, <length> perm-set)>
+			
+	recursive-permutations(|set, block, n):
+		_ -> <if(<eq> (1,n), <filter-permutations(|block)> set, recursive-permutations(|new_set, block, <dec> n))>
+		where
+			new_set := <map(flatten-list)> <list-combinations> [set, block]
+			
+	filter-permutations(|block):
+		set -> filtered-permutations
+		where
+			filtered-list := <collect-all(filter(|block))> set;
+			filtered-permutations := <map(TupleToList; last)> filtered-list
+	
+	filter(|block):
+		set -> <set-eq> (block, set)		

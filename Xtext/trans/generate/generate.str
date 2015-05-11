@@ -10,6 +10,7 @@ imports
 	include/Xtext
 	generate/common
 	generate/terminal-rule
+	include/TemplateLang
 
 rules 
 
@@ -26,7 +27,7 @@ rules
 			filename := $[[<remove-extension> path].sdf3]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-rule + gen-abstract-token> selected
+		selected -> <gen-grammar + gen-sdf-section + gen-abstract-token> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
@@ -34,51 +35,125 @@ rules
 			<is-list> selected
 	
 	gen-grammar:
-		Grammar(GrammarID(names), _, _, _, abstract-rules) -> $[module [name]  [gen-abstract-rules]]
+		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> Module(name,imports,sdf-sections)
+		//$[module [name] [gen-mixin] context-free syntax [gen-abstract-rules]]
 		where
 			name               := <id-to-name> names;
-			gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
-
-	gen-rule:
-		ParserRule(name, _, _, alternatives) -> gen-alternatives
+			imports			   := <gen-imports> mixin;
+			sdf-sections	   := <map(gen-sdf-section)> abstract-rules
+			//gen-mixin		   := <gen-imports> mixin;
+			//gen-abstract-rules := <map(gen-rule) ; separate-by(|"\n")> abstract-rules
+		
+	gen-imports:
+		None() -> []
+		
+	gen-imports:
+		Some(Mixin(imports)) -> Imports(<map(gen-import-name)> imports)
+		//$[imports [<map(gen-import-name) ; separate-by(|"\n")> imports]]
+		
+	gen-import-name:
+		GrammarID(names) -> Module(name)
 		where
-			gen-alternatives := <gen-alternatives(|name)> alternatives
+			name			:= <id-to-name> names
+
+	gen-sdf-section:
+		TerminalRule(_,_) -> []
+
+	gen-sdf-section:
+		ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts))
+		where
+			alts			:= <concat> <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
+		
+	gen-alternatives(|name, attr):
+		Alternatives(unordered-groups) -> <map(gen-unordered-groups(|name, attr))> unordered-groups
+			
+	gen-unordered-groups(|name, attr):
+		UnorderedGroup(groups) -> <map(gen-groups(|name, attr))> permutations
+		where
+			permutations := <gen-permutations(|groups)>
+				
+	gen-groups(|name, attr):
+		groups -> SdfProduction(name, Rhs(rule), attr)
+		where
+			rule			:= <map(gen-group-content); flatten-list> groups
 	
-	gen-alternatives(|name):
-		Alternatives(unordered-groups) -> $[[<map(gen-unordered-group ; add-name(|name)) ; separate-by(|"\n")> unordered-groups]]
+	gen-group-content:
+		Group(content) -> <map(gen-abstract-token)> content
+
+	gen-abstract-token:
+		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> gen-cardinality
+		with
+			gen-abstract-terminal := <gen-abstract-terminal> abstract-terminal;
+			gen-cardinality       := <gen-cardinality(|gen-abstract-terminal)> cardinality-opt
+
+	gen-abstract-terminal:
+		RuleCall(name) -> Sort(name)
+		
+	gen-abstract-terminal:
+		Keyword(word) -> output
+		where
+			output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
+			
+	gen-dq-word:
+		input -> Lit(input)
+		
+	gen-sq-word:
+		input -> CiLit(input)
+		
+//Deprecated
+
+	//gen-rule:
+		//ParserRule(name, _, _, alternatives) -> gen-alternatives
+		//where
+			//gen-alternatives := <gen-alternatives(|name)> alternatives
+
+//	gen-alternatives(|name):
+	//	Alternatives(unordered-groups) -> $[[<map(gen-unordered-group ; add-name(|name)) ; separate-by(|"\n")> unordered-groups]]
 	
-	add-name(|name):
-		unordered-group -> $[[name] = [unordered-group]]
+	//add-name(|name):
+		//unordered-group -> $[[name] = [unordered-group]]
 	
-	gen-unordered-group:
-		UnorderedGroup([Group(abstract-tokens)]) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+	//gen-unordered-group:
+		//UnorderedGroup(groups) -> $[[<map(gen-group) ; separate-by(|"\n")> groups]]
+		
+	//gen-group:
+		//Group(abstract-tokens) -> $[<[<map(gen-abstract-token) ; separate-by(|" ")> abstract-tokens]>]
+		
+	// gen-abstract-token:
+	// 	AssignmentAbstractToken(_, feature, AddAssignment(), assignable-terminal, cardinality-opt) -> $[<{ [gen-assignable-terminal] " " } [gen-cardinality]>]
+	// 	with
+	// 		gen-assignable-terminal := <gen-assignable-terminal> assignable-terminal;
+	// 		gen-cardinality			:= <gen-cardinality> cardinality-opt
 	
 	gen-abstract-token:
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
 	
-	gen-abstract-token:
-		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> $[[gen-abstract-terminal] [gen-cardinality]]
-		with
-			gen-abstract-terminal := <gen-abstract-terminal> abstract-terminal;
-			gen-cardinality       := <gen-cardinality-opt> cardinality-opt
+//	gen-abstract-token:
+	//	AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> $[[gen-abstract-terminal] [gen-cardinality]]
+	//	with
+	//		gen-abstract-terminal := <gen-abstract-terminal> abstract-terminal;
+	//		gen-cardinality       := <gen-cardinality-opt> cardinality-opt
 	
 	gen-abstract-token:
 		ActionAbstractToken(_) -> $[]
 	
-	gen-abstract-terminal:
-		Keyword(ID) -> $[[ID]]
+	//gen-abstract-terminal:
+		//Keyword(ID) -> $[[ID]]
 		
-	gen-abstract-terminal:
-		RuleCall(ID) -> $[[ID]]
+	//gen-abstract-terminal:
+		//RuleCall(ID) -> $[[ID]]
 
-	// gen-abstract-terminal:
-	// 	x@Alternatives(_) -> <gen-alternatives> x
+	//gen-abstract-terminal:
+	 //	x@Alternatives(_) -> <gen-internal-alternatives> x
 	
-	gen-assignable-terminal:
-		RuleCall(ID) -> $[<[ID]>]
+//	gen-internal-alternatives:
+	//	Alternatives(unordered-groups) -> $[[<map(gen-unordered-group) ; separate-by(|"\n")> unordered-groups]]
 	
-	gen-assignable-terminal:
-		AssignableAlternatives(assignable-terminal) -> $[] //<map(gen-assignable-terminal)> assignable-terminal
+	//gen-assignable-terminal:
+		//RuleCall(ID) -> $[<[ID]>]
+	
+	//gen-assignable-terminal:
+	//	AssignableAlternatives(assignable-terminal) -> $[] //<map(gen-assignable-terminal)> assignable-terminal
 	
 	// TODO: For now, just use the type. Eventually, this should be a reference (i.e. ID that is linked to `type`)
 	gen-assignable-terminal:

@@ -14,23 +14,12 @@ rules
 	list-to-conc:
 		[head | tail] -> Conc(head, <list-to-conc> tail)
 	
-	// gen-rule:
-	// 	TerminalRule(Returns(terminal-name, _), TerminalAlternatives(terminal-alternatives)) -> $[
-	// 		lexical syntax
-	// 	    	[terminal-name] = [<map(gen-terminal-alternative) ; flatten-list ; separate-by(|" | ")> terminal-alternatives]
-	// 	]
-	
 	gen-rule:
 		TerminalRule(Returns(terminal-name, _), terminal-token-element) ->
 			LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([<gen-terminal-token-element ; innermost(post-process-terminal-rule)> terminal-token-element]), NoAttrs())])
 	
 	post-process-terminal-rule:
 		CharClass(Simple(Present(Alt(x, y)))) -> Alt(x, y)
-	
-	// gen-terminal-alternative:
-	// 	TerminalGroup(terminal-group) -> $<[<gen-terminal-group>]>
-	// 	where
-	// 		gen-terminal-group := <map(gen-terminal-group) ; concat-strings> terminal-group
 	
 	gen-terminal-alternative:
 		TerminalGroup(terminal-group) -> gen-terminal-group
@@ -43,31 +32,8 @@ rules
 	list-to-sequence:
 		[h|t] -> Sequence(h, t)
 	
-	// gen-terminal-group:
-	// 	TerminalToken(terminal-token-element, cardinality-opt) -> $[[<gen-terminal-token-element> terminal-token-element][<gen-cardinality-opt> cardinality-opt]]
-
 	gen-terminal-group:
-		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality-opt> (cardinality-opt, CharClass(Simple(Present(<gen-terminal-token-element> terminal-token-element))))
-	
-	gen-cardinality-opt:
-		(None(), terminal-token-element) -> terminal-token-element
-
-	gen-cardinality-opt:
-		(Some(cardinality), terminal-token-element) -> <gen-cardinality> (cardinality, terminal-token-element)
-
-	gen-cardinality:
-		(Optional(), terminal-token-element) -> Opt(terminal-token-element)
-
-	gen-cardinality:
-		(Multiple(), terminal-token-element) -> Iter(terminal-token-element)
-	
-	gen-cardinality:
-		(Any(), terminal-token-element) -> IterStar(terminal-token-element)
-	
-	// gen-terminal-token-element:
-	// 	TerminalAlternatives(terminal-alternatives) -> $<[<gen-terminal-alternative>]>
-	// 	where
-	// 		gen-terminal-alternative := <map(gen-terminal-alternative) ; flatten-list ; concat-strings> terminal-alternatives
+		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality(|CharClass(Simple(Present(<gen-terminal-token-element> terminal-token-element))))> cardinality-opt
 	
 	gen-terminal-token-element:
 		TerminalAlternatives(terminal-alternatives) -> <map(gen-terminal-alternative) ; list-to-alt> terminal-alternatives
@@ -95,11 +61,6 @@ rules
 		RuleCall(reference) -> <fail>
 		where
 			<debug> "TODO"
-	
-	// gen-terminal-token-element:
-	// 	NegatedToken(terminal-token-element) -> $<~[<gen-terminal-token-element>]>
-	// 	where
-	// 		gen-terminal-token-element := <gen-terminal-token-element> terminal-token-element
-	
+		
 	gen-terminal-token-element:
 		NegatedToken(terminal-token-element) -> Comp(<gen-terminal-token-element> terminal-token-element)
