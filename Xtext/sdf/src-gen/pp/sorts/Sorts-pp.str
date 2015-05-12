@@ -32,7 +32,7 @@ strategies
     prettyprint-SymbolDef
 
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-Symbol :
     Sort(t0__) -> [ H(
@@ -105,7 +105,7 @@ strategies
   is-SymbolDef =
     ?Var(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Sorts(t0__) -> [ H(
                        [SOpt(HS(), "0")]
                      , [S("sorts")]

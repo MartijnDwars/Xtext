@@ -41,7 +41,7 @@ strategies
     prettyprint-Productions
 
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-ATermAttribute :
     Default(aterm__) -> [ H(
@@ -184,7 +184,7 @@ strategies
     where not(is-Productions)
     where list__' := <pp-V-list(prettyprint-Production)> list__
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Syntax(t1__) -> [ H(
                         [SOpt(HS(), "0")]
                       , [S("syntax")]
@@ -243,5 +243,5 @@ strategies
   prettyprint-Productions :
     amb([h|hs]) -> <prettyprint-Productions> h
 
-  prettyprint-Grammar :
-    amb([h|hs]) -> <prettyprint-Grammar> h
+  prettyprint-sdf-Grammar :
+    amb([h|hs]) -> <prettyprint-sdf-Grammar> h

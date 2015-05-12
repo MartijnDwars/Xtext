@@ -18,9 +18,9 @@ imports
 
 strategies
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     KernelStartSymbols(t0__) -> [ H(
                                     [SOpt(HS(), "0")]
                                   , [S("start-symbols")]
@@ -40,7 +40,7 @@ strategies
   is-Grammar =
     ?KernelStartSymbols(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexicalStartSymbols(t0__) -> [ H(
                                      [SOpt(HS(), "0")]
                                    , [S("lexical start-symbols")]
@@ -60,7 +60,7 @@ strategies
   is-Grammar =
     ?LexicalStartSymbols(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     ContextFreeStartSymbols(t0__) -> [ H(
                                          [SOpt(HS(), "0")]
                                        , [S("context-free start-symbols")]

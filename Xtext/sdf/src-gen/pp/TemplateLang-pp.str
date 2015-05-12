@@ -39,7 +39,7 @@ imports
 
 strategies
   prettyprint-SDF-start-symbols =
-    prettyprint-Module
+    prettyprint-sdf-Module
 
 
 strategies
@@ -306,7 +306,7 @@ strategies
     prettyprint-Section
 
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-example =
     prettyprint-GeneralProduction
@@ -361,7 +361,7 @@ strategies
   is-Section =
     ?TemplateSection(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexicalSyntax(t1__) -> [ H(
                                [SOpt(HS(), "0")]
                              , [S("lexical syntax")]
@@ -381,7 +381,7 @@ strategies
   is-Grammar =
     ?LexicalSyntax(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     ContextFreeSyntax(t1__) -> [ H(
                                    [SOpt(HS(), "0")]
                                  , [S("context-free syntax")]
@@ -401,7 +401,7 @@ strategies
   is-Grammar =
     ?ContextFreeSyntax(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Kernel(t1__) -> [ H(
                         [SOpt(HS(), "0")]
                       , [S("syntax")]
@@ -700,8 +700,8 @@ strategies
   prettyprint-Section :
     amb([h|hs]) -> <prettyprint-Section> h
 
-  prettyprint-Grammar :
-    amb([h|hs]) -> <prettyprint-Grammar> h
+  prettyprint-sdf-Grammar :
+    amb([h|hs]) -> <prettyprint-sdf-Grammar> h
 
   prettyprint-GeneralProduction :
     amb([h|hs]) -> <prettyprint-GeneralProduction> h

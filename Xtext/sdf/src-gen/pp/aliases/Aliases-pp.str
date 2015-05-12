@@ -18,7 +18,7 @@ imports
 
 strategies
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-example =
     prettyprint-Alias
@@ -26,7 +26,7 @@ strategies
   prettyprint-example =
     prettyprint-Aliases
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Aliases(t1__) -> [ H(
                          [SOpt(HS(), "0")]
                        , [S("aliases")]

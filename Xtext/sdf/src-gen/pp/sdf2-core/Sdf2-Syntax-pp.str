@@ -43,7 +43,7 @@ strategies
     prettyprint-Symbol
 
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-Symbol :
     Start() -> [ H(
@@ -65,7 +65,7 @@ strategies
   is-Symbol =
     ?FileStart()
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexicalPriorities(t0__) -> [ H(
                                    [SOpt(HS(), "0")]
                                  , [S("lexical priorities")]
@@ -85,7 +85,7 @@ strategies
   is-Grammar =
     ?LexicalPriorities(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     ContextFreePriorities(t0__) -> [ H(
                                        [SOpt(HS(), "0")]
                                      , [S("context-free priorities")]
@@ -105,7 +105,7 @@ strategies
   is-Grammar =
     ?ContextFreePriorities(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexicalRestrictions(t0__) -> [ H(
                                      [SOpt(HS(), "0")]
                                    , [S("lexical restrictions")]
@@ -125,7 +125,7 @@ strategies
   is-Grammar =
     ?LexicalRestrictions(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     ContextFreeRestrictions(t0__) -> [ H(
                                          [SOpt(HS(), "0")]
                                        , [S("context-free restrictions")]

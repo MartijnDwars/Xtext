@@ -44,7 +44,7 @@ strategies
     prettyprint-Priorities
 
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-Associativity :
     Left() -> [ H(
@@ -252,7 +252,7 @@ strategies
     where not(is-Priorities)
     where list__' := <pp-V-list(prettyprint-Priority|"0", ",")> list__
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Priorities(t0__) -> [ H(
                             [SOpt(HS(), "0")]
                           , [S("priorities")]

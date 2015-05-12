@@ -20,12 +20,12 @@ imports
 
 strategies
   prettyprint-example =
-    prettyprint-Grammar
+    prettyprint-sdf-Grammar
 
   prettyprint-example =
     prettyprint-Symbol
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Lexical(t1__) -> [ H(
                          [SOpt(HS(), "0")]
                        , [S("lexical syntax")]
@@ -45,7 +45,7 @@ strategies
   is-Grammar =
     ?Lexical(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Contextfree(t1__) -> [ H(
                              [SOpt(HS(), "0")]
                            , [S("context-free syntax")]
@@ -65,7 +65,7 @@ strategies
   is-Grammar =
     ?Contextfree(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     Variables(t1__) -> [ H(
                            [SOpt(HS(), "0")]
                          , [S("variables")]
@@ -85,7 +85,7 @@ strategies
   is-Grammar =
     ?Variables(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     VariablesProductive(t1__) -> [ H(
                                      [SOpt(HS(), "0")]
                                    , [S("variables")]
@@ -105,7 +105,7 @@ strategies
   is-Grammar =
     ?VariablesProductive(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexVariables(t1__) -> [ H(
                               [SOpt(HS(), "0")]
                             , [S("lexical variables")]
@@ -125,7 +125,7 @@ strategies
   is-Grammar =
     ?LexVariables(_)
 
-  prettyprint-Grammar :
+  prettyprint-sdf-Grammar :
     LexVariablesProductive(t1__) -> [ H(
                                         [SOpt(HS(), "0")]
                                       , [S("lexical variables")]
