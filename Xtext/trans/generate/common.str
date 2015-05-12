@@ -12,6 +12,9 @@ rules
 		where
 			name := <last> ID
 	
+	remove-sortdef:
+		SortDef(name) -> name
+	
 	// Cardinality
 	
 	gen-cardinality(|abstract-terminal):
