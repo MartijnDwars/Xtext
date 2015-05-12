@@ -1,3 +1,8 @@
+/*
+	multiline comment
+*/
+
+// single line comment
 grammar org.eclipse.xtext.example.FJ with org.eclipse.xtext.common.Terminals
 
 generate fj "http://example.xtext.org/FJ"
