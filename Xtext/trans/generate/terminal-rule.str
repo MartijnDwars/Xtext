@@ -33,10 +33,10 @@ rules
 		[h|t] -> Sequence(h, t)
 	
 	gen-terminal-group:
-		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality(|CharClass(Simple(Present(<gen-terminal-token-element> terminal-token-element))))> cardinality-opt
+		TerminalToken(terminal-token-element, cardinality-opt) -> <gen-cardinality(|<gen-terminal-token-element> terminal-token-element)> cardinality-opt
 	
 	gen-terminal-token-element:
-		TerminalAlternatives(terminal-alternatives) -> <map(gen-terminal-alternative) ; list-to-alt> terminal-alternatives
+		TerminalAlternatives(terminal-alternatives) -> Parenthetical(<map(gen-terminal-alternative) ; list-to-alt> terminal-alternatives)
 	
 	// Turn [a, b, c, ...] into Alt(a, Alt(b, Alt(c, ...)))
 	list-to-alt:
@@ -45,17 +45,11 @@ rules
 	list-to-alt:
 		[head | tail] -> Alt(head, <list-to-alt> tail)
 	
-	// gen-terminal-token-element:
-	// 	Keyword(s) -> s
+	gen-terminal-token-element:
+		Keyword(s) -> Lit(<single-quote> s)
 	
 	gen-terminal-token-element:
-		Keyword(s) -> Short(s)
-	
-	// gen-terminal-token-element:
-	// 	CharacterRange(x,y) -> $[[x]-[y]]
-	
-	gen-terminal-token-element:
-		CharacterRange(x,y) -> Range(<gen-terminal-token-element> x, <gen-terminal-token-element> y)
+		CharacterRange(Keyword(x), Keyword(y)) -> CharClass(Simple(Present(Range(Short(x), Short(y)))))
 	
 	gen-terminal-token-element:
 		RuleCall(reference) -> <fail>

@@ -24,7 +24,7 @@ rules
 	gen-sdf:
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where
-			filename := $[[<remove-extension> path].sdf3]
+			filename := $[[<remove-extension> path].sdf3.aterm]
 	
 	gen-sdf-debug:
 		selected -> <gen-grammar + gen-rule + gen-abstract-token> selected
