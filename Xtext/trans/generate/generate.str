@@ -7,14 +7,15 @@ imports
 	lib/runtime/tmpl/pp
 	include/TemplateLang
 	sdf/src-gen/pp/TemplateLang-pp
+	sdf/src-gen/pp/modules/Modules-pp
 	include/Xtext
 	generate/common
 	generate/terminal-rule
 	include/TemplateLang
 
 rules 
-
-	sdf-pp = prettyprint-Grammar; !V([], <id>); box2text-string(|120)
+	
+	sdf-pp = (prettyprint-sdf-Module + prettyprint-sdf-Grammar + prettyprint-Section); !V([], <id>); box2text-string(|120)
 	
 	gen-sdf-file:
 		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> <gen-sdf-debug> selected)
@@ -48,7 +49,7 @@ rules
 		None() -> []
 		
 	gen-imports:
-		Some(Mixin(imports)) -> Imports(<map(gen-import-name)> imports)
+		Some(Mixin(imports)) -> [Imports(<map(gen-import-name)> imports)]
 		//$[imports [<map(gen-import-name) ; separate-by(|"\n")> imports]]
 		
 	gen-import-name:
