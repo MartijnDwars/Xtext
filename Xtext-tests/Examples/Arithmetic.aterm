@@ -1,0 +1,12 @@
+TerminalRule(
+  Returns("FOO", None())
+, TerminalAlternatives(
+    [ TerminalGroup(
+        [ TerminalToken(Keyword("f"), None())
+        , TerminalToken(Wildcard("."), None())
+        , TerminalToken(Keyword("o"), None())
+        ]
+      )
+    ]
+  )
+)

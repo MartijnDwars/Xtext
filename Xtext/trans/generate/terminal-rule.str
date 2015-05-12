@@ -58,3 +58,6 @@ rules
 		
 	gen-terminal-token-element:
 		NegatedToken(terminal-token-element) -> Comp(<gen-terminal-token-element> terminal-token-element)
+	
+	gen-terminal-token-element:
+		Wildcard(_) -> CharClass(Comp(Simple(Absent())))

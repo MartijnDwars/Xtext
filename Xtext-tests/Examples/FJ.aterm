@@ -1,0 +1,13 @@
+ParserRule(
+  "Temp"
+, None()
+, None()
+, Alternatives(
+    [ UnorderedGroup(
+        [Group(
+           [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+         )]
+      )
+    ]
+  )
+)

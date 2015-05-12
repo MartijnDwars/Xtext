@@ -1,0 +1,7 @@
+module arith
+
+	
+lexical syntax
+	NUMBER = [0-9]
+	
+	FOO = 'f' ~[] 'o'

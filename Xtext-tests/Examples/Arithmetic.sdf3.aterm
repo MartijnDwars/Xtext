@@ -1,0 +1,16 @@
+LexicalSyntax(
+  [ SdfProduction(
+      SortDef("FOO")
+    , Rhs(
+        [ Parenthetical(
+            Sequence(
+              Lit("'f'")
+            , [CharClass(Comp(Simple(Absent()))), Lit("'o'")]
+            )
+          )
+        ]
+      )
+    , NoAttrs()
+    )
+  ]
+)

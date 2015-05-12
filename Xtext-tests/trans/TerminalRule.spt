@@ -147,3 +147,22 @@ test complex terminal [[
 	  , NoAttrs()
 	)
 ])
+
+test wildcard [[
+	terminal FOO : 'f' . 'o';
+]] run gen-sdf-debug to LexicalSyntax(
+  [ SdfProduction(
+      SortDef("FOO")
+    , Rhs(
+        [ Parenthetical(
+            Sequence(
+              Lit("'f'")
+            , [CharClass(Comp(Simple(Absent()))), Lit("'o'")]
+            )
+          )
+        ]
+      )
+    , NoAttrs()
+    )
+  ]
+)

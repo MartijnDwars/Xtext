@@ -1,0 +1,7 @@
+LexicalSyntax(
+  [SdfProduction(
+     SortDef("ID")
+   , Rhs([Parenthetical(Lit("'abc'"))])
+   , NoAttrs()
+   )]
+)
