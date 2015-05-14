@@ -122,6 +122,35 @@ rules
 	gen-sq-word:
 		input -> (CiLit(input),[])
 		
+	gen-abstract-token(|name, attr):
+		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> (rule, nested_output)
+		where
+			(output, nested_output) := <gen-assignable-terminal(|name, attr)> assignable-terminal;
+			gen-cardinality := <gen-cardinality(|output)> cardinality-opt;
+			rule := Label(Unquoted(feature), gen-cardinality)
+		
+	gen-assignable-terminal(|name, attr):
+		RuleCall(input) -> (Sort(input),[])
+		
+	gen-assignable-terminal(|name, attr):
+		Keyword(word) -> output
+		where
+			output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
+			
+	gen-assignable-terminal(|name, attr):
+		AssignableAlternatives(alternatives) -> (output, nested)
+		where
+			name_string := <remove-sortdef> name;
+			new_name := <newname> <conc-strings> (name_string, "-");
+			output := Sort(new_name);
+			nested := <try(concat)> <map(gen-abstract-alternative(|SortDef(new_name), attr))> alternatives
+	
+	gen-abstract-alternative(|name, attr):
+		input -> [SdfProduction(name, Rhs([rule]), attr) | extra_rules]
+		where
+			(rule, nested) := <gen-assignable-terminal(|name, attr)> input;		
+			extra_rules		:= <try(concat)> nested
+		
 //Deprecated
 
 	//gen-rule:
