@@ -47,7 +47,38 @@ rules
                                      			 in  (y:us, f (t:y:us) : zs)
 	
 	*/
-		
+	
+	// The only permutation of a singleton list is a list containing that element 
+	permutations:
+		[x] -> [[x]]
+	
+	// do "permutations(|xs) x" for every x in xs
+	permutations:
+		xs -> <map(permutations(|xs)) ; concat> xs
+	
+	// Remove argument from xs, compute permutations of resulting list
+	permutations(|xs):
+		x -> <filter(not(?x)) ; permutations ; map(prepend(|x))> xs
+	
+	// Prepend x to every list of xs. E.g. prepend(1, [[2, 3], [3, 2]]) = [[1, 2, 3], [1, 3, 2]]
+	prepend-list:
+		(x, xss) -> <map(prepend(|x))> xss
+	
+	// Prepend x to the given list
+	prepend(|x) = ?t ; ![x | t]
+	
+	// Usage:
+	//
+	// test-prepend:
+	//  	_ -> <prepend-list> (2, [[2, 3], [11, 111]])
+	// 
+	test-permutations:
+		_ -> <permutations> [1, 2, 3]
+	
+	
+	
+
+	
 	gen-permutations(|perm-set):
 		_ -> permutations
 		where
