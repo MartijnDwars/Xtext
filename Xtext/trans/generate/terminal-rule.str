@@ -16,8 +16,10 @@ rules
 	
 	gen-rule:
 		TerminalRule(Returns(terminal-name, _), terminal-token-element) ->
-			LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([<gen-terminal-token-element ; innermost(post-process-terminal-rule)> terminal-token-element]), NoAttrs())])
-	
+			LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([<gen-terminal-token-element ; innermost(post-process-terminal-rule); remove-parenthetical> terminal-token-element]), NoAttrs())])
+			where
+				<debug> <remove-parenthetical> <gen-terminal-token-element ; innermost(post-process-terminal-rule)> terminal-token-element
+				
 	post-process-terminal-rule:
 		CharClass(Simple(Present(Alt(x, y)))) -> Alt(x, y)
 	
@@ -46,7 +48,7 @@ rules
 		[head | tail] -> Alt(head, <list-to-alt> tail)
 	
 	gen-terminal-token-element:
-		Keyword(s) -> Lit(<single-quote> s)
+		Keyword(s) -> CiLit(<single-quote> s)
 	
 	gen-terminal-token-element:
 		CharacterRange(Keyword(x), Keyword(y)) -> CharClass(Simple(Present(Range(Short(x), Short(y)))))

@@ -15,6 +15,10 @@ rules
 	remove-sortdef:
 		SortDef(name) -> name
 	
+	remove-parenthetical:
+		Parenthetical(content) -> content
+		where
+			<debug> content
 	// Cardinality
 	
 	gen-cardinality(|abstract-terminal):
