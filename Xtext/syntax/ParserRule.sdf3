@@ -46,12 +46,9 @@ context-free syntax
   AssignableTerminal.Keyword = STRING
   AssignableTerminal = RuleCall
   AssignableTerminal = <( <AssignableAlternatives> )>
-  AssignableTerminal.CrossReference = <[ <TypeRef> <CrossReferenceableTerminal>? ]> 
+  AssignableTerminal.CrossReference = <[ <TypeRef> <CrossReferenceableTerminal?> ]> 
   
-  CrossReferenceableTerminal.CrossReferenceableTerminal = <| <NeedNaming>>
-  
-  NeedNaming.Keyword = STRING
-  NeedNaming = RuleCall
+  CrossReferenceableTerminal.CrossReferenceableTerminal = <| <RuleCall>>
   
   RuleCall.RuleCall = ID
   
