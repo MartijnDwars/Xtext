@@ -123,3 +123,17 @@ test hiddenToken with multiple tokens [[
 		name="abc"
 	;
 ]] parse succeeds
+
+// Testing cross-reference
+
+test cross-reference with default terminal [[
+	ClassType:
+		classref=[Class]
+	;
+]] parse succeeds
+
+test cross-reference with custom terminal [[
+	ClassType:
+		classref=[Class|ID]
+	;
+]] parse succeeds
