@@ -15,7 +15,7 @@ rules
 	// 	]
 		
 	gen-rule:
-		EnumRule(name, enum-literals) -> LexicalSyntax(<map(gen-enum-literal(|name))> enum-literals)
+		EnumRule(name, enum-literals) -> SDFSection(LexicalSyntax(<map(gen-enum-literal(|name))> enum-literals))
 	
 	// gen-enum-literal:
 	// 	EnumLiteral(name) -> $["[name]"]
