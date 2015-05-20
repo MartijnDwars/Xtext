@@ -68,11 +68,10 @@ rules
 	gen-unordered-groups(|name, attr):
 		UnorderedGroup(groups) -> <flatten-list> [group | extra_rules]
 		where
-			permutations := <gen-permutations(|groups)>;
-
+			permutations     := <gen-permutations(|groups)>;
 			groups_generated := <map(gen-groups(|name, attr))> permutations;
-			group			:= <try(concat)> <map(extract-outputs)> groups_generated;
-			extra_rules		:= <try(concat)> <map(extract-nested-outputs)> groups_generated
+			group			 := <try(concat)> <map(extract-outputs)> groups_generated;
+			extra_rules		 := <try(concat)> <map(extract-nested-outputs)> groups_generated
 				
 	gen-groups(|name, attr):
 		groups -> (SdfProduction(name, Rhs(rule), attr), extra_rules)
@@ -136,7 +135,10 @@ rules
 		Keyword(word) -> (Lit(<double-quote> word),[])
 		// where
 		// 	output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
-			
+	
+	gen-assignable-terminal(|name, attr):
+		CrossReference(TypeRef(_, _)) -> (Sort("ID"), [])
+	
 	gen-assignable-terminal(|name, attr):
 		AssignableAlternatives(alternatives) -> (output, nested)
 		where
