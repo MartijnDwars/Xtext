@@ -1,0 +1,8 @@
+ParserRule(
+  "LocalValueRef"
+, None()
+, None()
+, Alternatives(
+    [UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("ref=[LocalValue|LOCAL_ID]\r"), None())])])]
+  )
+)

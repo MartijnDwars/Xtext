@@ -63,7 +63,19 @@ NamedMetadata:
 MetadataRef:
 	ref=[NamedMetadata|MetadataIdentifier]
 ;
-
+ 
+Temp:
+	ref=NamedMetadata|MetadataIdentifier
+;
+ 
+Temp2:
+	ref=NamedMetadata
+;
+ 
+Temp2:
+	ref=[NamedMetadata]
+;
+	
 MetadataIdentifier:
 	META_INT | META_NAME
 ;
