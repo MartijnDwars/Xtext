@@ -70,8 +70,8 @@ rules
 		where
 			permutations     := <gen-permutations(|groups)>;
 			groups_generated := <map(gen-groups(|name, attr))> permutations;
-			group			 := <try(concat)> <map(extract-outputs)> groups_generated;
-			extra_rules		 := <try(concat)> <map(extract-nested-outputs)> groups_generated
+			group            := <try(concat)> <map(extract-outputs)> groups_generated;
+			extra_rules      := <try(concat)> <map(extract-nested-outputs)> groups_generated
 				
 	gen-groups(|name, attr):
 		groups -> (SdfProduction(name, Rhs(rule), attr), extra_rules)
@@ -137,7 +137,10 @@ rules
 		// 	output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
 	
 	gen-assignable-terminal(|name, attr):
-		CrossReference(TypeRef(_, _)) -> (Sort("ID"), [])
+		CrossReference(TypeRef(_, _), None()) -> (Sort("ID"), [])
+		
+	gen-assignable-terminal(|name, attr):
+		CrossReference(TypeRef(_, _), Some(CrossReferenceableTerminal(RuleCall(terminal-rule)))) -> (Sort(terminal-rule), [])
 	
 	gen-assignable-terminal(|name, attr):
 		AssignableAlternatives(alternatives) -> (output, nested)
@@ -177,9 +180,6 @@ rules
 	// 	with
 	// 		gen-assignable-terminal := <gen-assignable-terminal> assignable-terminal;
 	// 		gen-cardinality			:= <gen-cardinality> cardinality-opt
-	
-	gen-abstract-token:
-		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> <gen-assignable-terminal> assignable-terminal
 	
 //	gen-abstract-token:
 	//	AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> $[[gen-abstract-terminal] [gen-cardinality]]
