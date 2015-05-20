@@ -112,15 +112,15 @@ rules
 			nested := <try(concat)> <map(gen-unordered-groups(|SortDef(new_name), attr))> unordered-groups
 	
 	gen-abstract-terminal(|name, attr):
-		Keyword(word) -> output
-		where
-			output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
-			
-	gen-dq-word:
-		input -> (Lit(input),[])
-		
-	gen-sq-word:
-		input -> (CiLit(input),[])
+		Keyword(word) -> (Lit(<double-quote> word),[])
+	// 	where
+	// 		output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
+	// 		
+	// gen-dq-word:
+	// 	input -> (Lit(<double-quote> input),[])
+	// 	
+	// gen-sq-word:
+	// 	input -> (CiLit(<double-quote> input),[])
 		
 	gen-abstract-token(|name, attr):
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> (rule, nested_output)
@@ -133,9 +133,9 @@ rules
 		RuleCall(input) -> (Sort(input),[])
 		
 	gen-assignable-terminal(|name, attr):
-		Keyword(word) -> output
-		where
-			output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
+		Keyword(word) -> (Lit(<double-quote> word),[])
+		// where
+		// 	output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
 			
 	gen-assignable-terminal(|name, attr):
 		AssignableAlternatives(alternatives) -> (output, nested)
