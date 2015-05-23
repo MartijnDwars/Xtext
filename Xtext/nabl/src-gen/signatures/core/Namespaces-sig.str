@@ -1,0 +1,18 @@
+module nabl/src-gen/signatures/core/Namespaces-sig
+
+imports
+  nabl/src-gen/signatures/common/Identifiers-sig
+  nabl/src-gen/signatures/core/Modules-sig
+
+
+signature
+  constructors
+     : String -> NamespaceID
+     : String -> SectionKeyword
+
+  constructors
+    Namespaces      : List(NamespaceDef) -> ModuleSection
+    NamespaceDef    : NamespaceID -> NamespaceDef
+    NamespaceRef    : LanguageRef * NamespaceID -> NamespaceRef
+    CurrentLanguage : LanguageRef
+    LanguageRef     : Id -> LanguageRef

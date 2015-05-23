@@ -1,0 +1,15 @@
+module nabl/src-gen/completions/formulas/Formulas-esv
+
+imports
+  nabl/src-gen/completions/terms/Terms-esv
+  nabl/src-gen/completions/formulas/Propositions-esv
+
+completions
+  completion template Formula : "not Formula" =
+    "not " <Formula:Formula> (blank)  
+  completion template Formula : "Formula and Formula" =
+    <Formula:Formula> "\nand " <Formula:Formula> (blank)  
+  completion template Formula : "Formula or Formula" =
+    <Formula:Formula> "\nor " <Formula:Formula> (blank)  
+  completion template Formula : "(Formula)" =
+    "(" <Formula:Formula> ")"  

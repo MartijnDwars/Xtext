@@ -1,0 +1,65 @@
+module nabl/src-gen/pp/terms/Constants-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  nabl/src-gen/signatures/terms/Constants-sig
+
+
+strategies
+  prettyprint-Int =
+    ![S(<is-string>)]
+
+  prettyprint-Real =
+    ![S(<is-string>)]
+
+  prettyprint-String =
+    ![S(<is-string>)]
+
+  prettyprint-StrChar =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-Int
+
+  prettyprint-example =
+    prettyprint-Real
+
+  prettyprint-example =
+    prettyprint-String
+
+  prettyprint-example =
+    prettyprint-StrChar
+
+  prettyprint-Int :
+    amb([h|hs]) -> <prettyprint-Int> h
+
+  prettyprint-Real :
+    amb([h|hs]) -> <prettyprint-Real> h
+
+  prettyprint-String :
+    amb([h|hs]) -> <prettyprint-String> h
+
+  prettyprint-StrChar :
+    amb([h|hs]) -> <prettyprint-StrChar> h
+
+
+strategies
+  prettyprint-Char =
+    ![S(<is-string>)]
+
+  prettyprint-CharChar =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-Char
+
+  prettyprint-example =
+    prettyprint-CharChar
+
+  prettyprint-Char :
+    amb([h|hs]) -> <prettyprint-Char> h
+
+  prettyprint-CharChar :
+    amb([h|hs]) -> <prettyprint-CharChar> h

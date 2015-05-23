@@ -1,0 +1,13 @@
+module nabl/src-gen/signatures/formulas/Formulas-sig
+
+imports
+  nabl/src-gen/signatures/terms/Terms-sig
+  nabl/src-gen/signatures/formulas/Propositions-sig
+
+
+signature
+  constructors
+        : Proposition -> Formula
+    Not : Formula -> Formula
+    And : Formula * Formula -> Formula
+    Or  : Formula * Formula -> Formula

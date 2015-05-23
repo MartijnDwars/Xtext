@@ -1,0 +1,45 @@
+module nabl/src-gen/pp/common/Layout-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  nabl/src-gen/signatures/common/Layout-sig
+
+
+strategies
+  prettyprint-Eof =
+    ![S(<is-string>)]
+
+  prettyprint-LongCom =
+    ![S(<is-string>)]
+
+  prettyprint-CommChar =
+    ![S(<is-string>)]
+
+  prettyprint-Asterisk =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-Eof
+
+  prettyprint-example =
+    prettyprint-LongCom
+
+  prettyprint-example =
+    prettyprint-CommChar
+
+  prettyprint-example =
+    prettyprint-Asterisk
+
+  prettyprint-Eof :
+    amb([h|hs]) -> <prettyprint-Eof> h
+
+  prettyprint-LongCom :
+    amb([h|hs]) -> <prettyprint-LongCom> h
+
+  prettyprint-CommChar :
+    amb([h|hs]) -> <prettyprint-CommChar> h
+
+  prettyprint-Asterisk :
+    amb([h|hs]) -> <prettyprint-Asterisk> h

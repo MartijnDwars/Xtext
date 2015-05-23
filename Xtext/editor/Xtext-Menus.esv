@@ -34,3 +34,4 @@ menus
     
     action: "Generate SDF (ATerm)"   = gen-sdf
 	action: "Generate SDF"           = gen-sdf-file
+	action: "Generate NaBL"          = gen-nabl

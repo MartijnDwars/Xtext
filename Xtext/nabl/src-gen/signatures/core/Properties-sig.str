@@ -1,0 +1,22 @@
+module nabl/src-gen/signatures/core/Properties-sig
+
+imports
+  nabl/src-gen/signatures/common/Identifiers-sig
+  nabl/src-gen/signatures/terms/Signatures-sig
+  nabl/src-gen/signatures/terms/Vars-sig
+  nabl/src-gen/signatures/terms/Terms-sig
+  nabl/src-gen/signatures/formulas/Formulas-sig
+  nabl/src-gen/signatures/core/Namespaces-sig
+
+
+signature
+  constructors
+     : String -> PropertyID
+     : String -> SectionKeyword
+     : String -> Relation
+
+  constructors
+    Properties  : List(PropertyDef) -> ModuleSection
+    PropertyDef : PropertyID * List(NamespaceRef) * Sort -> PropertyDef
+    TypeProp    : PropertyRef
+    PropertyRef : PropertyID -> PropertyRef

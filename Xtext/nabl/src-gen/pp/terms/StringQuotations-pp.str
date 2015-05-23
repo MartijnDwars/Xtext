@@ -1,0 +1,152 @@
+module nabl/src-gen/pp/terms/StringQuotations-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  nabl/src-gen/signatures/terms/StringQuotations-sig
+
+
+imports
+  nabl/src-gen/signatures/terms/Terms-sig
+
+
+imports
+  nabl/src-gen/pp/terms/Terms-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-PPTerm
+
+  prettyprint-PPTerm :
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [t1__']
+              )
+            ]
+    where not(is-PPTerm)
+    where t1__' := <pp-one-Z(prettyprint-StringQuotation)> t1__
+
+  is-PPTerm =
+    fail
+
+  prettyprint-StringQuotedChars1 =
+    ![S(<is-string>)]
+
+  prettyprint-QuotedBracket1 =
+    ![S(<is-string>)]
+
+  prettyprint-Dollar1 =
+    ![S(<is-string>)]
+
+  prettyprint-StringQuotedChars2 =
+    ![S(<is-string>)]
+
+  prettyprint-QuotedBracket2 =
+    ![S(<is-string>)]
+
+  prettyprint-Dollar2 =
+    ![S(<is-string>)]
+
+  prettyprint-StringQuotedChars3 =
+    ![S(<is-string>)]
+
+  prettyprint-QuotedBracket3 =
+    ![S(<is-string>)]
+
+  prettyprint-Dollar3 =
+    ![S(<is-string>)]
+
+  prettyprint-StringQuotedChars4 =
+    ![S(<is-string>)]
+
+  prettyprint-QuotedBracket4 =
+    ![S(<is-string>)]
+
+  prettyprint-Dollar4 =
+    ![S(<is-string>)]
+
+  prettyprint-Padding =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-StringQuotedChars1
+
+  prettyprint-example =
+    prettyprint-QuotedBracket1
+
+  prettyprint-example =
+    prettyprint-Dollar1
+
+  prettyprint-example =
+    prettyprint-StringQuotedChars2
+
+  prettyprint-example =
+    prettyprint-QuotedBracket2
+
+  prettyprint-example =
+    prettyprint-Dollar2
+
+  prettyprint-example =
+    prettyprint-StringQuotedChars3
+
+  prettyprint-example =
+    prettyprint-QuotedBracket3
+
+  prettyprint-example =
+    prettyprint-Dollar3
+
+  prettyprint-example =
+    prettyprint-StringQuotedChars4
+
+  prettyprint-example =
+    prettyprint-QuotedBracket4
+
+  prettyprint-example =
+    prettyprint-Dollar4
+
+  prettyprint-example =
+    prettyprint-Padding
+
+  prettyprint-PPTerm :
+    amb([h|hs]) -> <prettyprint-PPTerm> h
+
+  prettyprint-StringQuotedChars1 :
+    amb([h|hs]) -> <prettyprint-StringQuotedChars1> h
+
+  prettyprint-QuotedBracket1 :
+    amb([h|hs]) -> <prettyprint-QuotedBracket1> h
+
+  prettyprint-Dollar1 :
+    amb([h|hs]) -> <prettyprint-Dollar1> h
+
+  prettyprint-StringQuotedChars2 :
+    amb([h|hs]) -> <prettyprint-StringQuotedChars2> h
+
+  prettyprint-QuotedBracket2 :
+    amb([h|hs]) -> <prettyprint-QuotedBracket2> h
+
+  prettyprint-Dollar2 :
+    amb([h|hs]) -> <prettyprint-Dollar2> h
+
+  prettyprint-StringQuotedChars3 :
+    amb([h|hs]) -> <prettyprint-StringQuotedChars3> h
+
+  prettyprint-QuotedBracket3 :
+    amb([h|hs]) -> <prettyprint-QuotedBracket3> h
+
+  prettyprint-Dollar3 :
+    amb([h|hs]) -> <prettyprint-Dollar3> h
+
+  prettyprint-StringQuotedChars4 :
+    amb([h|hs]) -> <prettyprint-StringQuotedChars4> h
+
+  prettyprint-QuotedBracket4 :
+    amb([h|hs]) -> <prettyprint-QuotedBracket4> h
+
+  prettyprint-Dollar4 :
+    amb([h|hs]) -> <prettyprint-Dollar4> h
+
+  prettyprint-Padding :
+    amb([h|hs]) -> <prettyprint-Padding> h
