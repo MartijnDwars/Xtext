@@ -10,8 +10,8 @@ imports
 	sdf/src-gen/pp/modules/Modules-pp
 	include/Xtext
 	generate/common
+	generate/nabl
 	generate/terminal-rule
-	include/TemplateLang
 
 rules 
 	

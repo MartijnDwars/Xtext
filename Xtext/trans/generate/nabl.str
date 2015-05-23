@@ -1,0 +1,68 @@
+// Rules to generate an nabl file for the given Xtext grammar
+
+module nabl
+
+imports
+	libstratego-gpp
+	include/NameBindingLanguage
+	nabl/src-gen/pp/NameBindingLanguage-pp
+	nabl/src-gen/pp/core/Modules-pp
+	include/Xtext
+
+rules
+	
+	nab-pp = (prettyprint-nabl-Module); !V([], <id>); box2text-string(|120)
+
+	gen-nab-debug:
+		ast -> Module("Dummy", [
+			Namespaces(namespace-defs),
+			Bindings(<conc> (def-clause, ref-clause))
+		])
+		where
+			namespace-defs := <collect(gen-nab-namespace-defs)> ast;
+			def-clause     := <collect(gen-nab-def-clause)> ast;
+			ref-clause     := <collect(gen-nab-ref-clause)> ast
+	
+	gen-nab-namespace-defs:
+		CrossReference(TypeRef(_, name), _) -> NamespaceDef(name)
+	
+	// TODO: Lookup the signature for the constructor with name <name>
+	gen-nab-def-clause:
+		CrossReference(TypeRef(_, name), _) -> BindingRule(
+          Op(name, [Var("n")])
+        , NoWhere()
+        , [ DefClause(
+              Explicit()
+            , Unique()
+            , NamespaceRef(CurrentLanguage(), name)
+            , VarRef("n")
+            , []
+            , Current()
+            , NoWhere()
+            )
+          ]
+        )
+	
+	// TODO: Lookup the signature for the constructor with name <name>
+	gen-nab-ref-clause:
+		CrossReference(TypeRef(_, name), _) -> BindingRule(
+          Op(<conc-strings> (name, "Ref"), [Var("n")])
+        , NoWhere()
+        , [ RefClause(
+              [ RefClausePart(
+                  All()
+                , NamespaceRef(CurrentLanguage(), name)
+                , VarRef("n")
+                , []
+                , Current()
+                , NoWhere()
+                )
+              ]
+            )
+          ]
+        )
+	
+	gen-nabl:
+		(selected, position, ast, path, project-path) -> (filename, <nab-pp> <gen-nab-debug> selected)
+		where
+			filename := $[[<remove-extension> path].nab]
