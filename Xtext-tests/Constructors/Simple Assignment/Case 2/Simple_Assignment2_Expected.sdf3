@@ -1,0 +1,18 @@
+module Simple_Assignment2_Expected
+
+imports
+  
+  Terminals
+
+context-free syntax
+
+DomainModel.DomainModel0 = model:AbstractElement
+AbstractElement = Import
+AbstractElement.AbstractElement0 = pd:PackageDeclaration
+Import = 'import' QualifiedNameWithWildcard
+QualifiedNameWithWildcard = QualifiedName Keyword1?
+Keyword1 = '.*'
+QualifiedName = ID Rule1*
+Rule1 = '.' ID
+PackageDeclaration.PackageDeclaration0 = p:'package'
+//ID is imported from the Terminals file, which should also be converted

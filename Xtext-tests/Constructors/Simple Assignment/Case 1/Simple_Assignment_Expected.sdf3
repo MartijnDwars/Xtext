@@ -1,0 +1,17 @@
+module Simple_Assignment_Expected
+
+imports
+  
+  Terminals
+
+context-free syntax
+
+DomainModel.DomainModel0 = model:AbstractElement
+AbstractElement = Import
+Import = 'import' QualifiedNameWithWildcard
+QualifiedNameWithWildcard = QualifiedName Keyword1?
+Keyword1 = '.*'
+QualifiedName = ID Rule1*
+Rule1 = '.' ID
+
+//ID is imported from the Terminals file, which should also be converted
