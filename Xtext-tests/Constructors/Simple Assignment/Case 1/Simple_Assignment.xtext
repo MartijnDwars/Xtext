@@ -1,0 +1,23 @@
+grammar org.xtext.example.SA.Simple_Assignment with org.eclipse.xtext.common.Terminals
+
+generate domainmodel "http://www.xtext.org/example/domainmodel/Domainmodel"
+
+DomainModel:
+	model = AbstractElement
+;
+
+AbstractElement:
+	Import
+;
+
+Import:
+	'import' QualifiedNameWithWildcard
+;
+
+QualifiedNameWithWildcard:
+	QualifiedName '.*'?
+;
+
+QualifiedName:
+	ID('.' ID)*
+;
