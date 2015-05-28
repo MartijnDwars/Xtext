@@ -244,17 +244,17 @@ rules
 	gen-alternatives(|name, attr):
 		//Input: Alternative with listof unorderedgroups
 		//Output: List of Contextfree rules
-		Alternatives(unordered-groups) -> <flatten-list> <map(gen-unordered-group(|name, attr))> unordered-groups
+		Alternatives(unordered-groups) -> <flatten-list> <map(gen-unordered-group(|name, attr, 1))> unordered-groups
 			
-	gen-unordered-group(|name, attr):
+	gen-unordered-group(|name, attr, main):
 		//Input: UnorderedGroup with list of groups
 		//Convert input to its final form
 		//If necessary create permutations
 		//Output: One or more permutations of the rules formed by the groups
 		UnorderedGroup(groups) -> output
 		where
-			output := <if(<equal(|1)> <length> groups, <singular-group-constructor(|name, attr)> groups, <perm-group-constructor(|name, attr)> groups)>
-	
+			output := <if(<equal(|1)> <length> groups, <singular-group-constructor(|name, attr, main)> groups, <perm-group-constructor(|name, attr)> groups)>
+		
 	perm-group-constructor(|name, attr):
 		input -> <flatten-list>[rule_set | extra_rules]
 		where
@@ -274,15 +274,18 @@ rules
 	group-constructor(|name, attr):
 		input -> SdfProductionWithCons(SortCons(name, Constructor(new_constructor)), Rhs(input), attr)
 		where
-			new_constructor := <newname> <conc-strings>(<remove-sortdef> name, "-")
+			new_constructor := <newname> <conc-strings>(<remove-sortdef> name, "-Perm-")
 			
-	singular-group-constructor(|name, attr):
+	singular-group-constructor(|name, attr, main):
 		//If any of the contents is of type assignment or action, then return a constructor name
 		[Group(content)] -> rule
 		where
-			constructor := <fetch-elem(is-action) + fetch-elem(is-assignment) + id> content;
-			output := <if(<equal(|content)> constructor, <gen-sortdef-rule(|name, attr)> content, <gen-sortconstructordef-rule(|name, attr, constructor)> content)>;
+			constructor := <collect-one(is-action) + collect-one(is-assignment) + id> content;
+			output := <if(or(<equal(|content)> constructor, <equal(|0)> main) , <gen-sortdef-rule(|name, attr)> content, <gen-sortconstructordef-rule(|name, attr, constructor)> content)>;
 			rule := <flatten-list> [<try(concat)> <(extract-outputs)> output| <try(concat)> <(extract-nested-outputs)> output]
+	
+	contains(|t)= oncetd(?t)
+
 	
 	gen-sortdef-rule(|name, attr):
 		//input: [List of AbstractTokens]
@@ -343,10 +346,10 @@ rules
 		Alternatives(unordered-groups) -> (output,nested)
 		where
 			name_string := <remove-sortdef> name;
-			new_name := <newname> <conc-strings> (name_string, "-");
+			new_name := <newname> <conc-strings> (name_string, "-SubRule-");
 			//new_name := <newname> "SubRule-";
 			output := Sort(new_name);
-			nested := <try(concat)> <map(gen-unordered-group(|SortDef(new_name), attr))> unordered-groups
+			nested := <try(concat)> <map(gen-unordered-group(|SortDef(new_name), attr, 0))> unordered-groups
 			
 	/* Revised Sections */
 	gen-abstract-token-rule(|name, attr):
@@ -383,7 +386,7 @@ rules
 		AssignableAlternatives(alternatives) -> (output, nested)
 		where
 			name_string := <remove-sortdef> name;
-			new_name := <newname> <conc-strings> (name_string, "-");
+			new_name := <newname> <conc-strings> (name_string, "-SubRule-");
 			//new_name := <newname> "SubRule-";
 			output := Sort(new_name);
 			nested := <try(concat)> <map(gen-abstract-alternative(|SortDef(new_name), attr,cardinality-opt))> alternatives

@@ -20,6 +20,7 @@ rules
 		content -> content
 		where
 			<debug> content
+			
 	// Cardinality
 	
 	gen-cardinality(|abstract-terminal):
@@ -92,7 +93,7 @@ rules
 	recursive-permutations(|set, block, n):
 		_ -> <if(<eq> (1,n), <filter-permutations(|block)> set, recursive-permutations(|new_set, block, <dec> n))>
 		where
-			new_set := <map(flatten-list)> <list-combinations> [set, block]
+			new_set := <list-combinations> [set, block]
 			
 	filter-permutations(|block):
 		set -> filtered-permutations
