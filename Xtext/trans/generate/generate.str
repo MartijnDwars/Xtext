@@ -7,6 +7,7 @@ imports
 	sdf/src-gen/pp/modules/Modules-pp
 	generate/parser-rule
 	include/Xtext
+	generate/post
 	
 rules
 	
@@ -23,7 +24,7 @@ rules
 			filename := $[[<remove-extension> path].sdf3.aterm]
 	
 	gen-sdf-debug:
-		selected -> <gen-grammar + gen-rule> selected
+		selected -> <(gen-grammar + gen-rule) ; post> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
