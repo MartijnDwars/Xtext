@@ -12,7 +12,6 @@ imports
 	generate/common
 	generate/generate
 	generate/terminal-rule
-	include/TemplateLang
 
 rules 
 	
@@ -196,25 +195,7 @@ rules
 // 	Fixed, don't change
 // 	*/
 // 	
-	sdf-pp = (prettyprint-sdf-Module + prettyprint-sdf-Grammar + prettyprint-Section); !V([], <id>); box2text-string(|120)
-	
-	gen-sdf-file:
-		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> <gen-sdf-debug> selected)
-		where
-			filename := $[[<remove-extension> path].sdf3]
-	
-	gen-sdf:
-		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
-		where
-			filename := $[[<remove-extension> path].sdf3.aterm]
-	
-	gen-sdf-debug:
-		selected -> <gen-grammar + gen-rule> selected
-	
-	gen-sdf-debug:
-		selected -> <map(gen-sdf-debug)> selected
-		where
-			<is-list> selected
+
 	
 	gen-grammar:
 		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> Module(name,imports,sdf-sections)
