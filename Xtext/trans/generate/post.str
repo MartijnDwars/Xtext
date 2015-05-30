@@ -1,0 +1,23 @@
+module post
+
+imports
+	
+	include/TemplateLang
+
+rules
+		
+  /**
+   * Group SdfProductions inside ContextFreeSyntax respectively
+   * LexicalSyntax together.
+   */
+  post:
+    Module(x, y, sdf-sections) -> Module(x, y, [
+      SDFSection(ContextFreeSyntax(cfs-productions)),
+      SDFSection(LexicalSyntax(lex-productions))
+    ])
+    with
+      cfs* := <collect(?ContextFreeSyntax(_))> sdf-sections;
+      cfs-productions := <collect(?SdfProduction(_, _, _))> cfs*;
+
+      lex* := <collect(?LexicalSyntax(_))> sdf-sections;
+      lex-productions := <collect(?SdfProduction(_, _, _))> lex*
