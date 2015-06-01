@@ -1,0 +1,25 @@
+module xtext-expand-alternatives
+
+imports
+	
+	include/Xtext
+	
+rules
+	
+	expand-alternatives:
+		p@ParserRule(_, _, _, alternatives) -> <map(insert(|p))> unordered-groups
+		where
+			unordered-groups := <collect-one(is-double-alt)> alternatives
+	
+	insert(|p):
+		u@UnorderedGroup(_) -> <oncetd(replace(|u))> p
+	
+	replace(|u):
+		Alternatives(unordered-groups) -> Alternatives(u)
+		where
+			<gt> (<length> unordered-groups, 1)
+	
+	is-double-alt:
+		Alternatives(unordered-groups) -> unordered-groups
+		where
+			<gt> (<length> unordered-groups, 1)
