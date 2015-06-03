@@ -370,17 +370,17 @@ RightSquareBracketKeyword:
 terminal NEGATIVE_INTEGER:
 	"-" INT;
 	
-terminal DOC_COMMENT:
-	'/**' -> '*/';		
-	
-terminal ML_COMMENT: 
-	'/*' !('*') -> '*/';
-
-terminal SL_COMMENT:
-	('//' !('\n' | '\r')* ('\r'? '\n')?) | ('--'->'\n');
-	
-terminal WS	: 
-	(' '|'\t'|'\r'|'\n')+;
+// terminal DOC_COMMENT:
+// 	'/**' -> '*/';		
+// 	
+// terminal ML_COMMENT: 
+// 	'/*' !('*') -> '*/';
+// 
+// terminal SL_COMMENT:
+// 	('//' !('\n' | '\r')* ('\r'? '\n')?) | ('--'->'\n');
+// 	
+// terminal WS	: 
+// 	(' '|'\t'|'\r'|'\n')+;
 
 terminal ID:
 	('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ("'" | '"')*;

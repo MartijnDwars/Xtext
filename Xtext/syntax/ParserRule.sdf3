@@ -22,7 +22,10 @@ context-free syntax
   
   AbstractMetaModelReference.AbstractMetaModelReference = <<STRING> ::>
   
-  Classifier.Classifier = <EClassifier>
+  // Classifier.Classifier = <EClassifier>
+  
+  Classifier.EInt = <EInt>
+  Classifier.EString = <EString>
   	
   AbstractRule.ParserRule = <<ID> <Returns?> <HiddenToken?>: <Alternatives> ;>
   
