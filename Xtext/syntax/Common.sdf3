@@ -24,9 +24,13 @@ lexical syntax
 	NewLineEOF     = EOF 
 	EOF            =  
  	WILDCARD = [\.]
+ 	
+ 	// gives either:
+ 	// "ecore::EInt" or "ecore::EString"
+ 	ECoreRet = "ecore::" "EInt" | "EString"
 
   // Reserved keywords
-  //ID = "terminal" {reject}
+  //ID = "terminal" {rejeect}
 
 lexical restrictions
 
