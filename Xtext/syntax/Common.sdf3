@@ -34,7 +34,7 @@ lexical syntax
  					  "EEnumLiteral"
 
   // Reserved keywords
-  //ID = "terminal" {rejeect}
+  ID = "terminal" {reject}
 
 lexical restrictions
 

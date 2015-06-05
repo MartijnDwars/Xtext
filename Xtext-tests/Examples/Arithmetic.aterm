@@ -1,16 +1,424 @@
-ParserRule(
-  "Import"
+Grammar(
+  GrammarID(["org", "eclipse", "xtext", "example", "arithmetics", "Arithmetics"])
+, Some(
+    Mixin(
+      [GrammarID(["org", "eclipse", "xtext", "common", "Terminals"])]
+    )
+  )
 , None()
-, None()
-, Alternatives(
-    [ UnorderedGroup(
-        [ Group(
-            [ AbstractTerminalAbstractToken(Keyword("'import'"), None())
-            , AssignmentAbstractToken(None(), "importedNamespace", Assignment(), RuleCall("ImportName"), None())
+, [ReferencedMetamodel("\"http://www.eclipse.org/emf/2002/Ecore\"", Some(Alias("ecore"))), GeneratedMetamodel("arithmetics", "\"http://www.eclipse.org/Xtext/example/Arithmetics\"", None())]
+, [ ParserRule(
+      "Module"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'module'"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "imports", AddAssignment(), RuleCall("Import"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "statements", AddAssignment(), RuleCall("Statement"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
             ]
           )
         ]
       )
-    ]
-  )
+    )
+  , ParserRule(
+      "Import"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'import'"), None())
+                , AssignmentAbstractToken(None(), "importedNamespace", Assignment(), RuleCall("ImportName"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ImportName"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(RuleCall("ID"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [AbstractTerminalAbstractToken(Keyword("'.'"), None()), AbstractTerminalAbstractToken(Keyword("'*'"), None())]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Statement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Definition"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Evaluation"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Definition"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'def'"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'('"), None())
+                              , AssignmentAbstractToken(None(), "args", AddAssignment(), RuleCall("DeclaredParameter"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AssignmentAbstractToken(None(), "args", AddAssignment(), RuleCall("DeclaredParameter"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Any())
+                                )
+                              , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("':'"), None())
+                , AssignmentAbstractToken(None(), "expr", Assignment(), RuleCall("Expression"), None())
+                , AbstractTerminalAbstractToken(Keyword("';'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "DeclaredParameter"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "AbstractDefinition"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Definition"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("DeclaredParameter"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Evaluation"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "expression", Assignment(), RuleCall("Expression"), None())
+                , AbstractTerminalAbstractToken(Keyword("';'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Expression"
+    , None()
+    , None()
+    , Alternatives(
+        [UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Addition"), None())])])]
+      )
+    )
+  , ParserRule(
+      "Addition"
+    , Some(Returns(TypeRef(None(), "Expression")))
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(RuleCall("Multiplication"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ ActionAbstractToken(
+                                                Action(TypeRef(None(), "Plus"), Some(ActionCurrent("left", Assignment())))
+                                              )
+                                            , AbstractTerminalAbstractToken(Keyword("'+'"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    , UnorderedGroup(
+                                        [ Group(
+                                            [ ActionAbstractToken(
+                                                Action(TypeRef(None(), "Minus"), Some(ActionCurrent("left", Assignment())))
+                                              )
+                                            , AbstractTerminalAbstractToken(Keyword("'-'"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              , AssignmentAbstractToken(None(), "right", Assignment(), RuleCall("Multiplication"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Multiplication"
+    , Some(Returns(TypeRef(None(), "Expression")))
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(RuleCall("PrimaryExpression"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ ActionAbstractToken(
+                                                Action(TypeRef(None(), "Multi"), Some(ActionCurrent("left", Assignment())))
+                                              )
+                                            , AbstractTerminalAbstractToken(Keyword("'*'"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    , UnorderedGroup(
+                                        [ Group(
+                                            [ ActionAbstractToken(
+                                                Action(TypeRef(None(), "Div"), Some(ActionCurrent("left", Assignment())))
+                                              )
+                                            , AbstractTerminalAbstractToken(Keyword("'/'"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              , AssignmentAbstractToken(None(), "right", Assignment(), RuleCall("PrimaryExpression"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "PrimaryExpression"
+    , Some(Returns(TypeRef(None(), "Expression")))
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AbstractTerminalAbstractToken(RuleCall("Expression"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "NumberLiteral"), None()))
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("NUMBER"), None())
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "FunctionCall"), None()))
+                , AssignmentAbstractToken(
+                    None()
+                  , "func"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "AbstractDefinition"), None())
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'('"), None())
+                              , AssignmentAbstractToken(None(), "args", AddAssignment(), RuleCall("Expression"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AssignmentAbstractToken(None(), "args", AddAssignment(), RuleCall("Expression"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Any())
+                                )
+                              , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("NUMBER", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [TerminalGroup(
+                     [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                   )]
+                )
+              , Some(Any())
+              )
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [ TerminalToken(Keyword("'.'"), None())
+                      , TerminalToken(
+                          TerminalAlternatives(
+                            [TerminalGroup(
+                               [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                             )]
+                          )
+                        , Some(Multiple())
+                        )
+                      ]
+                    )
+                  ]
+                )
+              , Some(Optional())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("INT", Some(Returns(MetaModelDeclaration(Classifier("ecore::EInt")))))
+    , TerminalAlternatives([TerminalGroup([TerminalToken(Keyword("'this one has been deactivated'"), None())])])
+    )
+  , TerminalRule(
+      Returns("FOO", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'f'"), None())
+            , TerminalToken(Wildcard("."), None())
+            , TerminalToken(Keyword("'o'"), None())
+            ]
+          )
+        ]
+      )
+    )
+  ]
 )
