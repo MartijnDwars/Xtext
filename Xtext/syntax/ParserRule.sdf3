@@ -18,14 +18,11 @@ context-free syntax
   Operator.BooleanAssignment = "?="
   
   TypeRef.TypeRef = AbstractMetaModelReference? ID
-  TypeRef.MetaModelDeclaration = Classifier //< ecore :: <Classifier> >
+  TypeRef.MetaModelDeclaration = Classifier
   
   AbstractMetaModelReference.AbstractMetaModelReference = <<STRING> ::>
   
   Classifier.Classifier = ECore
-  
-  // Classifier.EInt = <EInt>
-  // Classifier.EString = <EString>
   	
   AbstractRule.ParserRule = <<ID> <Returns?> <HiddenToken?>: <Alternatives> ;>
   
