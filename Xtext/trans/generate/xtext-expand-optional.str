@@ -6,14 +6,8 @@ imports
 	
 rules
 	
-	flatten-parser-rules:
-		Grammar(a, b, c, d, parser-rules) -> Grammar(a, b, c, d, <flatten-list> parser-rules)
-	
-	flatten-parser-rules =
-		flatten-list <+ id
-	
-	expand-optional:
-		p@ParserRule(_, _, _, alternatives) -> <flatten-list> [
+	expand:
+		p@ParserRule(_, _, _, alternatives) -> [
 			<oncetd(remove(|abstract-terminal-token))> p,
 			<oncetd(mandatory(|abstract-terminal-token))> p
 		]

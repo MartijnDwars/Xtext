@@ -16,10 +16,7 @@ rules
 		SortDef(name) -> name
 	
 	remove-parenthetical:
-		//Parenthetical(content) -> content
-		content -> content
-		where
-			<debug> content
+		Parenthetical(content) -> content
 			
 	// Cardinality
 	
