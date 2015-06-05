@@ -1,10 +1,14 @@
-TerminalRule(
-  Returns("FOO", None())
-, TerminalAlternatives(
-    [ TerminalGroup(
-        [ TerminalToken(Keyword("f"), None())
-        , TerminalToken(Wildcard("."), None())
-        , TerminalToken(Keyword("o"), None())
+ParserRule(
+  "Import"
+, None()
+, None()
+, Alternatives(
+    [ UnorderedGroup(
+        [ Group(
+            [ AbstractTerminalAbstractToken(Keyword("'import'"), None())
+            , AssignmentAbstractToken(None(), "importedNamespace", Assignment(), RuleCall("ImportName"), None())
+            ]
+          )
         ]
       )
     ]

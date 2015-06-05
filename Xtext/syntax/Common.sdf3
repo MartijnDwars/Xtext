@@ -27,7 +27,11 @@ lexical syntax
  	
  	// gives either:
  	// "ecore::EInt" or "ecore::EString"
- 	ECore = "ecore::" "EInt" | "EString"
+ 	ECore = "ecore::" "EInt" | 
+ 					  "EString" | 
+ 					  "EPackage" | 
+ 					  "EClassifier" | 
+ 					  "EEnumLiteral"
 
   // Reserved keywords
   //ID = "terminal" {rejeect}
