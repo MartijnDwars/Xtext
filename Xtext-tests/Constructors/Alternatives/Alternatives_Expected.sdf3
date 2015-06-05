@@ -1,0 +1,82 @@
+module Alternatives_Expected
+
+imports
+  
+  Terminals
+
+context-free syntax
+
+A = "a"
+A = "b"
+
+B = "a"
+B = "b"
+B = "c"
+
+C = "a"
+C = "b"
+C = A
+
+D.D1 = a:"a"
+D = "b"
+
+E = "a"
+E.E1 = b:"b"
+
+F.F1 = a:"a"
+F.F2 = b:"b"
+
+G = SubRule-1
+SubRule-1 = "a"
+SubRule-1 = "b"
+
+H = SubRule-1
+SubRule-1.SubRule-1-1 = a:"a"
+SubRule-1.SubRule-1-2 = b:"b"
+
+I.a = "a"
+I = "b"
+
+J.a = SubRule-1
+SubRule-1 = "a"
+SubRule-1 = "b"
+
+K = SubRule-1
+SubRule-1.a = a:"a"
+SubRule-1.b = b:"b"
+
+L = SubRule-1
+SubRule-1.a = a:"a"
+SubRule-1.SubRule-1-1 = b:"b"
+
+AA = SubRule-1
+SubRule-1 = "a"
+SubRule-1 = SubRule-1-1
+SubRule-1-1 = "b"
+SubRule-1-1 = "c"
+
+AB.AB-0 = a:SubRule-1
+SubRule-1 = "a"
+SubRule-1 = SubRule-1-1
+SubRule-1-1 = "b"
+SubRule-1-1 = "c"
+
+AC.a = SubRule-1
+SubRule-1 = "a"
+SubRule-1 = SubRule-1-1
+SubRule-1-1 = "b"
+SubRule-1-1 = "c"
+
+AD = SubRule-1
+SubRule-1.a = "a"
+SubRule-1.alt = SubRule-1-1
+SubRule-1-1 = "b"
+SubRule-1-1 = "c"
+
+AE = SubRule-1
+SubRule-1.a = "a"
+SubRule-1 = SubRule-1-1
+SubRule-1-1.b = "b"
+SubRule-1-1.c = "c"
+
+//ID is imported from the Terminals file, which should also be converted

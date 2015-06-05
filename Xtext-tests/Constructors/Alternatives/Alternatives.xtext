@@ -1,0 +1,84 @@
+/* This grammar works as intended, except for the pretty printed version of the QualifiedName, which should be transformed into one of
+the more complex list definitions. */
+
+/* This grammar will lead to a SDF3 grammar that produces an empty AST, as it would inside Xtext. The only noticeable difference is the 
+'.*' which inside an Xtext grammar can have a cardinality (as in this example), but in SDF3 only Sorts can have a cardinality, so the 
+Keyword '.*' had to be extracted to a new rule */
+
+grammar org.xtext.example.NA.No_Assignment with org.eclipse.xtext.common.Terminals
+
+generate domainmodel "http://www.xtext.org/example/domainmodel/Domainmodel"
+
+A:
+	"a" | "b"	
+;
+ 
+B:
+	"a" | "b" | "c"
+;
+ 
+C:
+	"a" | "b" | A
+;
+ 
+D:
+	a="a" | "b"
+;
+ 
+E:
+	"a" | b="b"
+;
+ 
+F:
+	a="a" | b="b"
+;
+ 
+G: 
+	("a" | "b")
+; 
+  
+H: 
+	(a="a" | b="b")
+; 
+  
+I:
+	{a} "a" | "b"	
+;
+ 
+J:
+	{a} ("a" | "b")
+;
+ 
+K:
+	({a} a="a"| {b} b="b")
+;
+ 
+L:
+	({a} a="a"| b="b")	
+;
+ 
+//More complex examples
+
+AA:
+	("a" | ("b" | "c"))	
+; 
+  
+AB:
+	a=("a" | ("b" | "c"))
+;   
+    
+AC:
+	{a} ("a" | ("b" | "c"))	
+;
+ 
+AD:
+	({a} "a" | {alt} ("b" | "c"))		
+;
+ 
+AE:
+	({a} "a" | ({b} "b" | {c} "c"))		
+;
+ 
+AF:
+	((({a} id=AE)) | {alt} ( "b" | "c"))	
+;
