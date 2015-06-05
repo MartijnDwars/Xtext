@@ -1,4 +1,4 @@
-module xtext-expand-alternatives
+module xtext-expand-alternative
 
 imports
 	
@@ -6,7 +6,7 @@ imports
 	
 rules
 	
-	expand-alternatives:
+	expand:
 		p@ParserRule(_, _, _, alternatives) -> <map(insert(|p))> unordered-groups
 		where
 			unordered-groups := <collect-one(is-double-alt)> alternatives
@@ -15,7 +15,7 @@ rules
 		u@UnorderedGroup(_) -> <oncetd(replace(|u))> p
 	
 	replace(|u):
-		Alternatives(unordered-groups) -> Alternatives(u)
+		Alternatives(unordered-groups) -> Alternatives([u])
 		where
 			<gt> (<length> unordered-groups, 1)
 	

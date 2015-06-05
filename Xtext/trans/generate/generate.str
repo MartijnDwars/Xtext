@@ -9,7 +9,7 @@ imports
 	include/Xtext
 	generate/post
 	generate/xtext-expand-optional
-	generate/xtext-expand-alternatives
+	generate/xtext-expand-alternative
 	
 rules
 	
@@ -26,14 +26,28 @@ rules
 			filename := $[[<remove-extension> path].sdf3.aterm]
 	
 	gen-sdf-debug:
-		selected -> <(gen-grammar + gen-rule) ; post> selected
+		selected -> <(gen-grammar + gen-rule) ; try(post)> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
 		where
 			<is-list> selected
 	
+	// Menu
+	gen-xtext-sdf:
+		(selected, position, ast, path, project-path) -> (filename, <gen-xtext ; gen-sdf-debug ; sdf-pp> selected)
+		where
+			filename := $[[<remove-extension> path].sdf3]
+	
+	// Menu
 	gen-xtext:
-		(selected, _, _, path, _) -> (filename, <innermost(expand-optional) ; flatten-parser-rules ; innermost(expand-alternatives)> selected)
+		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
 		where
 			filename := <guarantee-extension(|"xtextng")> path
+	
+	// Desugar selection. Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
+	gen-xtext:
+		ast -> <desugar ; topdown(try(flatten-list))> ast
+	
+	// Expand optionals, then recursively desugar those expanded optionals, and finally flatten the result
+	desugar = topdown(try(expand ; desugar ; flatten-list))
