@@ -385,7 +385,7 @@ terminal WS	:
 terminal ID:
 	('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ("'" | '"')*;
 	
-terminal INT returns ecore::EString: 
+terminal INT returns ecore::EInt: 
 	('0'..'9')+ ;
 
 terminal STRING	: 

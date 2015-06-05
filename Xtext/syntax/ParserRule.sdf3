@@ -22,7 +22,7 @@ context-free syntax
   
   AbstractMetaModelReference.AbstractMetaModelReference = <<STRING> ::>
   
-  Classifier.Classifier = ECoreRet
+  Classifier.Classifier = ECore
   
   // Classifier.EInt = <EInt>
   // Classifier.EString = <EString>

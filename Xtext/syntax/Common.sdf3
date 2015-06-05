@@ -2,14 +2,14 @@ module Common
 
 lexical syntax
 
-	ID               = "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
+	ID               	= "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*
 	
-	// STRING           = "\"" DoubleStringChar* "\""
-	// STRING           = "'" SingleStringChar* "'"
-	DoubleStringChars =  DoubleStringChar*
-	DoubleStringChar = ~[\"\n]
-	SingleStringChars = SingleStringChar*
-	SingleStringChar = ~[\'\n] 
+	STRING  	        = "\"" DoubleStringChar* "\""
+	STRING           	= "'" SingleStringChar* "'"
+	DoubleStringChars 	=  DoubleStringChar*
+	DoubleStringChar 	= ~[\"\n]
+	SingleStringChars 	= SingleStringChar*
+	SingleStringChar 	= ~[\'\n] 
 	
 	// StringChar     = "\\\"" 
 	// StringChar     = BackSlashChar 
@@ -23,11 +23,11 @@ lexical syntax
 	NewLineEOF     = [\n\r] 
 	NewLineEOF     = EOF 
 	EOF            =  
- 	WILDCARD = [\.]
+ 	WILDCARD	   = [\.]
  	
  	// gives either:
  	// "ecore::EInt" or "ecore::EString"
- 	ECoreRet = "ecore::" "EInt" | "EString"
+ 	ECore = "ecore::" "EInt" | "EString"
 
   // Reserved keywords
   //ID = "terminal" {rejeect}
@@ -36,11 +36,10 @@ lexical restrictions
 
 	// Ensure greedy matching for lexicals
 	
-	CommentChar   -/- [\/]
-	// INT           -/- [0-9]
-	ID            -/- [a-zA-Z0-9\_]
-	
-  WILDCARD -/- [\.]
+	CommentChar			-/- [\/]
+	// INT					-/- [0-9]
+	ID					-/- [a-zA-Z0-9\_]
+  	WILDCARD			-/- [\.]
   
 	// EOF may not be followed by any char
 	
@@ -64,5 +63,5 @@ context-free syntax
   Cardinality.Multiple = <+>
   Cardinality.Any = <*>
   
-  STRING = <"<DoubleStringChars>">
-  STRING = <'<SingleStringChars>'>
+  // STRING = <"<DoubleStringChars>">
+  // STRING = <'<SingleStringChars>'>
