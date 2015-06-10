@@ -7,6 +7,10 @@ test terminal without name [[
   terminal
 ]] parse fails
 
+test terminal with terminal as name [[
+	terminal terminal: 'a';
+]] parse fails
+
 test terminal name not an ID [[
   terminal ID.NAME: 'a';
 ]] parse fails

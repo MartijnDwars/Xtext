@@ -1,8 +1,4692 @@
-ParserRule(
-  "LocalValueRef"
+Grammar(
+  GrammarID(["com", "intel", "llvm", "ireditor", "LLVM_IR"])
 , None()
-, None()
-, Alternatives(
-    [UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("ref=[LocalValue|LOCAL_ID]\r"), None())])])]
+, Some(
+    HiddenToken([RuleCall("WS"), RuleCall("FILECHECK_COMMENT"), RuleCall("SL_COMMENT")])
   )
+, [ReferencedMetamodel("\"http://www.eclipse.org/emf/2002/Ecore\"", Some(Alias("ecore"))), GeneratedMetamodel("lLVM_IR", "\"http://www.intel.com/llvm/ireditor\"", None())]
+, [ ParserRule(
+      "Model"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [AssignmentAbstractToken(None(), "elements", AddAssignment(), RuleCall("TopLevelElement"), Some(Any()))]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TopLevelElement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("TypeDef"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("InlineAsm"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("TargetInfo"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("GlobalValue"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("NamedMetadata"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("AttributeGroup"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "AttributeGroup"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'attributes'"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ATTRIBUTE_ID"), None())
+                , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                , AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "attributes", AddAssignment(), RuleCall("FunctionAttribute"), None())]
+                           )]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "alignstack", AddAssignment(), RuleCall("AlignStack"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                              , AssignmentAbstractToken(None(), "alignstackValue", AddAssignment(), RuleCall("INTEGER"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "targetSpecificAttributes", AddAssignment(), RuleCall("TargetSpecificAttribute"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TargetSpecificAttribute"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("STRING"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'='"), None())
+                              , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("STRING"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NamedMetadata"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("META_INT"), None())
+                , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                , AbstractTerminalAbstractToken(Keyword("'metadata'"), None())
+                , AssignmentAbstractToken(None(), "node", Assignment(), RuleCall("MetadataNode"), None())
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("META_NAME"), None())
+                , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                , AssignmentAbstractToken(None(), "node", Assignment(), RuleCall("MetadataNode"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataRef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "NamedMetadata"), Some(CrossReferenceableTerminal(RuleCall("MetadataIdentifier"))))
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Temp"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "ref", Assignment(), RuleCall("NamedMetadata"), None())]
+             )]
+          )
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("MetadataIdentifier"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Temp2"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "ref", Assignment(), RuleCall("NamedMetadata"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Temp2"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "NamedMetadata"), None())
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataIdentifier"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("META_INT"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("META_NAME"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "ValueRef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("GlobalValueRef"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("LocalValueRef"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "GlobalValueRef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "constant", Assignment(), RuleCall("Constant"), None())]
+             )]
+          )
+        , UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "metadata", Assignment(), RuleCall("MetadataRef"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "LocalValueRef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "LocalValue"), Some(CrossReferenceableTerminal(RuleCall("LOCAL_ID"))))
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "GlobalValue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("GlobalVariable"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Function"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Alias"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "GlobalValueDef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("GlobalVariable"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("FunctionHeader"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Alias"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "LocalValue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("NamedInstruction"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Parameter"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "NamedInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("StartingInstruction"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("NamedMiddleInstruction"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("NamedTerminatorInstruction"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("StartingInstruction"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("MiddleInstruction"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("TerminatorInstruction"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Alias"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("GlobalName"), None())
+                , AbstractTerminalAbstractToken(Keyword("'alias'"), None())
+                , AssignmentAbstractToken(None(), "linkage", Assignment(), RuleCall("Linkage"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "visibility", Assignment(), RuleCall("Visibility"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "aliasee", Assignment(), RuleCall("Aliasee"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Aliasee"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "GlobalValueDef"), Some(CrossReferenceableTerminal(RuleCall("GLOBAL_ID"))))
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "bitcast", Assignment(), RuleCall("ConstantExpression_convert"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TargetInfo"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'target'"), None())
+                , AssignmentAbstractToken(
+                    None()
+                  , "infoType"
+                  , Assignment()
+                  , AssignableAlternatives([Keyword("'datalayout'"), Keyword("'triple'")])
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                , AssignmentAbstractToken(None(), "layout", Assignment(), RuleCall("STRING"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "InlineAsm"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'module'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'asm'"), None())
+                , AssignmentAbstractToken(None(), "asmLine", Assignment(), RuleCall("STRING"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "GlobalVariable"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("GlobalName"), None())
+                , AssignmentAbstractToken(None(), "linkage", Assignment(), RuleCall("Linkage"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "addrspace", Assignment(), RuleCall("AddressSpace"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "tlsModel", Assignment(), RuleCall("TLSmodel"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'unnamed_addr'"), Some(Optional()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'constant'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'global'"), None())])])
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "initialValue", Assignment(), RuleCall("Constant"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "section", Assignment(), RuleCall("Section"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "align", Assignment(), RuleCall("Align"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Constant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("SimpleConstant"), None())])])
+        , UnorderedGroup(
+            [Group([AbstractTerminalAbstractToken(PredicatedRuleCall(Predicated(), RuleCall("StructureConstant")), None())])]
+          )
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ArrayConstant"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("VectorConstant"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ZeroInitializer"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("MetadataNode"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("MetadataString"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("BlockAddress"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Undef"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression"), None())])])
+        , UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "GlobalValueDef"), Some(CrossReferenceableTerminal(RuleCall("GLOBAL_ID"))))
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_convert"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_getelementptr"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_select"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_compare"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_extractelement"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_insertelement"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_shufflevector"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_extractvalue"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_insertvalue"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ConstantExpression_binary"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_convert"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), RuleCall("ConvertionOpcode"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "fromType", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "constant", Assignment(), RuleCall("GlobalValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("'to'"), None())
+                , AssignmentAbstractToken(None(), "targetType", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_getelementptr"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'getelementptr'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'inbounds'"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "constantType", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "constant", Assignment(), RuleCall("GlobalValueRef"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indexTypes", AddAssignment(), RuleCall("Type"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("Constant"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_select"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'select'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_compare"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'icmp'"), None())
+                              , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("IcmpCondition"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fcmp'"), None())
+                              , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("FcmpCondition"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_extractelement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'extractelement'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "vector", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "index", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_insertelement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'insertelement'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "vectorType", Assignment(), RuleCall("VectorType"), None())
+                , AssignmentAbstractToken(None(), "vector", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "element", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "index", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_shufflevector"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'shufflevector'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "vector1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "vector2", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "mask", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_extractvalue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'extractvalue'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("INTEGER"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_insertvalue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'insertvalue'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "element", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("INTEGER"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantExpression_binary"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(
+                                                None()
+                                              , "opcode"
+                                              , Assignment()
+                                              , AssignableAlternatives(
+                                                  [Keyword("'add'"), Keyword("'sub'"), Keyword("'mul'"), Keyword("'shl'")]
+                                                )
+                                              , None()
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group([AbstractTerminalAbstractToken(Keyword("'nuw'"), Some(Optional()))])
+                                                      , Group([AbstractTerminalAbstractToken(Keyword("'nsw'"), Some(Optional()))])
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , None()
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(
+                                                None()
+                                              , "opcode"
+                                              , Assignment()
+                                              , AssignableAlternatives(
+                                                  [Keyword("'sdiv'"), Keyword("'udiv'"), Keyword("'lshr'"), Keyword("'ashr'")]
+                                                )
+                                              , None()
+                                              )
+                                            , AbstractTerminalAbstractToken(Keyword("'exact'"), Some(Optional()))
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "opcode"
+                                , Assignment()
+                                , AssignableAlternatives(
+                                    [ Keyword("'fadd'")
+                                    , Keyword("'fsub'")
+                                    , Keyword("'fmul'")
+                                    , Keyword("'fdiv'")
+                                    , Keyword("'urem'")
+                                    , Keyword("'srem'")
+                                    , Keyword("'frem'")
+                                    , Keyword("'and'")
+                                    , Keyword("'or'")
+                                    , Keyword("'xor'")
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Undef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'undef'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "Undef"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BlockAddress"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'blockaddress'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "function", Assignment(), RuleCall("GlobalValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "basicBlock", Assignment(), RuleCall("BasicBlockRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ZeroInitializer"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'zeroinitializer'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "ZeroInitializer"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "StructureConstant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "StructureConstant"), None()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                              , AssignmentAbstractToken(None(), "list", Assignment(), RuleCall("ConstantList"), Some(Optional()))
+                              , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "packed", Assignment(), Keyword("'<'"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                              , AssignmentAbstractToken(None(), "list", Assignment(), RuleCall("ConstantList"), Some(Optional()))
+                              , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'>'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ArrayConstant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "ArrayConstant"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'['"), None())
+                , AssignmentAbstractToken(None(), "list", Assignment(), RuleCall("ConstantList"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "VectorConstant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "VectorConstant"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'<'"), None())
+                , AssignmentAbstractToken(None(), "list", Assignment(), RuleCall("ConstantList"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'>'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConstantList"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "typedConstants", AddAssignment(), RuleCall("TypedConstant"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "typedConstants", AddAssignment(), RuleCall("TypedConstant"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TypedConstant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("Constant"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "SimpleConstant"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "value"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ RuleCall("INTEGER")
+                      , RuleCall("SIGNED_INT")
+                      , RuleCall("FLOAT")
+                      , RuleCall("BOOLEAN")
+                      , RuleCall("NULL")
+                      , RuleCall("CSTRING")
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataNode"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "MetadataNode"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'!'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "elements", AddAssignment(), RuleCall("MetadataNodeElement"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AssignmentAbstractToken(None(), "elements", AddAssignment(), RuleCall("MetadataNodeElement"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Any())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataNodeElement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "metadataRef", Assignment(), RuleCall("MetadataRef"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "null", Assignment(), RuleCall("NULL"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataString"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("METADATA_STRING"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TLSmodel"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'thread_local'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AbstractTerminalAbstractToken(RuleCall("TLSoption"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TLSoption"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'localdynamic'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'initialexec'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'localexec'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "AddressSpace"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'addrspace'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("INTEGER"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Section"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [AbstractTerminalAbstractToken(Keyword("'section'"), None()), AbstractTerminalAbstractToken(RuleCall("STRING"), None())]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Align"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [AbstractTerminalAbstractToken(Keyword("'align'"), None()), AbstractTerminalAbstractToken(RuleCall("INTEGER"), None())]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Gc"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [AbstractTerminalAbstractToken(Keyword("'gc'"), None()), AbstractTerminalAbstractToken(RuleCall("STRING"), None())]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Function"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("FunctionDef"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("FunctionDecl"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionDef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'define'"), None())
+                , AssignmentAbstractToken(None(), "header", Assignment(), RuleCall("FunctionHeader"), None())
+                , AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                , AssignmentAbstractToken(None(), "basicBlocks", AddAssignment(), RuleCall("BasicBlock"), Some(Multiple()))
+                , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionDecl"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'declare'"), None())
+                , AssignmentAbstractToken(None(), "header", Assignment(), RuleCall("FunctionHeader"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionHeader"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "linkage", Assignment(), RuleCall("Linkage"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "visibility", Assignment(), RuleCall("Visibility"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "cconv", Assignment(), RuleCall("CConv"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'unnamed_addr'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "rettypeAttrs", Assignment(), RuleCall("ParameterAttributes"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "rettype", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("GLOBAL_ID"), None())
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AssignmentAbstractToken(None(), "parameters", Assignment(), RuleCall("Parameters"), None())
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                , AssignmentAbstractToken(None(), "attrs", Assignment(), RuleCall("FunctionAttributes"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "section", Assignment(), RuleCall("Section"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "align", Assignment(), RuleCall("Align"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "gc", Assignment(), RuleCall("Gc"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "functionPrefix", Assignment(), RuleCall("FunctionPrefix"), Some(Optional()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionPrefix"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'prefix'"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedConstant"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Parameters"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "Parameters"), None()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "parameters", AddAssignment(), RuleCall("Parameter"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "parameters", AddAssignment(), RuleCall("Parameter"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Any())
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "vararg", Assignment(), Keyword("'...'"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Optional())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "vararg", Assignment(), Keyword("'...'"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionAttributes"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "functionAttributes", AddAssignment(), RuleCall("FunctionAttribute"), None())]
+                           )]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "alignstack", AddAssignment(), RuleCall("AlignStack"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                                            , AssignmentAbstractToken(None(), "alignstackValue", AddAssignment(), RuleCall("INTEGER"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "functionAttributeGroupRefs"
+                                , AddAssignment()
+                                , CrossReference(TypeRef(None(), "AttributeGroup"), Some(CrossReferenceableTerminal(RuleCall("ATTRIBUTE_ID"))))
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "AlignStack"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "AlignStack"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'alignstack'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FunctionAttribute"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "attribute"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ Keyword("'alwaysinline'")
+                      , Keyword("'builtin'")
+                      , Keyword("'cold'")
+                      , Keyword("'inlinehint'")
+                      , Keyword("'naked'")
+                      , Keyword("'nobuiltin'")
+                      , Keyword("'noduplicate'")
+                      , Keyword("'noimplicitfloat'")
+                      , Keyword("'noinline'")
+                      , Keyword("'nonlazybind'")
+                      , Keyword("'noredzone'")
+                      , Keyword("'noreturn'")
+                      , Keyword("'nounwind'")
+                      , Keyword("'optnone'")
+                      , Keyword("'optsize'")
+                      , Keyword("'readnone'")
+                      , Keyword("'readonly'")
+                      , Keyword("'returns_twice'")
+                      , Keyword("'sanitize_address'")
+                      , Keyword("'sanitize_memory'")
+                      , Keyword("'sanitize_thread'")
+                      , Keyword("'ssp'")
+                      , Keyword("'sspreq'")
+                      , Keyword("'sspstrong'")
+                      , Keyword("'uwtable'")
+                      , Keyword("'address_safety'")
+                      , Keyword("'thread_safety'")
+                      , Keyword("'uninitialized_checks'")
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BasicBlock"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("BasicBlockName"), None())
+                , AssignmentAbstractToken(None(), "instructions", AddAssignment(), RuleCall("StartingInstruction"), Some(Any()))
+                , AssignmentAbstractToken(None(), "instructions", AddAssignment(), RuleCall("MiddleInstruction"), Some(Any()))
+                , AssignmentAbstractToken(None(), "instructions", AddAssignment(), RuleCall("TerminatorInstruction"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BasicBlockName"
+    , Some(Returns(MetaModelDeclaration(Classifier("ecore::EString"))))
+    , None()
+    , Alternatives(
+        [UnorderedGroup(
+           [Group([AbstractTerminalAbstractToken(RuleCall("BASIC_BLOCK_ID"), Some(Optional()))])]
+         )]
+      )
+    )
+  , ParserRule(
+      "MetadataSuffix"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("META_NAME"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("MetadataRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "StartingInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("LocalName"), None())
+                , AssignmentAbstractToken(None(), "instruction", Assignment(), RuleCall("Instruction_phi"), None())
+                , AssignmentAbstractToken(None(), "metadata", AddAssignment(), RuleCall("MetadataSuffix"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MiddleInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "instruction"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [RuleCall("NamedMiddleInstruction"), RuleCall("Instruction_store"), RuleCall("Instruction_fence"), RuleCall("Instruction_call_void")]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "metadata", AddAssignment(), RuleCall("MetadataSuffix"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NamedMiddleInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("LocalName"), None())
+                , AssignmentAbstractToken(
+                    None()
+                  , "instruction"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ RuleCall("BinaryInstruction")
+                      , RuleCall("BitwiseBinaryInstruction")
+                      , RuleCall("VectorInstructions")
+                      , RuleCall("AggregateInstruction")
+                      , RuleCall("Instruction_alloca")
+                      , RuleCall("Instruction_load")
+                      , RuleCall("Instruction_getelementptr")
+                      , RuleCall("Instruction_cmpxchg")
+                      , RuleCall("Instruction_atomicrmw")
+                      , RuleCall("ConversionInstruction")
+                      , RuleCall("OtherInstruction")
+                      , RuleCall("Instruction_call_nonVoid")
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ParamName"
+    , Some(Returns(MetaModelDeclaration(Classifier("ecore::EString"))))
+    , None()
+    , Alternatives(
+        [UnorderedGroup(
+           [Group([AbstractTerminalAbstractToken(RuleCall("LOCAL_ID"), Some(Optional()))])]
+         )]
+      )
+    )
+  , ParserRule(
+      "LocalName"
+    , Some(Returns(MetaModelDeclaration(Classifier("ecore::EString"))))
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(RuleCall("LOCAL_ID"), None())
+                              , AbstractTerminalAbstractToken(RuleCall("WS"), Some(Any()))
+                              , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "GlobalName"
+    , Some(Returns(MetaModelDeclaration(Classifier("ecore::EString"))))
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(RuleCall("GLOBAL_ID"), None())
+                              , AbstractTerminalAbstractToken(RuleCall("WS"), Some(Any()))
+                              , AbstractTerminalAbstractToken(Keyword("'='"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TerminatorInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "instruction"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ RuleCall("NamedTerminatorInstruction")
+                      , RuleCall("Instruction_ret")
+                      , RuleCall("Instruction_br")
+                      , RuleCall("Instruction_switch")
+                      , RuleCall("Instruction_indirectbr")
+                      , RuleCall("Instruction_resume")
+                      , RuleCall("Instruction_unreachable")
+                      , RuleCall("Instruction_invoke_void")
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "metadata", AddAssignment(), RuleCall("MetadataSuffix"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NamedTerminatorInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("LocalName"), None())
+                , AssignmentAbstractToken(
+                    None()
+                  , "instruction"
+                  , Assignment()
+                  , AssignableAlternatives([RuleCall("Instruction_invoke_nonVoid")])
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_ret"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'ret'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "val", Assignment(), RuleCall("TypedValue"), None())]
+                           )]
+                        )
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'void'"), None())])])
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_br"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'br'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                                            , AssignmentAbstractToken(None(), "true", Assignment(), RuleCall("BasicBlockRef"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                                            , AssignmentAbstractToken(None(), "false", Assignment(), RuleCall("BasicBlockRef"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                                            , AssignmentAbstractToken(None(), "unconditional", Assignment(), RuleCall("BasicBlockRef"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_switch"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'switch'"), None())
+                , AssignmentAbstractToken(None(), "comparisonValue", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                , AssignmentAbstractToken(None(), "defaultDest", Assignment(), RuleCall("BasicBlockRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("'['"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "caseConditions", AddAssignment(), RuleCall("TypedValue"), None())
+                              , AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                              , AssignmentAbstractToken(None(), "destinations", AddAssignment(), RuleCall("BasicBlockRef"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_indirectbr"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'indirectbr'"), None())
+                , AssignmentAbstractToken(None(), "address", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AbstractTerminalAbstractToken(Keyword("'['"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                              , AssignmentAbstractToken(None(), "destinations", AddAssignment(), RuleCall("BasicBlockRef"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                                            , AssignmentAbstractToken(None(), "destinations", AddAssignment(), RuleCall("BasicBlockRef"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Any())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_invoke_void"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'invoke'"), None())
+                , AssignmentAbstractToken(None(), "cconv", Assignment(), RuleCall("CConv"), Some(Optional()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'zeroext'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'signext'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'inreg'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("VoidType"), None())
+                , AssignmentAbstractToken(None(), "callee", Assignment(), RuleCall("Callee"), None())
+                , AssignmentAbstractToken(None(), "args", Assignment(), RuleCall("ArgList"), None())
+                , AssignmentAbstractToken(None(), "attributes", Assignment(), RuleCall("FunctionAttributes"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'to'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                , AssignmentAbstractToken(None(), "toLabel", Assignment(), RuleCall("BasicBlockRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("'unwind'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                , AssignmentAbstractToken(None(), "exceptionLabel", Assignment(), RuleCall("BasicBlockRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_invoke_nonVoid"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'invoke'"), None())
+                , AssignmentAbstractToken(None(), "cconv", Assignment(), RuleCall("CConv"), Some(Optional()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'zeroext'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'signext'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'inreg'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("NonVoidType"), None())
+                , AssignmentAbstractToken(None(), "callee", Assignment(), RuleCall("Callee"), None())
+                , AssignmentAbstractToken(None(), "args", Assignment(), RuleCall("ArgList"), None())
+                , AssignmentAbstractToken(None(), "attributes", Assignment(), RuleCall("FunctionAttributes"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'to'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                , AssignmentAbstractToken(None(), "toLabel", Assignment(), RuleCall("BasicBlockRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("'unwind'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'label'"), None())
+                , AssignmentAbstractToken(None(), "exceptionLabel", Assignment(), RuleCall("BasicBlockRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_resume"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'resume'"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_unreachable"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [Group(
+               [AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'unreachable'"), None())]
+             )]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BasicBlockRef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "ref"
+                  , Assignment()
+                  , CrossReference(TypeRef(None(), "BasicBlock"), Some(CrossReferenceableTerminal(RuleCall("LOCAL_ID"))))
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BinaryInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_add"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fadd"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_sub"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fsub"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_mul"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fmul"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_udiv"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_sdiv"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fdiv"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_urem"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_srem"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_frem"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_add"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'add'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'nuw'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'nsw'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fadd"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fadd'"), None())
+                , AssignmentAbstractToken(None(), "fastMathFlags", AddAssignment(), RuleCall("FastMathFlag"), Some(Any()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FastMathFlag"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "FastMathFlag"), None()))
+                , AssignmentAbstractToken(
+                    None()
+                  , "kind"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ Keyword("\"nnan\"")
+                      , Keyword("\"ninf\"")
+                      , Keyword("\"nsz\"")
+                      , Keyword("\"arcp\"")
+                      , Keyword("\"fast\"")
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_sub"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'sub'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'nuw'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'nsw'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fsub"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fsub'"), None())
+                , AssignmentAbstractToken(None(), "fastMathFlags", AddAssignment(), RuleCall("FastMathFlag"), Some(Any()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_mul"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'mul'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'nuw'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'nsw'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fmul"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fmul'"), None())
+                , AssignmentAbstractToken(None(), "fastMathFlags", AddAssignment(), RuleCall("FastMathFlag"), Some(Any()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_udiv"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'udiv'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'exact'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_sdiv"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'sdiv'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'exact'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fdiv"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fdiv'"), None())
+                , AssignmentAbstractToken(None(), "fastMathFlags", AddAssignment(), RuleCall("FastMathFlag"), Some(Any()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_urem"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'urem'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_srem"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'srem'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_frem"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'frem'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BitwiseBinaryInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_shl"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_lshr"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_ashr"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_and"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_or"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_xor"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_shl"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'shl'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group([AbstractTerminalAbstractToken(Keyword("'nuw'"), Some(Optional()))])
+                          , Group([AbstractTerminalAbstractToken(Keyword("'nsw'"), Some(Optional()))])
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_lshr"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'lshr'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'exact'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_ashr"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'ashr'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'exact'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_and"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'and'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_or"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'or'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_xor"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'xor'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "VectorInstructions"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_extractelement"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_insertelement"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_shufflevector"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_extractelement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'extractelement'"), None())
+                , AssignmentAbstractToken(None(), "vector", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "index", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_insertelement"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'insertelement'"), None())
+                , AssignmentAbstractToken(None(), "vector", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "element", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "index", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_shufflevector"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'shufflevector'"), None())
+                , AssignmentAbstractToken(None(), "vector1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "vector2", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "mask", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "AggregateInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_extractvalue"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_insertvalue"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_extractvalue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'extractvalue'"), None())
+                , AssignmentAbstractToken(None(), "aggregate", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("Constant"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_insertvalue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'insertvalue'"), None())
+                , AssignmentAbstractToken(None(), "aggregate", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "element", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("Constant"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Multiple())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MemoryInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_alloca"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_load"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_store"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fence"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_cmpxchg"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_atomicrmw"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_getelementptr"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_alloca"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'alloca'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "numElements", Assignment(), RuleCall("TypedValue"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "alignment", Assignment(), RuleCall("Align"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_load"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'load'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "alignment", Assignment(), RuleCall("Align"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AbstractTerminalAbstractToken(Keyword("'!nontemporal'"), None())
+                                                          , AssignmentAbstractToken(None(), "nontemporalIndex", Assignment(), RuleCall("MetadataRef"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AbstractTerminalAbstractToken(Keyword("'!invariant.load'"), None())
+                                                          , AssignmentAbstractToken(None(), "invariantLoadIndex", Assignment(), RuleCall("MetadataRef"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("'atomic'"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'singlethread'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "ordering", Assignment(), RuleCall("Ordering"), None())
+                                            , AssignmentAbstractToken(None(), "alignment", Assignment(), RuleCall("Align"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_store"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'store'"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "alignment", Assignment(), RuleCall("Align"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AbstractTerminalAbstractToken(Keyword("'!nontemporal'"), None())
+                                                          , AssignmentAbstractToken(None(), "nontemporalIndex", Assignment(), RuleCall("MetadataRef"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("'atomic'"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("TypedValue"), None())
+                                            , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                                            , AbstractTerminalAbstractToken(Keyword("'singlethread'"), Some(Optional()))
+                                            , AssignmentAbstractToken(None(), "ordering", Assignment(), RuleCall("Ordering"), None())
+                                            , AssignmentAbstractToken(None(), "alignment", Assignment(), RuleCall("Align"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fence"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fence'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'singlethread'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "ordering", Assignment(), RuleCall("Ordering"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_cmpxchg"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'cmpxchg'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "comparedWith", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "newValue", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("'singlethread'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "ordering", Assignment(), RuleCall("Ordering"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_atomicrmw"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'atomicrmw'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'volatile'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "operation", Assignment(), RuleCall("Atomicrmw_operation"), None())
+                , AssignmentAbstractToken(None(), "pointer", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "argument", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("'singlethread'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "ordering", Assignment(), RuleCall("Ordering"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Atomicrmw_operation"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'xchg'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'add'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sub'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'and'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'nand'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'or'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'xor'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'max'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'min'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'umax'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'umin'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_getelementptr"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'getelementptr'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'inbounds'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "base", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "indices", AddAssignment(), RuleCall("TypedValue"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConversionInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), RuleCall("ConvertionOpcode"), None())
+                , AssignmentAbstractToken(None(), "fromType", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "value", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("'to'"), None())
+                , AssignmentAbstractToken(None(), "targetType", Assignment(), RuleCall("Type"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ConvertionOpcode"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'trunc'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'zext'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sext'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'fptrunc'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'fpext'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'fptoui'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'fptosi'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'uitofp'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sitofp'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ptrtoint'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'inttoptr'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'bitcast'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'addrspacecast'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "OtherInstruction"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_icmp"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_fcmp"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_select"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_va_arg"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("Instruction_landingpad"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_icmp"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'icmp'"), None())
+                , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("IcmpCondition"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "IcmpCondition"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'eq'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ne'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ugt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'uge'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ult'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ule'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sgt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sge'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'slt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sle'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_fcmp"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'fcmp'"), None())
+                , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("FcmpCondition"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "op1", Assignment(), RuleCall("ValueRef"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "op2", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FcmpCondition"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("BOOLEAN"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'oeq'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ogt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'oge'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'olt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ole'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'one'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ord'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ueq'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ugt'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'uge'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ult'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ule'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'une'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'uno'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_phi"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'phi'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'['"), None())
+                              , AssignmentAbstractToken(None(), "values", AddAssignment(), RuleCall("ValueRef"), None())
+                              , AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "labels", AddAssignment(), RuleCall("BasicBlockRef"), None())
+                              , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'['"), None())
+                              , AssignmentAbstractToken(None(), "values", AddAssignment(), RuleCall("ValueRef"), None())
+                              , AbstractTerminalAbstractToken(Keyword("','"), None())
+                              , AssignmentAbstractToken(None(), "labels", AddAssignment(), RuleCall("BasicBlockRef"), None())
+                              , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Any())
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_select"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'select'"), None())
+                , AssignmentAbstractToken(None(), "condition", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "value1", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "value2", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_call_nonVoid"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "isTail", BooleanAssignment(), Keyword("'tail'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'call'"), None())
+                , AssignmentAbstractToken(None(), "cconv", Assignment(), RuleCall("CConv"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "returnAttributes", Assignment(), RuleCall("ParameterAttributes"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("NonVoidType"), None())
+                , AssignmentAbstractToken(None(), "callee", Assignment(), RuleCall("Callee"), None())
+                , AssignmentAbstractToken(None(), "args", Assignment(), RuleCall("ArgList"), None())
+                , AssignmentAbstractToken(None(), "functionAttributes", Assignment(), RuleCall("FunctionAttributes"), Some(Optional()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_call_void"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "isTail", BooleanAssignment(), Keyword("'tail'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'call'"), None())
+                , AssignmentAbstractToken(None(), "cconv", Assignment(), RuleCall("CConv"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "returnAttributes", Assignment(), RuleCall("ParameterAttributes"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("VoidType"), None())
+                , AssignmentAbstractToken(None(), "callee", Assignment(), RuleCall("Callee"), None())
+                , AssignmentAbstractToken(None(), "args", Assignment(), RuleCall("ArgList"), None())
+                , AssignmentAbstractToken(None(), "functionAttributes", Assignment(), RuleCall("FunctionAttributes"), Some(Optional()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ArgList"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "ArgList"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "arguments", AddAssignment(), RuleCall("Argument"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                            , AssignmentAbstractToken(None(), "arguments", AddAssignment(), RuleCall("Argument"), None())
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Any())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , Some(Optional())
+                  )
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Callee"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("ValueRef"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(RuleCall("InlineAssembler"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "InlineAssembler"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'asm'"), None())
+                , AbstractTerminalAbstractToken(Keyword("'sideeffect'"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'alignstack'"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'inteldialect'"), Some(Optional()))
+                , AssignmentAbstractToken(None(), "assembler", Assignment(), RuleCall("STRING"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "flags", Assignment(), RuleCall("STRING"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_va_arg"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'va_arg'"), None())
+                , AssignmentAbstractToken(None(), "arglist", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(Keyword("','"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Instruction_landingpad"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "opcode", Assignment(), Keyword("'landingpad'"), None())
+                , AssignmentAbstractToken(None(), "resultType", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(Keyword("'personality'"), None())
+                , AssignmentAbstractToken(None(), "personality", Assignment(), RuleCall("TypedValue"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "clauses", AddAssignment(), RuleCall("LandingpadClause"), None())]
+                           )]
+                        )
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'cleanup'"), None())])])
+                      ]
+                    )
+                  , None()
+                  )
+                , AssignmentAbstractToken(None(), "clauses", AddAssignment(), RuleCall("LandingpadClause"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "LandingpadClause"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "landingPadType", Assignment(), Keyword("'catch'"), None())
+                , AssignmentAbstractToken(None(), "catchType", Assignment(), RuleCall("TypedValue"), None())
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "landingPadType", Assignment(), Keyword("'filter'"), None())
+                , AssignmentAbstractToken(None(), "arrayType", Assignment(), RuleCall("ArrayType"), None())
+                , AssignmentAbstractToken(None(), "arrayConstant", Assignment(), RuleCall("ArrayConstant"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Ordering"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'unordered'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'monotonic'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'acquire'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'release'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'acq_rel'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'seq_cst'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "TypedValue"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "ref", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ParameterType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("Type"), None())
+                , AssignmentAbstractToken(None(), "attrs", Assignment(), RuleCall("ParameterAttributes"), Some(Optional()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ParameterAttributes"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [AssignmentAbstractToken(None(), "attributes", AddAssignment(), RuleCall("ParameterAttribute"), Some(Multiple()))]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ParameterAttribute"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'zeroext'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'signext'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'inreg'"), None())])])
+        , UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'byval'"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [AbstractTerminalAbstractToken(Keyword("'align'"), None()), AbstractTerminalAbstractToken(RuleCall("INTEGER"), None())]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Optional())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sret'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'noalias'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'nocapture'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'nest'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'returned'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'inalloca'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "Argument"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("ParameterType"), None())
+                , AssignmentAbstractToken(None(), "ref", Assignment(), RuleCall("ValueRef"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Parameter"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("ParameterType"), None())
+                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ParamName"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NonVoidType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "baseType", Assignment(), RuleCall("VoidType"), None())
+                , AssignmentAbstractToken(None(), "suffixes", AddAssignment(), RuleCall("TypeSuffix"), Some(Multiple()))
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "baseType", Assignment(), RuleCall("NonLeftRecursiveNonVoidType"), None())
+                , AssignmentAbstractToken(None(), "stars", AddAssignment(), RuleCall("Star"), Some(Any()))
+                , AssignmentAbstractToken(None(), "suffixes", AddAssignment(), RuleCall("TypeSuffix"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Star"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "Star"), None()))
+                , AssignmentAbstractToken(None(), "addressSpace", Assignment(), RuleCall("AddressSpace"), Some(Optional()))
+                , AbstractTerminalAbstractToken(Keyword("'*'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Type"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "baseType", Assignment(), RuleCall("NonLeftRecursiveType"), None())
+                , AssignmentAbstractToken(None(), "stars", AddAssignment(), RuleCall("Star"), Some(Any()))
+                , AssignmentAbstractToken(None(), "suffixes", AddAssignment(), RuleCall("TypeSuffix"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TypeSuffix"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "TypeSuffix"), None()))
+                , AbstractTerminalAbstractToken(Keyword("'('"), None())
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "containedTypes", AddAssignment(), RuleCall("ParameterType"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "containedTypes", AddAssignment(), RuleCall("ParameterType"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Any())
+                                              )
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "vararg", Assignment(), Keyword("'...'"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Optional())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Optional())
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [Group(
+                             [AssignmentAbstractToken(None(), "vararg", Assignment(), Keyword("'...'"), None())]
+                           )]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                , AbstractTerminalAbstractToken(Keyword("')'"), None())
+                , AssignmentAbstractToken(None(), "stars", AddAssignment(), RuleCall("Star"), Some(Any()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NonLeftRecursiveType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "type"
+                                , Assignment()
+                                , AssignableAlternatives(
+                                    [ RuleCall("IntType")
+                                    , RuleCall("FloatingType")
+                                    , RuleCall("VectorType")
+                                    , RuleCall("ArrayType")
+                                    , RuleCall("X86mmxType")
+                                    , RuleCall("VoidType")
+                                    , RuleCall("MetadataType")
+                                    , RuleCall("StructType")
+                                    , RuleCall("OpaqueType")
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "typedef"
+                                , Assignment()
+                                , CrossReference(TypeRef(None(), "TypeDef"), Some(CrossReferenceableTerminal(RuleCall("LOCAL_ID"))))
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "NonLeftRecursiveNonVoidType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "type"
+                                , Assignment()
+                                , AssignableAlternatives(
+                                    [ RuleCall("IntType")
+                                    , RuleCall("FloatingType")
+                                    , RuleCall("VectorType")
+                                    , RuleCall("ArrayType")
+                                    , RuleCall("X86mmxType")
+                                    , RuleCall("MetadataType")
+                                    , RuleCall("StructType")
+                                    , RuleCall("OpaqueType")
+                                    ]
+                                  )
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(
+                                  None()
+                                , "typedef"
+                                , Assignment()
+                                , CrossReference(TypeRef(None(), "TypeDef"), Some(CrossReferenceableTerminal(RuleCall("LOCAL_ID"))))
+                                , None()
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "TypeDef"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("LocalName"), None())
+                , AbstractTerminalAbstractToken(Keyword("'type'"), None())
+                , AssignmentAbstractToken(None(), "type", Assignment(), RuleCall("NonVoidType"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "BinaryOpcode"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'mov'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'add'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'sub'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "IntType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(RuleCall("INT_TYPE"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "IntType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "OpaqueType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'opaque'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "OpaqueType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "StructType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ ActionAbstractToken(Action(TypeRef(None(), "StructType"), None()))
+                , AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "types", AddAssignment(), RuleCall("Type"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "types", AddAssignment(), RuleCall("Type"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Any())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Optional())
+                                )
+                              , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      , UnorderedGroup(
+                          [ Group(
+                              [ AssignmentAbstractToken(None(), "packed", Assignment(), Keyword("'<'"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'{'"), None())
+                              , AbstractTerminalAbstractToken(
+                                  Alternatives(
+                                    [ UnorderedGroup(
+                                        [ Group(
+                                            [ AssignmentAbstractToken(None(), "types", AddAssignment(), RuleCall("Type"), None())
+                                            , AbstractTerminalAbstractToken(
+                                                Alternatives(
+                                                  [ UnorderedGroup(
+                                                      [ Group(
+                                                          [ AbstractTerminalAbstractToken(Keyword("','"), None())
+                                                          , AssignmentAbstractToken(None(), "types", AddAssignment(), RuleCall("Type"), None())
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              , Some(Any())
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                , Some(Optional())
+                                )
+                              , AbstractTerminalAbstractToken(Keyword("'}'"), None())
+                              , AbstractTerminalAbstractToken(Keyword("'>'"), None())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "VectorType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'<'"), None())
+                , AssignmentAbstractToken(None(), "size", Assignment(), RuleCall("INTEGER"), None())
+                , AbstractTerminalAbstractToken(Keyword("'x'"), None())
+                , AssignmentAbstractToken(None(), "elemType", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(Keyword("'>'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "ArrayType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'['"), None())
+                , AssignmentAbstractToken(None(), "size", Assignment(), RuleCall("INTEGER"), None())
+                , AbstractTerminalAbstractToken(Keyword("'x'"), None())
+                , AssignmentAbstractToken(None(), "elemType", Assignment(), RuleCall("Type"), None())
+                , AbstractTerminalAbstractToken(Keyword("']'"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "X86mmxType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'x86_mmx'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "X86mmxType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "VoidType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'void'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "VoidType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "MetadataType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(Keyword("'metadata'"), None())
+                , ActionAbstractToken(Action(TypeRef(None(), "MetadataType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "FloatingType"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'half'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'float'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'double'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'fp128'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'x86_fp80'"), None())])])
+                      , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'ppc_fp128'"), None())])])
+                      ]
+                    )
+                  , None()
+                  )
+                , ActionAbstractToken(Action(TypeRef(None(), "FloatingType"), None()))
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Linkage"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'private'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'linker_private'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'linker_private_weak'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'linker_private_weak_def_auto'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'internal'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'available_externally'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'linkonce'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'weak'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'common'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'appending'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'extern_weak'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'linkonce_odr'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'weak_odr'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'external'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'dllimport'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'dllexport'"), None())])])
+        ]
+      )
+    )
+  , ParserRule(
+      "CConv"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(
+                    None()
+                  , "val"
+                  , Assignment()
+                  , AssignableAlternatives(
+                      [ Keyword("'ccc'")
+                      , Keyword("'fastcc'")
+                      , Keyword("'coldcc'")
+                      , Keyword("'webkit_jscc'")
+                      , Keyword("'anyregcc'")
+                      , Keyword("'preserve_mostcc'")
+                      , Keyword("'preserve_allcc'")
+                      , Keyword("\"intel_ocl_bicc\"")
+                      , Keyword("\"x86_stdcallcc\"")
+                      , Keyword("\"x86_fastcallcc\"")
+                      , Keyword("\"x86_thiscallcc\"")
+                      , Keyword("\"arm_apcscc\"")
+                      , Keyword("\"arm_aapcscc\"")
+                      , Keyword("\"arm_aapcs_vfpcc\"")
+                      , Keyword("\"msp430_intrcc\"")
+                      , Keyword("\"ptx_kernel\"")
+                      , Keyword("\"ptx_device\"")
+                      , Keyword("\"spir_kernel\"")
+                      , Keyword("\"spir_func\"")
+                      , Keyword("\"x86_64_sysvcc\"")
+                      , Keyword("\"x86_64_win64cc\"")
+                      ]
+                    )
+                  , None()
+                  )
+                ]
+              )
+            ]
+          )
+        , UnorderedGroup(
+            [ Group(
+                [ AssignmentAbstractToken(None(), "val", Assignment(), Keyword("'cc'"), None())
+                , AssignmentAbstractToken(None(), "customNumber", Assignment(), RuleCall("INTEGER"), None())
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , ParserRule(
+      "Visibility"
+    , None()
+    , None()
+    , Alternatives(
+        [ UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'default'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'hidden'"), None())])])
+        , UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'protected'"), None())])])
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("BOOLEAN", None())
+    , TerminalAlternatives(
+        [ TerminalGroup([TerminalToken(Keyword("'true'"), None())])
+        , TerminalGroup([TerminalToken(Keyword("'false'"), None())])
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("NULL", None())
+    , TerminalAlternatives([TerminalGroup([TerminalToken(Keyword("'null'"), None())])])
+    )
+  , TerminalRule(
+      Returns("INT_TYPE", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [TerminalToken(Keyword("'i'"), None()), TerminalToken(RuleCall("INTEGER"), None())]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("GLOBAL_ID", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'@'"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("NAME"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("STRING"), None())])
+                  ]
+                )
+              , None()
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("LOCAL_ID", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'%'"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("NAME"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("STRING"), None())])
+                  ]
+                )
+              , None()
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("BASIC_BLOCK_ID", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("NAME"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("STRING"), None())])
+                  ]
+                )
+              , None()
+              )
+            , TerminalToken(Keyword("':'"), None())
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("META_INT", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [TerminalToken(Keyword("'!'"), None()), TerminalToken(RuleCall("INTEGER"), None())]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("META_NAME", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [TerminalToken(Keyword("'!'"), None()), TerminalToken(RuleCall("NAME"), None())]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("ATTRIBUTE_ID", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'#'"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("NAME"), None())])
+                  ]
+                )
+              , None()
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("INTEGER", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [TerminalGroup(
+                     [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                   )]
+                )
+              , Some(Multiple())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("SIGNED_INT", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(Keyword("'+'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'-'"), None())])
+                  ]
+                )
+              , None()
+              )
+            , TerminalToken(RuleCall("INTEGER"), None())
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Fragment("NAME")
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'a'"), Keyword("'z'")), None())]
+                    )
+                  , TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'Z'")), None())]
+                    )
+                  , TerminalGroup([TerminalToken(Keyword("'$'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'.'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'_'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'-'"), None())])
+                  ]
+                )
+              , None()
+              )
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'a'"), Keyword("'z'")), None())]
+                    )
+                  , TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'Z'")), None())]
+                    )
+                  , TerminalGroup([TerminalToken(Keyword("'$'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'.'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'_'"), None())])
+                  , TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                    )
+                  , TerminalGroup([TerminalToken(Keyword("'-'"), None())])
+                  ]
+                )
+              , Some(Any())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("CSTRING", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [TerminalToken(Keyword("'c'"), None()), TerminalToken(RuleCall("STRING"), None())]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("STRING", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'\"'"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [ TerminalToken(Keyword("'\\\\'"), None())
+                      , TerminalToken(
+                          TerminalAlternatives(
+                            [ TerminalGroup([TerminalToken(Keyword("'\\\\'"), None())])
+                            , TerminalGroup(
+                                [ TerminalToken(
+                                    TerminalAlternatives(
+                                      [ TerminalGroup(
+                                          [ TerminalToken(
+                                              TerminalAlternatives(
+                                                [ TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'a'"), Keyword("'f'")), None())]
+                                                  )
+                                                , TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'F'")), None())]
+                                                  )
+                                                , TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                                                  )
+                                                ]
+                                              )
+                                            , None()
+                                            )
+                                          , TerminalToken(
+                                              TerminalAlternatives(
+                                                [ TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'a'"), Keyword("'f'")), None())]
+                                                  )
+                                                , TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'F'")), None())]
+                                                  )
+                                                , TerminalGroup(
+                                                    [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                                                  )
+                                                ]
+                                              )
+                                            , None()
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  , None()
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        , None()
+                        )
+                      ]
+                    )
+                  , TerminalGroup(
+                      [ TerminalToken(
+                          NegatedToken(
+                            TerminalAlternatives(
+                              [ TerminalGroup([TerminalToken(Keyword("'\\\\'"), None())])
+                              , TerminalGroup([TerminalToken(Keyword("'\"'"), None())])
+                              ]
+                            )
+                          )
+                        , None()
+                        )
+                      ]
+                    )
+                  ]
+                )
+              , Some(Any())
+              )
+            , TerminalToken(Keyword("'\"'"), None())
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("METADATA_STRING", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [TerminalToken(Keyword("'!'"), None()), TerminalToken(RuleCall("STRING"), None())]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("FLOAT", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(RuleCall("SIGNED_INT"), None())])
+                  , TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                  ]
+                )
+              , None()
+              )
+            , TerminalToken(Keyword("'.'"), None())
+            , TerminalToken(RuleCall("INTEGER"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [ TerminalToken(Keyword("'e'"), None())
+                      , TerminalToken(
+                          TerminalAlternatives(
+                            [ TerminalGroup([TerminalToken(RuleCall("SIGNED_INT"), None())])
+                            , TerminalGroup([TerminalToken(RuleCall("INTEGER"), None())])
+                            ]
+                          )
+                        , None()
+                        )
+                      ]
+                    )
+                  ]
+                )
+              , Some(Optional())
+              )
+            ]
+          )
+        , TerminalGroup(
+            [ TerminalToken(Keyword("'0x'"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(Keyword("'K'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'L'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'M'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'H'"), None())])
+                  ]
+                )
+              , Some(Optional())
+              )
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'a'"), Keyword("'f'")), None())]
+                    )
+                  , TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'F'")), None())]
+                    )
+                  , TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'0'"), Keyword("'9'")), None())]
+                    )
+                  ]
+                )
+              , Some(Multiple())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("FILECHECK_COMMENT", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("'; '"), None())
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(CharacterRange(Keyword("'A'"), Keyword("'Z'")), None())]
+                    )
+                  , TerminalGroup([TerminalToken(Keyword("'_'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'-'"), None())])
+                  ]
+                )
+              , Some(Multiple())
+              )
+            , TerminalToken(Keyword("': '"), None())
+            , TerminalToken(
+                NegatedToken(
+                  TerminalAlternatives(
+                    [ TerminalGroup([TerminalToken(Keyword("'\\n'"), None())])
+                    , TerminalGroup([TerminalToken(Keyword("'\\r'"), None())])
+                    ]
+                  )
+                )
+              , Some(Any())
+              )
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(Keyword("'\\r'"), Some(Optional())), TerminalToken(Keyword("'\\n'"), None())]
+                    )
+                  ]
+                )
+              , Some(Optional())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("SL_COMMENT", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(Keyword("';'"), None())
+            , TerminalToken(
+                NegatedToken(
+                  TerminalAlternatives(
+                    [ TerminalGroup([TerminalToken(Keyword("'\\n'"), None())])
+                    , TerminalGroup([TerminalToken(Keyword("'\\r'"), None())])
+                    ]
+                  )
+                )
+              , Some(Any())
+              )
+            , TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup(
+                      [TerminalToken(Keyword("'\\r'"), Some(Optional())), TerminalToken(Keyword("'\\n'"), None())]
+                    )
+                  ]
+                )
+              , Some(Optional())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("WS", None())
+    , TerminalAlternatives(
+        [ TerminalGroup(
+            [ TerminalToken(
+                TerminalAlternatives(
+                  [ TerminalGroup([TerminalToken(Keyword("' '"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'\\t'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'\\r'"), None())])
+                  , TerminalGroup([TerminalToken(Keyword("'\\n'"), None())])
+                  ]
+                )
+              , Some(Multiple())
+              )
+            ]
+          )
+        ]
+      )
+    )
+  , TerminalRule(
+      Returns("ANY_OTHER", None())
+    , TerminalAlternatives([TerminalGroup([TerminalToken(Wildcard("."), None())])])
+    )
+  ]
 )
