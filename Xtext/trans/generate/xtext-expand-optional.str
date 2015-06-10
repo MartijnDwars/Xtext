@@ -1,0 +1,28 @@
+module xtext-expand-optional
+
+imports
+	
+	include/Xtext
+	
+rules
+	
+	expand:
+		p@ParserRule(_, _, _, alternatives) -> [
+			<oncetd(remove(|abstract-terminal-token))> p,
+			<oncetd(mandatory(|abstract-terminal-token))> p
+		]
+	where
+		abstract-terminal-token := <collect-one(is-abstract-terminal-token)> alternatives
+	
+	is-abstract-terminal-token =
+		?AbstractTerminalAbstractToken(_, Some(Optional()))
+	
+	// Remove the given abstract-terminal-token from a Group of AbstractTerminalTokens
+	remove(|abstract-terminal-token):
+		Group(abstract-terminal-tokens) -> Group(removed-abstract-terminal-tokens)
+	where
+		removed-abstract-terminal-tokens := <map(?abstract-terminal-token ; ![] <+ id) ; flatten-list> abstract-terminal-tokens
+	
+	// TODO: Why is abstract-terminal-token not used here?
+	mandatory(|abstract-terminal-token):
+		AbstractTerminalAbstractToken(x, Some(Optional())) -> AbstractTerminalAbstractToken(x, None())

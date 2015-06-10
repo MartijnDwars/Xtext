@@ -17,8 +17,6 @@ rules
 	
 	remove-parenthetical:
 		Parenthetical(content) -> content
-		where
-			<debug> content
 			
 	// Cardinality
 	
