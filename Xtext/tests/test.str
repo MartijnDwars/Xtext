@@ -1,0 +1,18 @@
+module test
+
+imports
+  libstratego-lib
+
+strategies
+  main =
+    test-suite(!"list-zip-test",
+      nzip0-test
+   // ; ...
+    )
+    
+  nzip0-test =
+    apply-test(!"nzip0-test"
+        ,nzip0(id)
+        ,!["a","b","c"]
+        ,![(0, "a"), (1, "b"), (2, "c")]
+        )
