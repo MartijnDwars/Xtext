@@ -1,0 +1,34 @@
+module xtext-move-constructor
+
+imports
+	
+	include/Xtext
+	
+rules
+	
+	/*
+	Move constructor to the front. See pattern: 
+	
+	Addition:
+		Multiplication (({Plus.left=current} '-') right=Multiplication)+
+	;
+	
+	-->
+	
+	Addition:
+		{Plus} left=Multiplication ("+" right=Multiplcation)*
+	;
+	*/
+	
+	expand:
+		  Group(tokens) -> Group([
+            [ ActionAbstractToken(Action(TypeRef(None(), "Plus"), None()))
+            , AssignmentAbstractToken(None(), "left", Assignment(), RuleCall("Multiplication"), None())
+            , AbstractTerminalAbstractToken(Keyword("+"), None())
+            , AssignmentAbstractToken(None(), "right", Assignment(), RuleCall("Multiplication"), None())
+            ]
+		])
+	where
+		fail
+	//where
+		//tokens contains a RuleCall followed by a token
