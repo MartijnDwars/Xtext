@@ -48,7 +48,36 @@
 	<property location="${user.home}/.nix-profile/bin" name="build.strategoxt.sdf"/>
 		
     <!-- used for building inside of Eclipse -->
-    <import file="build.generated.xml"/>   
+    <import file="build.generated.xml"/>
+	
+	<!-- Fancy testing. Copy-pasted from build.generated.xml with some manual adjustments -->
+	<target name="test">
+		<!-- compile stratego to java -->
+		<java classname="org.strategoxt.strj.Main" failonerror="true">
+			<arg value="--input" />
+			<arg value="${basedir}/tests/test.str" />
+			<arg value="--output" />
+			<arg value="${basedir}/tests/src" />
+			<arg value="--clean" />
+			<!-- next line is ${build.stratego.args}, but without the library flag -->
+			<arg line="-I &quot;/Users/martijn/Projects/xtext/Xtext/trans&quot; -I &quot;/Users/martijn/Projects/xtext/Xtext&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
+			<arg line="-I &quot;${lib}&quot; -I &quot;${include}&quot; --cache-dir &quot;${basedir}/.cache&quot;" />
+		</java>
+		<!-- compile java to class -->
+		<javac srcdir="${basedir}/tests/src" destdir="${basedir}/tests/target/classes" source="1.7" target="1.7" debug="on">
+			<classpath>
+				<pathelement path="utils/strategoxt.jar:${src-gen}${externaljarimport1}${externaljarimport2}${java.jar.classpath}" />
+			</classpath>
+		</javac>
+		<!-- run test suite -->
+		<java classname="src" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="${eclipse.spoofaximp.strategojar}" />
+				<pathelement location="${basedir}/tests/target/classes" />
+			</classpath>
+		</java>
+		<!-- clean up -->
+	</target>
 
     <!-- Main target -->
     <target name="all" depends="spoofaximp.default.ctree"/>
