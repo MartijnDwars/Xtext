@@ -10,6 +10,7 @@ imports
 	generate/post
 	generate/xtext-expand-optional
 	generate/xtext-expand-alternative
+	generate/add-actions
 	
 rules
 	
@@ -41,7 +42,7 @@ rules
 	
 	// Menu
 	gen-xtext:
-		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
+		(selected, _, _, path, _) -> (filename, <add-action> <gen-xtext> selected)
 		where
 			filename := <guarantee-extension(|"xtextng")> path
 	

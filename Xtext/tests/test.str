@@ -3,15 +3,21 @@ module test
 imports
   libstratego-lib
   generate/common
+  generate/add-actions
+  include/Xtext
   
 strategies
   main =
     test-suite(!"permutations",
       permute-empty-list;
       permute-singleton;
-      permute-simple-list
+      permute-simple-list;
+      
+      test-add-action-redundant;
+      test-add-action-simple
     )
-    
+  
+  // Permutations
   permute-empty-list =
     apply-test(!"permute-empty-list",
       permutations,
@@ -31,4 +37,64 @@ strategies
       , permutations
       , ![1,2,3]
       , ![[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+    )
+
+  // Add actions
+  test-add-action-redundant =
+    apply-test(!"add-action on ParserRule that already has an action"
+    , add-action
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [Group(
+                 [ ActionAbstractToken(Action(TypeRef(None(), "Name"), None()))
+                 , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+               )]
+            )
+          ]
+        )
+      )
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [Group(
+                 [ ActionAbstractToken(Action(TypeRef(None(), "Name"), None()))
+                 , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+               )]
+            )
+          ]
+        )
+      )
+    )
+  
+  test-add-action-simple =
+    apply-test(!"add-action on simple ParserRule"
+    , add-action
+    , !ParserRule(
+	      "Person", None(), None()
+	    , Alternatives(
+	        [ UnorderedGroup(
+	            [Group(
+	               [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+	             )]
+	          )
+	        ]
+	      )
+	    )
+	  , !ParserRule(
+	      "Person", None(), None()
+	    , Alternatives(
+	        [ UnorderedGroup(
+	            [ Group(
+	                [ ActionAbstractToken(Action(TypeRef(None(), "Name"), None()))
+	                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())
+	                ]
+	              )
+	            ]
+	          )
+	        ]
+	      )
+	    )
     )

@@ -63,6 +63,8 @@
 			<arg line="-I &quot;/Users/martijn/Projects/xtext/Xtext/trans&quot; -I &quot;/Users/martijn/Projects/xtext/Xtext&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
 			<arg line="-I &quot;${lib}&quot; -I &quot;${include}&quot; --cache-dir &quot;${basedir}/.cache&quot;" />
 		</java>
+		<!-- create classes dir -->
+		<mkdir dir="${basedir}/tests/target/classes" />
 		<!-- compile java to class -->
 		<javac srcdir="${basedir}/tests/src" destdir="${basedir}/tests/target/classes" source="1.7" target="1.7" debug="on">
 			<classpath>
