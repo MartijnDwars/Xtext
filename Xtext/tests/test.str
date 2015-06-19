@@ -2,44 +2,17 @@ module test
 
 imports
   libstratego-lib
-  generate/common
   generate/add-actions
   include/Xtext
   
 strategies
   main =
-    test-suite(!"permutations",
-      permute-empty-list;
-      permute-singleton;
-      permute-simple-list;
-      
+    test-suite(!"add-action",
       test-add-action-redundant;
       test-add-action-no-assignment;
       test-add-action-simple;
       test-add-action-name;
       test-add-action-multiple-features
-    )
-  
-  // Permutations
-  permute-empty-list =
-    apply-test(!"permute-empty-list",
-      permutations,
-      ![],
-      ![]
-    )
-  
-  permute-singleton =
-    apply-test(!"permute-singleton"
-      , permutations
-      , ![1]
-      , ![[1]]
-    )
-        
-  permute-simple-list =
-    apply-test(!"permute-simple-list"
-      , permutations
-      , ![1,2,3]
-      , ![[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
     )
 
   // Add actions

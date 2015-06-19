@@ -51,35 +51,79 @@
     <import file="build.generated.xml"/>
 	
 	<!-- Fancy testing. Copy-pasted from build.generated.xml with some manual adjustments -->
+  <path id="test.files">
+    <fileset dir="tests">
+      <include name="**/*.str" />
+    </fileset>
+  </path>
+  
 	<target name="test">
     <!-- create gen dirs -->
-		<mkdir dir="${basedir}/tests/gen/src" />
-		<mkdir dir="${basedir}/tests/gen/target/classes" />
-		<!-- compile stratego to java -->
-		<java classname="org.strategoxt.strj.Main" failonerror="true">
-			<arg value="--input" />
-			<arg value="${basedir}/tests/test.str" />
-			<arg value="--output" />
-			<arg value="${basedir}/tests/gen/src/test.java" />
-			<arg value="--clean" />
-			<!-- next line is ${build.stratego.args}, but without the library flag -->
-			<arg line="-I &quot;/Users/martijn/Projects/xtext/Xtext/trans&quot; -I &quot;/Users/martijn/Projects/xtext/Xtext&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
-			<arg line="-I &quot;${lib}&quot; -I &quot;${include}&quot; --cache-dir &quot;${basedir}/.cache&quot;" />
-		</java>
-		<!-- compile java to class -->
-		<javac srcdir="${basedir}/tests/gen/src" destdir="${basedir}/tests/gen/target/classes" source="1.7" target="1.7" debug="on">
-			<classpath>
-				<pathelement path="utils/strategoxt.jar:${src-gen}${externaljarimport1}${externaljarimport2}${java.jar.classpath}" />
-			</classpath>
-		</javac>
-		<!-- run test suite -->
-		<java classname="test" failonerror="true" fork="true">
-			<classpath>
-				<pathelement location="${eclipse.spoofaximp.strategojar}" />
-				<pathelement location="${basedir}/tests/gen/target/classes" />
-			</classpath>
-		</java>
-		<!-- clean up -->
+    <mkdir dir="${basedir}/tests/gen/src" />
+    <mkdir dir="${basedir}/tests/gen/target/classes" />
+    	
+    <!-- compile files -->
+		<for param="file">
+			<path>
+	      <fileset dir="tests" includes="**/*.str" />
+			</path>
+      <sequential>
+      	<antcall target="test.compile">
+          <param name="file" value="@{file}" />
+    		</antcall>
+      </sequential>
+    </for>
+		
+		<!-- run files -->
+    <for param="file">
+      <path>
+        <fileset dir="tests" includes="**/*.str" />
+      </path>
+      <sequential>
+        <antcall target="test.run">
+          <param name="file" value="@{file}" />
+        </antcall>
+      </sequential>
+    </for>
+	</target>
+	
+	<!-- compile .str to .java to .class -->
+  <target name="test.compile">
+  	<echo message="Compile ${file}" />
+  	
+  	<basename property="filename" file="${file}" suffix=".str"/>
+  	
+  	<!-- .str to .java -->
+    <java classname="org.strategoxt.strj.Main" failonerror="true">
+      <arg value="--input" />
+      <arg value="${basedir}/tests/${filename}.str" />
+      <arg value="--output" />
+      <arg value="${basedir}/tests/gen/src/${filename}.java" />
+      <arg value="--clean" />
+      <!-- next line is ${build.stratego.args}, but without the library flag -->
+      <arg line="-I &quot;/Users/martijn/Projects/xtext/Xtext/trans&quot; -I &quot;/Users/martijn/Projects/xtext/Xtext&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
+      <arg line="-I &quot;${lib}&quot; -I &quot;${include}&quot; --cache-dir &quot;${basedir}/.cache&quot;" />
+    </java>
+    <!-- .java to .class -->
+    <javac srcdir="${basedir}/tests/gen/src" destdir="${basedir}/tests/gen/target/classes" source="1.7" target="1.7" debug="on">
+      <classpath>
+        <pathelement path="utils/strategoxt.jar:${src-gen}${externaljarimport1}${externaljarimport2}${java.jar.classpath}" />
+      </classpath>
+    </javac>
+	</target>
+	
+  <!-- run test suite -->
+	<target name="test.run">
+		<echo message="Running ${file}" />
+		    
+    <basename property="filename" file="${file}" suffix=".str"/>
+		
+    <java classname="${filename}" failonerror="true" fork="true">
+      <classpath>
+        <pathelement location="${eclipse.spoofaximp.strategojar}" />
+        <pathelement location="${basedir}/tests/gen/target/classes" />
+      </classpath>
+    </java>
 	</target>
 
     <!-- Main target -->
