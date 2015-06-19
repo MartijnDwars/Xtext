@@ -14,7 +14,9 @@ strategies
       permute-simple-list;
       
       test-add-action-redundant;
-      test-add-action-simple
+      test-add-action-no-assignment;
+      test-add-action-simple;
+      test-add-action-name
     )
   
   // Permutations
@@ -68,33 +70,84 @@ strategies
         )
       )
     )
-  
+
+  test-add-action-no-assignment =
+    apply-test(!"add-action on simple ParserRule that has no assignment"
+    , add-action
+		, !ParserRule(
+        "Person"
+      , None()
+      , None()
+      , Alternatives(
+          [UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'x'"), None())])])]
+        )
+      )
+	  , !ParserRule(
+        "Person"
+      , None()
+      , None()
+      , Alternatives(
+          [UnorderedGroup([Group([AbstractTerminalAbstractToken(Keyword("'x'"), None())])])]
+        )
+      )
+	  )
+   
   test-add-action-simple =
     apply-test(!"add-action on simple ParserRule"
     , add-action
     , !ParserRule(
-	      "Person", None(), None()
-	    , Alternatives(
-	        [ UnorderedGroup(
-	            [Group(
-	               [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
-	             )]
-	          )
-	        ]
-	      )
-	    )
-	  , !ParserRule(
-	      "Person", None(), None()
-	    , Alternatives(
-	        [ UnorderedGroup(
-	            [ Group(
-	                [ ActionAbstractToken(Action(TypeRef(None(), "Name"), None()))
-	                , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())
-	                ]
-	              )
-	            ]
-	          )
-	        ]
-	      )
-	    )
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [Group(
+                 [AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())]
+               )]
+            )
+          ]
+        )
+      )
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [ Group(
+                  [ ActionAbstractToken(Action(TypeRef(None(), "Name"), None()))
+                  , AssignmentAbstractToken(None(), "name", Assignment(), RuleCall("ID"), None())
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      )
+    )
+    
+  test-add-action-name =
+    apply-test(!"add-action uses first feature capitalized as action name"
+    , add-action
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [Group(
+                 [AssignmentAbstractToken(None(), "abcdef", Assignment(), RuleCall("ID"), None())]
+               )]
+            )
+          ]
+        )
+      )
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [ Group(
+                  [ ActionAbstractToken(Action(TypeRef(None(), "Abcdef"), None()))
+                  , AssignmentAbstractToken(None(), "abcdef", Assignment(), RuleCall("ID"), None())
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      )
     )
