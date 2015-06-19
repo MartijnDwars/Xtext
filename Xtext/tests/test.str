@@ -16,7 +16,8 @@ strategies
       test-add-action-redundant;
       test-add-action-no-assignment;
       test-add-action-simple;
-      test-add-action-name
+      test-add-action-name;
+      test-add-action-multiple-features
     )
   
   // Permutations
@@ -143,6 +144,40 @@ strategies
               [ Group(
                   [ ActionAbstractToken(Action(TypeRef(None(), "Abcdef"), None()))
                   , AssignmentAbstractToken(None(), "abcdef", Assignment(), RuleCall("ID"), None())
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      )
+    )
+    
+  test-add-action-multiple-features =
+    apply-test(!"add-action on rule with multiple features"
+    , add-action
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [ Group(
+                  [ AssignmentAbstractToken(None(), "a", Assignment(), Keyword("'x'"), None())
+                  , AssignmentAbstractToken(None(), "b", Assignment(), Keyword("'y'"), None())
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+      )
+    , !ParserRule(
+        "Person", None(), None()
+      , Alternatives(
+          [ UnorderedGroup(
+              [ Group(
+                  [ ActionAbstractToken(Action(TypeRef(None(), "A"), None()))
+                  , AssignmentAbstractToken(None(), "a", Assignment(), Keyword("'x'"), None())
+                  , AssignmentAbstractToken(None(), "b", Assignment(), Keyword("'y'"), None())
                   ]
                 )
               ]
