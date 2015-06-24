@@ -1,4 +1,4 @@
-module test
+module permutations
 
 imports
   libstratego-lib

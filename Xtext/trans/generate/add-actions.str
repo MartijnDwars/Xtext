@@ -1,0 +1,50 @@
+module add-actions
+
+/*
+ * If there is a production that has one or more assignments but
+ * no action, add action with the first feature as its name. If
+ * there are alternative rules with same name, suffix with
+ * counter. For example:
+ * 
+ *
+ * DeclaredParameter:
+ * 	name=ID age=INT | name=ID;
+ * 
+ * =>
+ * 
+ * DeclaredParameter:
+ * 	{Name-0} name=ID age=INT;
+ * 
+ * DeclaredParameter:
+ * 	{Name-1} name=ID;
+ */
+
+imports
+	
+  include/Xtext
+  
+rules
+  
+  add-action:
+    rule@ParserRule(_, _, _, Alternatives([UnorderedGroup([Group(tokens)])])) -> result
+    where
+      result := <assignment-without-action < oncetd(add-action-to-group) + id> rule
+  
+  assignment-without-action:
+    rule -> rule
+    where
+      <gt> (<length> <collect(?AssignmentAbstractToken(_, _, _, _, _))> rule, 0);
+      <eq> (<length> <collect(?ActionAbstractToken(_))> rule, 0)
+
+  add-action-to-group:
+  	g@Group(tokens) -> result
+  	where
+  		constructor := <get-constructor-name ; string-as-chars(uc-first)> tokens;
+  		result := Group([ActionAbstractToken(Action(TypeRef(None(), constructor), None())) | tokens])
+  
+  get-constructor-name =
+    collect-one(?AssignmentAbstractToken(_, name, _, _, _)) ; !name
+
+  uc-first:
+  	[h | t] -> [<to-upper> h | t]
+  

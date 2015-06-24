@@ -1,0 +1,20 @@
+module No_Assignment_Expected
+
+imports
+  
+  Terminals
+
+context-free syntax
+
+AbstractElement = Import
+Import = 'import' QualifiedNameWithWildcard
+QualifiedNameWithWildcard = QualifiedName Keyword1?
+Keyword1 = '.*'
+QualifiedName = ID Rule1*
+Rule1 = '.' ID
+Permutations.Permutations0 = Import 'a'
+Permutations.Permutations1 = 'a' Import
+Alternatives = Import
+Alternatives = 'a'
+
+//ID is imported from the Terminals file, which should also be converted
