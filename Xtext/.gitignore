@@ -28,3 +28,7 @@ lib/runtime
 lib/*.generated.str
 lib-refactoring/*.generated.str
 /src-gen
+tests/src
+tests/target
+tests/src.dep
+tests/src.rtree

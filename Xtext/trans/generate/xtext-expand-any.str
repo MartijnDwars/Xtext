@@ -1,4 +1,4 @@
-module xtext-expand-optional
+module xtext-expand-any
 
 imports
 	
@@ -12,10 +12,12 @@ rules
 			<oncetd(mandatory(|abstract-terminal-token))> p
 		]
 	where
-		abstract-terminal-token := <collect-one(is-abstract-terminal-token)> alternatives
-
+		abstract-terminal-token := <collect-one(is-abstract-terminal-token)> alternatives;
+		<debug> <oncetd(remove(|abstract-terminal-token))> p;
+		<debug> <oncetd(mandatory(|abstract-terminal-token))> p
+	
 	is-abstract-terminal-token =
-		?AbstractTerminalAbstractToken(_, Some(Optional()))
+		?AbstractTerminalAbstractToken(_, Some(Any()))
 	
 	// Remove the given abstract-terminal-token from a Group of AbstractTerminalTokens
 	remove(|abstract-terminal-token):
@@ -25,4 +27,5 @@ rules
 	
 	// TODO: Why is abstract-terminal-token not used here?
 	mandatory(|abstract-terminal-token):
-		AbstractTerminalAbstractToken(x, Some(Optional())) -> AbstractTerminalAbstractToken(x, None())
+		AbstractTerminalAbstractToken(x, Some(Any())) -> AbstractTerminalAbstractToken(x, Some(Multiple()))
+	

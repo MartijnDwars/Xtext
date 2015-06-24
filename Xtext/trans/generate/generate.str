@@ -11,6 +11,7 @@ imports
 	generate/xtext-expand-optional
 	generate/xtext-expand-alternative
 	generate/xtext-lift-alternative
+	generate/add-actions
 	
 rules
 	
@@ -42,7 +43,7 @@ rules
 	
 	// Menu
 	gen-xtext:
-		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
+		(selected, _, _, path, _) -> (filename, <add-action> <gen-xtext> selected)
 		where
 			filename := <guarantee-extension(|"xtextng")> path
 	
@@ -52,3 +53,4 @@ rules
 	
 	// Expand optionals, then recursively desugar those expanded optionals, and finally flatten the result
 	desugar = topdown(try(expand ; desugar ; try(flatten-list)))
+
