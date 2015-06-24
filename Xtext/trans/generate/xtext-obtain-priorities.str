@@ -1,0 +1,144 @@
+module xtext-obtain-priorities
+
+imports
+	
+	libstratego-gpp
+	lib/runtime/editor/interop
+	lib/runtime/tmpl/pp
+	include/TemplateLang
+	sdf/src-gen/pp/TemplateLang-pp
+	sdf/src-gen/pp/modules/Modules-pp
+	include/Xtext
+	generate/generate
+	
+rules
+	obtain-priorities:
+		ast -> <try(remove-return)> combined
+		where
+		chains := <flatten-list> <collect-all(gen-priorities(|ast))> ast;
+		cleaned := <try(cleanup_priorities)> chains;
+		priorities := SDFSection(ContextFreePriorities(cleaned));
+		combined := (ast, priorities)
+	
+	//Removing rules of type Exp = Exp can more easily be done in SDF
+	
+	gen-priorities(|ast):
+		ParserRule(name, Some(Returns(TypeRef(None(), return_type))), _, alternatives) -> chains
+		where
+			action := <last> <collect(find_actions)> alternatives;
+			rulecalls := <collect-all(find_rulecall)> alternatives;
+			matches := <collect-all(find_matching_priority(|name, return_type, rulecalls))> ast;
+			chains := <map(generate-chains(|name, action))> matches
+			
+	generate-chains(|lSort, lCons):
+		(hSort, hCons) -> Chain([ProdsRefGroup([SortConsRef(Sort(hSort), Constructor(hCons))]), ProdsRefGroup([SortConsRef(Sort(lSort), Constructor(lCons))])])
+			
+	find_matching_priority(|name, rtype, calls):
+		ParserRule(n, Some(Returns(TypeRef(None(), rt))), _, alternatives) -> (n, actions)
+		where
+			<elem> (n, calls);
+			actions := <last> <collect(find_actions)> alternatives
+	
+	find_actions:
+		ActionAbstractToken(Action(TypeRef(_, name), _)) -> name
+		
+	find_rulecall:
+		RuleCall(name) -> name
+	
+	
+	//Functionality for cleaning priority rules	
+	cleanup_priorities:
+		original@[head|chains] -> cleaned_LHS
+		where
+			cleaned := <clean_LHS(|head) + clean_RHS(|head)> chains;
+			<not(equal)> (original, cleaned);
+			cleaned_LHS := <try(cleanup_priorities)> cleaned
+	
+	clean_LHS(|head):
+		chains -> cleaned_LHS
+		where
+			equal := <collect-all(equal_LHS(|head))> chains;
+			<not(equal)> (equal,[]);
+			n_equal := <collect-all(not_equal_LHS(|head))> chains;
+			merged := <merge_RHS(|head)> equal;
+			cleaned_LHS := <conc> (n_equal, merged)
+	
+	clean_RHS(|head):
+		chains -> cleaned_RHS
+		where
+			equal := <collect-all(equal_RHS(|head))> chains;
+			<not(equal)> (equal,[]);
+			n_equal := <collect-all(not_equal_RHS(|head))> chains;
+			merged := <merge_LHS(|head)> equal;
+			cleaned_RHS := <conc> (n_equal, merged)
+	
+	equal_LHS(|head):
+		chain -> <id>
+		where
+			c_LHS := <extract_LHS> chain;
+			h_LHS := <extract_LHS> head;
+			<equal> (h_LHS, c_LHS)
+			
+	not_equal_LHS(|head):
+		chain -> <id>
+		where
+			c_LHS := <extract_LHS> chain;
+			h_LHS := <extract_LHS> head;
+			<not(equal)> (h_LHS, c_LHS)
+	
+	equal_RHS(|head):
+		chain -> <id>
+		where
+			c_RHS := <extract_RHS> chain;
+			h_RHS := <extract_RHS> head;
+			<equal> (h_RHS, c_RHS)
+			
+	not_equal_RHS(|head):
+		chain -> <id>
+		where
+			c_RHS := <extract_RHS> chain;
+			h_RHS := <extract_RHS> head;
+			<not(equal)> (h_RHS, c_RHS)
+			
+	extract_LHS:
+		Chain([ProdsRefGroup(lhs), ProdsRefGroup(rhs)]) -> lhs
+		
+	extract_RHS:
+		Chain([ProdsRefGroup(lhs), ProdsRefGroup(rhs)]) -> rhs
+		
+	merge_RHS(|head):
+		chains -> [Chain([ProdsRefGroup(h_LHS), ProdsRefGroup(new_RHS)])]
+		where
+			h_RHS := <extract_RHS> head;
+			h_LHS := <extract_LHS> head;
+			c_RHS := <flatten-list> <map(extract_RHS)> chains;
+			new_RHS := <conc> (h_RHS, c_RHS)	
+		
+	merge_LHS(|head):
+		chains -> [Chain([ProdsRefGroup(new_LHS), ProdsRefGroup(h_RHS)])]
+		where
+			h_RHS := <extract_RHS> head;
+			h_LHS := <extract_LHS> head;
+			c_LHS := <flatten-list> <map(extract_LHS)> chains;
+			new_LHS := <conc> (h_LHS, c_LHS)
+			
+	remove-return:
+		ast -> output
+		where
+		<collect-one(?ParserRule(name@_, Some(Returns(TypeRef(None(), r_type@_))), _, _))> ast;
+		output := <try(remove-return)> <bottomup(try(replace(|name, r_type)))> ast
+	
+	replace(|old, new):
+		Keyword(old) -> <id>
+		
+	replace(|old, new):
+		RuleCall(old) -> RuleCall(new)
+		
+	replace(|old, new):
+		CrossReference(old, opt) -> CrossReference(new, opt)
+		
+	replace(|old, new):
+		ParserRule(old, return, e1, e2) -> ParserRule(new, None(), e1, e2)
+		
+	replace(|old, new):
+		Sort(old) -> Sort(new)
