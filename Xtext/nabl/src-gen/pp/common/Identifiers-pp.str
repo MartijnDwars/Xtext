@@ -1,0 +1,56 @@
+module nabl/src-gen/pp/common/Identifiers-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  nabl/src-gen/signatures/common/Identifiers-sig
+
+
+strategies
+  prettyprint-LId =
+    ![S(<is-string>)]
+
+  prettyprint-Id =
+    ![S(<is-string>)]
+
+  prettyprint-LCID =
+    ![S(<is-string>)]
+
+  prettyprint-UCID =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-LId
+
+  prettyprint-example =
+    prettyprint-Id
+
+  prettyprint-example =
+    prettyprint-LCID
+
+  prettyprint-example =
+    prettyprint-UCID
+
+  prettyprint-LId :
+    amb([h|hs]) -> <prettyprint-LId> h
+
+  prettyprint-Id :
+    amb([h|hs]) -> <prettyprint-Id> h
+
+  prettyprint-LCID :
+    amb([h|hs]) -> <prettyprint-LCID> h
+
+  prettyprint-UCID :
+    amb([h|hs]) -> <prettyprint-UCID> h
+
+
+strategies
+  prettyprint-Keyword =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-Keyword
+
+  prettyprint-Keyword :
+    amb([h|hs]) -> <prettyprint-Keyword> h

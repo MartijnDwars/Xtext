@@ -1,0 +1,115 @@
+module nabl/src-gen/pp/core/Modules-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  nabl/src-gen/signatures/core/Modules-sig
+
+
+strategies
+  prettyprint-example =
+    prettyprint-nabl-Module
+
+  prettyprint-example =
+    prettyprint-nabl-ModuleSection
+
+  prettyprint-example =
+    prettyprint-ImportModule
+
+  prettyprint-nabl-Module :
+    Module(t1__, t2__) -> [ H(
+                              [SOpt(HS(), "0")]
+                            , [S("module "), t1__']
+                            )
+                          , H(
+                              []
+                            , [S("")]
+                            )
+                          , t2__'
+                          ]
+    with t1__' := <pp-one-Z(prettyprint-nabl-ModuleID)> t1__
+    with t2__' := <pp-indent(|"4")> [<pp-H-list(prettyprint-nabl-ModuleSection)> t2__]
+
+  is-Module =
+    ?Module(_, _)
+
+  prettyprint-nabl-ModuleSection :
+    Imports(t1__) -> [ H(
+                         [SOpt(HS(), "0")]
+                       , [S("imports "), t1__']
+                       )
+                     ]
+    with t1__' := <pp-H-list(prettyprint-ImportModule)> t1__
+
+  is-ModuleSection =
+    ?Imports(_)
+
+  prettyprint-ImportModule :
+    ImportWildcard(t1__) -> [ H(
+                                [SOpt(HS(), "0")]
+                              , [t1__', S("/-")]
+                              )
+                            ]
+    with t1__' := <pp-one-Z(prettyprint-nabl-ModuleID)> t1__
+
+  is-ImportModule =
+    ?ImportWildcard(_)
+
+  prettyprint-ImportModule :
+    Import(t1__) -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [t1__']
+                      )
+                    ]
+    with t1__' := <pp-one-Z(prettyprint-nabl-ModuleID)> t1__
+
+  is-ImportModule =
+    ?Import(_)
+
+  is-Module =
+    fail
+
+  is-ModuleSection =
+    fail
+
+  is-ImportModule =
+    fail
+
+  prettyprint-nabl-Module :
+    amb([h|hs]) -> <prettyprint-nabl-Module> h
+
+  prettyprint-nabl-ModuleSection :
+    amb([h|hs]) -> <prettyprint-nabl-ModuleSection> h
+
+  prettyprint-ImportModule :
+    amb([h|hs]) -> <prettyprint-ImportModule> h
+
+
+strategies
+  prettyprint-nabl-ModuleID =
+    ![S(<is-string>)]
+
+  prettyprint-nabl-ModuleIDPart =
+    ![S(<is-string>)]
+
+  prettyprint-SectionKeyword =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-nabl-ModuleID
+
+  prettyprint-example =
+    prettyprint-nabl-ModuleIDPart
+
+  prettyprint-example =
+    prettyprint-SectionKeyword
+
+  prettyprint-nabl-ModuleID :
+    amb([h|hs]) -> <prettyprint-nabl-ModuleID> h
+
+  prettyprint-nabl-ModuleIDPart :
+    amb([h|hs]) -> <prettyprint-nabl-ModuleIDPart> h
+
+  prettyprint-SectionKeyword :
+    amb([h|hs]) -> <prettyprint-SectionKeyword> h

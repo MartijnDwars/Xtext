@@ -1,0 +1,18 @@
+
+module nabl/src-gen/completions/core/Properties-esv
+
+imports
+  nabl/src-gen/completions/common/Identifiers-esv
+  nabl/src-gen/completions/terms/Signatures-esv
+  nabl/src-gen/completions/terms/Vars-esv
+  nabl/src-gen/completions/terms/Terms-esv
+  nabl/src-gen/completions/formulas/Formulas-esv
+  nabl/src-gen/completions/core/Namespaces-esv
+
+completions
+  completion template ModuleSection : "properties " =
+    "properties\n\t" (cursor) (blank)  
+  completion template PropertyDef : "PropertyID of NamespaceRef : Sort" =
+    <PropertyID:PropertyID> " of " <NamespaceRef:NamespaceRef> " : " <Sort:Sort> (blank)  
+  completion template PropertyRef : "type" =
+    "type"                                   

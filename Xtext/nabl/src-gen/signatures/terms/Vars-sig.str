@@ -1,0 +1,18 @@
+module nabl/src-gen/signatures/terms/Vars-sig
+
+imports
+  nabl/src-gen/signatures/common/Identifiers-sig
+  nabl/src-gen/signatures/terms/Terms-sig
+
+
+signature
+  sorts
+    Wld Var VarRef
+
+  constructors
+    Wld        : Wld
+               : Wld -> Var
+    Var        : Id -> Var
+    ListVar    : LId -> Var
+    VarRef     : Id -> VarRef
+    ListVarRef : LId -> VarRef

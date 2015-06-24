@@ -1,0 +1,22 @@
+module nabl/src-gen/signatures/formulas/Propositions-sig
+
+imports
+  nabl/src-gen/signatures/terms/Terms-sig
+  nabl/src-gen/signatures/terms/Vars-sig
+  nabl/src-gen/signatures/core/Namespaces-sig
+  nabl/src-gen/signatures/core/Scopes-sig
+  nabl/src-gen/signatures/core/Properties-sig
+
+
+signature
+  constructors
+    True        : Proposition
+    False       : Proposition
+    Eq          : VarRef * Term -> Proposition
+    Match       : VarRef * Pattern -> Proposition
+    DefOf       : VarRef * Var -> Proposition
+    DefOf       : NamespaceRef * VarRef * Var -> Proposition
+    ScopeOf     : Scope * Var -> Proposition
+    ResolvesTo  : Term * NamespaceRef * Var -> Proposition
+    HasProperty : VarRef * PropertyRef * Var -> Proposition
+    InRelation  : Term * Relation * Term -> Proposition

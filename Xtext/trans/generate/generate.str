@@ -10,8 +10,8 @@ imports
 	sdf/src-gen/pp/modules/Modules-pp
 	include/Xtext
 	generate/common
+	generate/nabl
 	generate/terminal-rule
-	include/TemplateLang
 
 rules 
 	
@@ -137,10 +137,16 @@ rules
 		// 	output := <if(is-double-quoted, gen-dq-word, gen-sq-word)> word
 	
 	gen-assignable-terminal(|name, attr):
-		CrossReference(TypeRef(_, _), None()) -> (Sort("ID"), [])
-		
-	gen-assignable-terminal(|name, attr):
-		CrossReference(TypeRef(_, _), Some(CrossReferenceableTerminal(RuleCall(terminal-rule)))) -> (Sort(terminal-rule), [])
+		CrossReference(TypeRef(_, type-name), terminal-rule) -> (Sort(sort-name), [SdfProductionWithCons(SortCons(SortDef(sort-name), Constructor(sort-name)), Rhs([Sort(sort-rhs)]), attr)])
+		where
+			sort-name := <conc-strings> (type-name, "Ref");
+			sort-rhs  := <gen-assignable-terminal-name> terminal-rule
+	
+	gen-assignable-terminal-name:
+		None() -> "ID"
+	
+	gen-assignable-terminal-name:
+		Some(CrossReferenceableTerminal(RuleCall(rulecall-name))) -> rulecall-name
 	
 	gen-assignable-terminal(|name, attr):
 		AssignableAlternatives(alternatives) -> (output, nested)

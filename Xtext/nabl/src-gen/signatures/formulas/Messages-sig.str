@@ -1,0 +1,12 @@
+module nabl/src-gen/signatures/formulas/Messages-sig
+
+imports
+  nabl/src-gen/signatures/terms/Terms-sig
+
+
+signature
+  constructors
+    Message : MessageKind * Term * Term -> Message
+    Error   : MessageKind
+    Warning : MessageKind
+    Note    : MessageKind
