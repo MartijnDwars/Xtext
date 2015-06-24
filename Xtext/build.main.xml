@@ -101,7 +101,7 @@
       <arg value="${basedir}/tests/gen/src/${filename}.java" />
       <arg value="--clean" />
       <!-- next line is ${build.stratego.args}, but without the library flag -->
-      <arg line="-I &quot;/Users/martijn/Projects/xtext/Xtext/trans&quot; -I &quot;/Users/martijn/Projects/xtext/Xtext&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
+      <arg line="-I &quot;${basedir}/trans&quot; -I &quot;${basedir}&quot; -la stratego-lib -la stratego-sglr -la stratego-gpp -la stratego-xtc -la stratego-aterm -la stratego-parallel" />
       <arg line="-I &quot;${lib}&quot; -I &quot;${include}&quot; --cache-dir &quot;${basedir}/.cache&quot;" />
     </java>
     <!-- .java to .class -->
