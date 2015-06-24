@@ -43,13 +43,15 @@ rules
 	
 	// Menu
 	gen-xtext:
-		(selected, _, _, path, _) -> (filename, <add-action> <gen-xtext> selected)
+		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
 		where
-			filename := <guarantee-extension(|"xtextng")> path
+			filename := <guarantee-extension(|"xtextng.aterm")> path
 	
-	// Desugar selection. Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
+	// Desugar selection.
+	// - Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
+	// - Do a add-action over the whole tree afterwards to add actions where necessary
 	gen-xtext:
-		ast -> <desugar ; topdown(try(flatten-list))> ast
+		ast -> <desugar ; topdown(try(flatten-list)) ; topdown(try(add-action))> ast
 	
 	// Expand optionals, then recursively desugar those expanded optionals, and finally flatten the result
 	desugar = topdown(try(expand ; desugar ; try(flatten-list)))
