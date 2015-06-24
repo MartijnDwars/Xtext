@@ -1,0 +1,23 @@
+module xtext-lift-alternative
+
+imports
+	
+	include/Xtext
+
+rules
+	
+	expand:
+		p@ParserRule(_, _, _, alternatives) -> <oncetd(lift-alt);try(flatten-list)> p
+
+	lift-alt:
+		AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group([input])])]), alternative-card) -> <replace-card(|alternative-card)> input
+	
+	lift-alt:
+		AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(input)])]), None()) -> input
+		
+	replace-card(|new-card):
+		AbstractTerminalAbstractToken(x, card) -> AbstractTerminalAbstractToken(x, new-card)
+		
+	replace-card(|new-card):
+		AssignmentAbstractToken(p, i, o, a, card) -> AssignmentAbstractToken(p, i, o, a, new-card)
+		

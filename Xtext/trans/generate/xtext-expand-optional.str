@@ -13,7 +13,7 @@ rules
 		]
 	where
 		abstract-terminal-token := <collect-one(is-abstract-terminal-token)> alternatives
-	
+
 	is-abstract-terminal-token =
 		?AbstractTerminalAbstractToken(_, Some(Optional()))
 	
