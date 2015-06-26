@@ -1,0 +1,26 @@
+module associativity
+
+imports
+  libstratego-lib
+  lib/editor-common.generated
+  include/Xtext
+  generate/generate
+  generate/common
+  
+strategies
+  main =
+    test-suite(!"associativity",
+      test-is-left-assoc
+    // ; test-is-right
+    )
+
+  test-is-left-assoc =
+    apply-and-check(!"match left-associativity pattern"
+    , is-left-assoc
+    , <parse-xtext-string> "
+        grammar MyDsl
+        
+        Add returns Expression:
+          Mul ({Plus.left=current} '+' right=Mul)*;"
+    , id
+    )
