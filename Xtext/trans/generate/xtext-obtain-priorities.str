@@ -3,13 +3,8 @@ module xtext-obtain-priorities
 imports
 	
 	libstratego-gpp
-	lib/runtime/editor/interop
-	lib/runtime/tmpl/pp
 	include/TemplateLang
-	sdf/src-gen/pp/TemplateLang-pp
-	sdf/src-gen/pp/modules/Modules-pp
 	include/Xtext
-	generate/generate
 	
 rules
 	obtain-priorities:

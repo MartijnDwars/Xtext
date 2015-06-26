@@ -410,10 +410,10 @@ rules
 			output := <if(<equal(|None())> cardinality-opt, <gen-keyword-wo-cardinality(|name, attr)> Keyword(word), <gen-keyword-w-cardinality(|name, attr)> Keyword(word))>
 			
 	gen-keyword-wo-cardinality(|name, attr):
-		Keyword(word) -> (Lit(<double-quote> word), [])
+		Keyword(word) -> (Lit(<double-quote> <try(un-single-quote + un-double-quote)> word), [])
 		
 	gen-keyword-w-cardinality(|name, attr):
 		Keyword(word) -> (Sort(rulename),[subrule])
 		where
 			rulename := <newname> "Keyword-";
-			subrule := SdfProduction(SortDef(rulename), Rhs([Lit(<double-quote> word)]), attr)
+			subrule := SdfProduction(SortDef(rulename), Rhs([Lit(<double-quote> <try(un-single-quote + un-double-quote)> word)]), attr)
