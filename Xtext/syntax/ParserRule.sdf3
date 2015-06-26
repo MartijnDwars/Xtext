@@ -45,14 +45,15 @@ context-free syntax
   
   AssignableTerminal.Keyword = STRING
   AssignableTerminal = RuleCall
-  AssignableTerminal = <( <AssignableAlternatives> )>
+  // {bracket} is added because without it, the constructor will not be available 
+  AssignableTerminal = <( <AssignableAlternatives> )> {bracket}
   AssignableTerminal.CrossReference = <[ <TypeRef> <CrossReferenceableTerminal?> ]> 
   
   CrossReferenceableTerminal.CrossReferenceableTerminal = <| <RuleCall>>
   
   RuleCall.RuleCall = ID
   
-  AssignableAlternatives.AssignableAlternatives = <<{AssignableTerminal "|"}+>>
+  AssignableAlternatives.AssignableAlternatives = {AssignableTerminal "|"}+
   
   Action.Action = <{ <TypeRef> <ActionCurrent?> }>
   ActionCurrent.ActionCurrent = <. <ID> <Operator> current>
