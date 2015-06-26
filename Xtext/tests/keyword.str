@@ -1,0 +1,28 @@
+module keyword
+
+imports
+  libstratego-lib
+  include/Xtext
+  include/TemplateLang
+  trans/generate/parser-rule
+  
+strategies
+  main =
+    test-suite(!"keyword",
+      test-single-quote;
+      test-double-quote
+    )
+
+  test-single-quote =
+    apply-test(!"turn single quotes into double quotes"
+    , gen-quoted-word
+    , !"'abc'"
+    , !Lit("\"abc\"")
+    )
+  
+  test-double-quote =
+    apply-test(!"leave double quotes"
+    , gen-quoted-word
+    , !"\"abc\""
+    , !Lit("\"abc\"")
+    )
