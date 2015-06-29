@@ -37,10 +37,7 @@ rules
 	; sdf-with-priorities := <add-priorities> (sdf, priorities)
 	  
 	add-priorities:
-	  (Module(x, y, sections), priorities) -> Module(x, y, <add-priorities-2> (sections, priorities))
-	
-	add-priorities-2:
-	  (sections, priorities) -> <append> (sections, priorities)
+	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
 	gen-sdf-debug:
 		selected -> <(gen-grammar + gen-rule) ; try(post)> selected

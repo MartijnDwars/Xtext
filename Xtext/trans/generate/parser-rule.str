@@ -216,9 +216,25 @@ rules
 			name			:= <id-to-name> names
 
 	gen-rule:
-		ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts))
+		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts-with-assoc))
 		where
-			alts			:= <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
+			alts := <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
+		; if <is-left-assoc> p then
+		    alts-with-assoc := <add-associativity(|Left())> alts
+		  else if <is-right-assoc> p then
+	      alts-with-assoc := <add-associativity(|Right())> alts
+	    else
+	      alts-with-assoc := alts
+	    end end
+	
+	add-associativity(|associativity):
+	  productions -> <map(try(add-associativity(|associativity)))> productions
+	where
+		<debug> productions
+  ; <is-list> productions
+	
+	add-associativity(|associativity):
+	  SdfProductionWithCons(cons, rhs, NoAttrs()) -> SdfProductionWithCons(cons, rhs, Attrs([Assoc(associativity)]))
 	
 	//Here the mess starts
 	
