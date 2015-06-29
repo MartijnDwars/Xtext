@@ -100,4 +100,12 @@ rules
 			filtered-permutations := <map(TupleToList; last)> filtered-list
 	
 	filter(|block):
-		set -> <set-eq> (block, set)		
+		set -> <set-eq> (block, set)
+
+  /**
+   * Append an element to the tail of the list
+   * 
+   * @type (List(a), a) -> List(a)
+   */
+  append:
+    (list, e) -> <reverse> [e | <reverse> list]
