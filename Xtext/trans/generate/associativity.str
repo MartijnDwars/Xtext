@@ -1,0 +1,36 @@
+module associativity
+
+imports
+  
+  include/TemplateLang
+  include/Xtext
+
+rules
+  
+  // Keyword(separator) can be made more general (just 'separator').
+  gen-rule:
+    ParserRule(name, _, _, Alternatives(
+      [UnorderedGroup(
+        [Group(
+          [ ActionAbstractToken(Action(TypeRef(None(), action), None()))
+          , AbstractTerminalAbstractToken(RuleCall(name), None())
+          , AbstractTerminalAbstractToken(
+              Alternatives(
+                [UnorderedGroup(
+                  [Group(
+                    [AbstractTerminalAbstractToken(Keyword(separator), None()), AbstractTerminalAbstractToken(RuleCall(name), None())]
+                  )]
+                )]
+              )
+            , Some(Any())
+            )
+          ]
+        )]
+      )]
+    ))
+    ->
+    SdfProductionWithCons(
+		  SortCons(SortDef(name), Constructor(action))
+		, Rhs([Sort(name), Lit(separator), Sort(name)])
+		, Attrs([Assoc(Left())])
+		)

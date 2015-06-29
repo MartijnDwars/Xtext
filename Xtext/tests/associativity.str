@@ -1,0 +1,51 @@
+module associativity
+
+imports
+  libstratego-lib
+  lib/editor-common.generated
+  include/Xtext
+  generate/generate
+  generate/common
+  
+strategies
+  main =
+    test-suite(!"associativity",
+      test-is-left-assoc
+    ; test-is-right-assoc
+    ; test-left-is-not-right-assoc
+    ; test-right-is-not-left-assoc
+    )
+
+  test-is-left-assoc =
+    apply-and-check(!"match left-associativity pattern"
+    , is-left-assoc
+    , <parse-xtext-string> "
+        Add returns Expression:
+          Mul ({Plus.left=current} '+' right=Mul)*;"
+    , id
+    )
+    
+  test-is-right-assoc =
+    apply-and-check(!"match right-associativity pattern"
+    , is-right-assoc
+    , <parse-xtext-string> "
+				Add returns Expression:
+				  Mul ({Add.left=current} '+' right=Add)?;"
+    , id
+    )
+    
+  test-left-is-not-right-assoc =
+    apply-and-fail(!"a left-associative pattern is not right-associative"
+    , is-right-assoc
+    , <parse-xtext-string> "
+        Add returns Expression:
+          Mul ({Plus.left=current} '+' right=Mul)*;"
+    )
+    
+  test-right-is-not-left-assoc =
+    apply-and-fail(!"a right-associative pattern is not left-associative"
+    , is-left-assoc
+    , <parse-xtext-string> "
+        Add returns Expression:
+          Mul ({Add.left=current} '+' right=Add)?;"
+    )

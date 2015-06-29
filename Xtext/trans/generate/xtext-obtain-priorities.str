@@ -8,12 +8,11 @@ imports
 	
 rules
 	obtain-priorities:
-		ast -> <try(remove-return)> combined
-		where
-		chains := <flatten-list> <collect-all(gen-priorities(|ast))> ast;
-		cleaned := <try(cleanup_priorities)> chains;
-		priorities := SDFSection(ContextFreePriorities(cleaned));
-		combined := (ast, priorities)
+		ast -> <try(remove-return)> (ast, priorities)
+  where
+		chains     := <collect-all(gen-priorities(|ast)); flatten-list> ast;
+		cleaned    := <try(cleanup_priorities)> chains;
+		priorities := SDFSection(ContextFreePriorities(cleaned))
 	
 	//Removing rules of type Exp = Exp can more easily be done in SDF
 	

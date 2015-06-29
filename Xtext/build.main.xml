@@ -122,6 +122,7 @@
       <classpath>
         <pathelement location="${eclipse.spoofaximp.strategojar}" />
         <pathelement location="${basedir}/tests/gen/target/classes" />
+        <pathelement location="${basedir}/include" />
       </classpath>
     </java>
 	</target>
