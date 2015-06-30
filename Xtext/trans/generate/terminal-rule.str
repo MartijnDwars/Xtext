@@ -48,7 +48,7 @@ rules
 		[head | tail] -> Alt(head, <list-to-alt> tail)
 	
 	gen-terminal-token-element:
-		Keyword(s) -> CiLit(<single-quote> s)
+		Keyword(s) -> CiLit(s)
 	
 	gen-terminal-token-element:
 		CharacterRange(Keyword(x), Keyword(y)) -> CharClass(Simple(Present(Range(Short(x), Short(y)))))
