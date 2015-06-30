@@ -12,6 +12,7 @@ rules
    */
   post:
     Module(x, y, sdf-sections) -> Module(x, y, [
+      SDFSection(ContextFreeStartSymbols(start-symbols)),	
       SDFSection(ContextFreeSyntax(cfs-productions)),
       SDFSection(LexicalSyntax(lex-productions))
     ])
@@ -20,4 +21,7 @@ rules
       cfs-productions := <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> cfs*;
 
       lex* := <collect(?LexicalSyntax(_))> sdf-sections;
-      lex-productions := <collect(?SdfProduction(_, _, _))> lex*
+      lex-productions := <collect(?SdfProduction(_, _, _))> lex*;
+      
+      start* := <collect(?ContextFreeStartSymbols(_))> sdf-sections;
+      start-symbols := <collect(?Sort(_))> start*
