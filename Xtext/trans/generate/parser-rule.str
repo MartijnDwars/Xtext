@@ -21,7 +21,7 @@ rules
 			name               := <id-to-name> names;
 			imports			   := <gen-imports> mixin;
 			start-symbol	   := <fetch-elem(gen-start-symbol)> abstract-rules;
-			sdf-sections	   := <conc> ([start-symbol], <map(gen-rule)> abstract-rules)
+			sdf-sections	   := [start-symbol | <map(gen-rule)> abstract-rules]
 		
 	gen-imports:
 		None() -> []
@@ -156,7 +156,9 @@ rules
 		CrossReference(TypeRef(_, _), None()) -> (Sort("ID"), [])
 		
 	gen-assignable-terminal(|name, attr, cardinality-opt):
-		CrossReference(TypeRef(_, _), Some(CrossReferenceableTerminal(RuleCall(terminal-rule)))) -> (Sort(terminal-rule), [])
+		CrossReference(TypeRef(_, _), Some(CrossReferenceableTerminal(RuleCall(terminal-rule)))) -> (Sort(new_name), [])
+		where
+			new_name := <conc-strings> (terminal-rule, "_Ref")
 	
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		AssignableAlternatives(alternatives) -> (output, nested)

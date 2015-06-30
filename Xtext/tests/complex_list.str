@@ -1,0 +1,143 @@
+module complex_list
+
+imports
+	generate/xtext-complex-list
+	libstratego-lib
+  	include/Xtext
+  	include/TemplateLang
+
+strategies
+  	main =
+	test-suite(!"complex_list",
+  		list-empty;
+  		list-too-small;
+  		no-complex-list;
+  		inverted-complex-list;
+  		complex-list-suffix-list;
+		prefix-list-complex-list;
+  		complex-list
+	)
+    
+  	list-empty =
+    apply-test(!"list-empty",
+      	replace-complex-list,
+     	![],
+      	![]
+    )
+    
+  	list-too-small =
+    apply-test(!"list-too-small",
+      	replace-complex-list,
+      	![AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())],
+      	![AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())]
+    )
+    
+  	no-complex-list = 
+	apply-test(!"no-complex-list",
+	  	replace-complex-list,
+	  	![AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None()), AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())],
+	  	![AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None()), AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())]
+	)
+  	
+  	inverted-complex-list =
+    apply-test(!"inverted-complex-list",
+      replace-complex-list,
+      ![AbstractTerminalAbstractToken(
+		    Alternatives(
+		      [ UnorderedGroup(
+		          [ Group(
+		              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+		              , AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+		              ]
+		            )
+		          ]
+		        )
+		      ]
+		    )
+		  , Some(Any())
+		),      	
+	    AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())],
+      ![AbstractTerminalAbstractToken(
+		    Alternatives(
+		      [ UnorderedGroup(
+		          [ Group(
+		              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+		              , AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+		              ]
+		            )
+		          ]
+		        )
+		      ]
+		    )
+		  , Some(Any())
+		),      	
+	    AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())]
+    )
+    
+    complex-list =
+    apply-test(!"complex-list",
+      	replace-complex-list,
+     	![ AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			, AbstractTerminalAbstractToken(
+			    Alternatives(
+			      [ UnorderedGroup(
+			          [ Group(
+			              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+			              , AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			              ]
+			            )
+			          ]
+			        )
+			      ]
+			    )
+			  , Some(Any())
+			  )
+			],
+			![IterSep(Label(Unquoted("p"), RuleCall("Q")), Keyword("','"))]
+	)
+	
+	complex-list-suffix-list =
+    apply-test(!"complex-list-suffix-list",
+      	replace-complex-list,
+     	![ AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			, AbstractTerminalAbstractToken(
+			    Alternatives(
+			      [ UnorderedGroup(
+			          [ Group(
+			              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+			              , AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			              ]
+			            )
+			          ]
+			        )
+			      ]
+			    )
+			  , Some(Any())
+			  )
+			, AbstractTerminalAbstractToken(Keyword("a"), None())
+			],
+			![IterSep(Label(Unquoted("p"), RuleCall("Q")), Keyword("','")), AbstractTerminalAbstractToken(Keyword("a"), None())]
+	)
+	
+	prefix-list-complex-list =
+    apply-test(!"prefix-list-complex-list",
+      	replace-complex-list,
+     	![  AbstractTerminalAbstractToken(Keyword("a"), None()),
+     		AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			, AbstractTerminalAbstractToken(
+			    Alternatives(
+			      [ UnorderedGroup(
+			          [ Group(
+			              [ AbstractTerminalAbstractToken(Keyword("','"), None())
+			              , AssignmentAbstractToken(None(), "p", AddAssignment(), RuleCall("Q"), None())
+			              ]
+			            )
+			          ]
+			        )
+			      ]
+			    )
+			  , Some(Any())
+			  )
+			],
+			![AbstractTerminalAbstractToken(Keyword("a"), None()), IterSep(Label(Unquoted("p"), RuleCall("Q")),Keyword("','"))]
+	)
