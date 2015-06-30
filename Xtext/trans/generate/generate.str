@@ -7,10 +7,13 @@ imports
 	sdf/src-gen/pp/modules/Modules-pp
 	generate/parser-rule
 	include/Xtext
+	include/TemplateLang
+	generate/common
 	generate/post
 	generate/xtext-expand-optional
 	generate/xtext-expand-alternative
 	generate/xtext-lift-alternative
+	generate/xtext-obtain-priorities
 	generate/add-actions
 	
 rules
@@ -26,6 +29,15 @@ rules
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where
 			filename := $[[<remove-extension> path].sdf3.aterm]
+	
+	gen-sdf-debug:
+	  (ast, priorities) -> sdf-with-priorities
+	where
+	  sdf                 := <gen-sdf-debug> ast
+	; sdf-with-priorities := <add-priorities> (sdf, priorities)
+	  
+	add-priorities:
+	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
 	gen-sdf-debug:
 		selected -> <(gen-grammar + gen-rule) ; try(post)> selected
@@ -50,8 +62,13 @@ rules
 	// Desugar selection.
 	// - Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
 	// - Do a add-action over the whole tree afterwards to add actions where necessary
+	// - Extract priorities from Xtext and return a pair (xtext grammar, sdf priorities)
 	gen-xtext:
-		ast -> <desugar ; topdown(try(flatten-list)) ; topdown(try(add-action))> ast
+		ast -> xtext-with-priorities
+	  where
+	    desugared             := <desugar ; topdown(try(flatten-list))> ast
+	  ; actions               := <topdown(try(add-action))> desugared
+	  ; xtext-with-priorities := <obtain-priorities> actions
 	
 	// Expand optionals, then recursively desugar those expanded optionals, and finally flatten the result
 	desugar = topdown(try(expand ; desugar ; try(flatten-list)))
