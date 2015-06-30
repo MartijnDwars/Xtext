@@ -6,7 +6,8 @@ imports
 	
 rules
 	
-	expand:
+	// We are in the process of moving this to SDF level
+	expand-not-used-anymore:
 		p@ParserRule(_, _, _, alternatives) -> [
 			<oncetd(remove(|abstract-terminal-token))> p,
 			<oncetd(mandatory(|abstract-terminal-token))> p

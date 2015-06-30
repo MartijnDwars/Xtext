@@ -12,7 +12,8 @@ imports
 	generate/common
 	generate/generate
 	generate/terminal-rule
-
+  generate/xtext-complex-list
+  
 rules 
 	
 	gen-grammar:
@@ -52,8 +53,7 @@ rules
 	add-associativity(|associativity):
 	  productions -> <map(try(add-associativity(|associativity)))> productions
 	where
-		<debug> productions
-  ; <is-list> productions
+    <is-list> productions
 	
 	add-associativity(|associativity):
 	  SdfProductionWithCons(cons, rhs, NoAttrs()) -> SdfProductionWithCons(cons, rhs, Attrs([Assoc(associativity)]))
@@ -99,7 +99,7 @@ rules
 		where
 			constructor := <collect-one(is-action) + collect-one(is-assignment) + id> content;
 			output := <if(or(<equal(|content)> constructor, <equal(|0)> main) , <gen-sortdef-rule(|name, attr)> content, <gen-sortconstructordef-rule(|name, attr, constructor)> content)>;
-			rule := <flatten-list> [<try(concat)> <(extract-outputs)> output| <try(concat)> <(extract-nested-outputs)> output]
+			rule := <flatten-list> [<try(concat)> <(extract-outputs)> output | <try(concat)> <(extract-nested-outputs)> output]
 	
 
 
@@ -115,10 +115,11 @@ rules
 	gen-sortconstructordef-rule(|name, attr, constructor):
 		input -> (SdfProductionWithCons(SortCons(name, Constructor(new_constructor)), Rhs(rule), attr), extra_rules)
 		where
-			new_constructor := <if(<equal(|constructor)> "AssignmentToken", <newname> <conc-strings> (<remove-sortdef> name, "-"), <id> constructor)>;
-			rules_generated := <map(gen-abstract-token-rule(|name, attr))> input;
-			rule			:= <try(concat)> <map(extract-outputs)> rules_generated;
-			extra_rules		:= <try(concat)> <map(extract-nested-outputs)> rules_generated		
+      input_converted_complexlist := <topdown(try(replace-complex-list))> input;
+			new_constructor := <if(<equal(|constructor)> "AssignmentToken", <newname> <conc-strings> (<remove-sortdef> name, "-"), !constructor)>;
+			rules_generated := <map(try(gen-abstract-token-rule(|name, attr)))> input_converted_complexlist;
+			rule	      		:= <try(concat)> <map(extract-outputs)> rules_generated;
+			extra_rules	   	:= <try(concat)> <map(extract-nested-outputs)> rules_generated		
 		
 	gen-abstract-token-rule(|name, attr):
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> (rule, nested_output)
@@ -126,6 +127,13 @@ rules
 			(output, nested_output) := <gen-assignable-terminal(|name, attr, cardinality-opt)> assignable-terminal;
 			gen-cardinality := <gen-cardinality(|output)> cardinality-opt;
 			rule := Label(Quoted(<double-quote> feature), gen-cardinality)
+	
+	gen-abstract-token-rule(|name, attr):
+	  x@(IterSep(_, _),[]) -> x
+
+	gen-abstract-token-rule(|name, attr):
+	  AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group([(IterSep(a, b),[])])])]), Some(Optional())) ->
+	    (IterStarSep(a, b), [])
 	
 	extract-action-ID:
 		Action(TypeRef(_, name), _) -> name
@@ -157,12 +165,21 @@ rules
 	gen-abstract-token-rule(|name, attr):
 		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> (gen-cardinality, <flatten-list> nested_output)
 		with
-			(output, nested_output) := <gen-abstract-terminal(|name, attr, cardinality-opt)> abstract-terminal;
-			gen-cardinality       := <gen-cardinality(|output)> cardinality-opt
+			(output, nested_output) := <try(gen-abstract-terminal(|name, attr, cardinality-opt))> abstract-terminal;
+			gen-cardinality         := <gen-cardinality(|output)> cardinality-opt
 
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		RuleCall(input) -> (Sort(input),[])
-		
+	
+	// Used for complex list
+  gen-assignable-terminal:
+    RuleCall(input) -> Sort(input)
+  
+  // Used for complex list
+  gen-assignable-terminal:
+    Keyword(word) -> <gen-quoted-word> word
+  
+    
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		Keyword(word) -> output
 		where
@@ -193,7 +210,7 @@ rules
 
 	//Need to fix the look of this, currently introduces extra space in final program 
 	gen-abstract-token-rule(|name, attr):
- 		ActionAbstractToken(_) -> ("",[])
+ 		ActionAbstractToken(_) -> (Lit(""),[])
 
  	/* Abstract Terminal Rulecall */
 	gen-abstract-terminal(|name, attr, cardinality-opt):

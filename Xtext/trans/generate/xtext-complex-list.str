@@ -5,14 +5,14 @@ imports
 	include/Xtext
 	include/TemplateLang
 	generate/parser-rule
-
+  
 rules
-	is-complex-list :
-		input -> <not(equal(input))> <find-consecutive-elements(find-list-initiator, find-list-tail)> input
 	
-	replace-complex-list :
+	replace-complex-list:
 		input -> <try(find-consecutive-elements(find-list-initiator, find-list-tail))> input
-		
+	where
+	  <debug> input
+	
 	find-consecutive-elements(filter1, filter2):
 		[head | [head_tail | tail]] -> <flatten-list> out
 	where
@@ -25,8 +25,9 @@ rules
 					<id> [head | <try(find-consecutive-elements(filter1, filter2))> [head_tail | tail]]
 				)>
 	
-	find-list-initiator:
-		AssignmentAbstractToken(_, a, _, b, None()) -> (a, b)
+	// First
+  find-list-initiator:
+    AssignmentAbstractToken(_, a, _, b, None()) -> (a, b)
 	
 	find-list-tail:
 		(AbstractTerminalAbstractToken(
@@ -34,24 +35,37 @@ rules
                       [ UnorderedGroup(
                           [ Group(
                               [ AbstractTerminalAbstractToken(sep, None())
-                              , AssignmentAbstractToken(None(), a, AddAssignment(), b, None())
+                              , AssignmentAbstractToken(None(), a, _, b, None())
                               ])
                           ])
                       ])
                   , Some(Any())
                   ),
-		(a, b)) -> IterSep(Label(Unquoted(a), b), sep) 
-		
-	find-list-tail:
-		(AbstractTerminalAbstractToken(
+		(a, b)) -> (IterSep(Label(Quoted(<double-quote> a), object), separator), [])
+	where
+	  separator := <gen-assignable-terminal> sep
+	; object    := <gen-assignable-terminal> b 
+
+  // Second
+  find-list-initiator:
+    AbstractTerminalAbstractToken(token, None()) -> ("", token)
+  where
+    <not(?Alternatives(_))> token
+  
+  find-list-tail:
+    (AbstractTerminalAbstractToken(
                     Alternatives(
                       [ UnorderedGroup(
                           [ Group(
-                              [ AbstractTerminalAbstractToken(sep, None())
-                              , AbstractTerminalAbstractToken(b, None())
+                              [ ActionAbstractToken(_)
+                              , AbstractTerminalAbstractToken(sep, None())
+                              , AssignmentAbstractToken(None(), _, _, b, None())
                               ])
                           ])
                       ])
                   , Some(Any())
                   ),
-		(a, b)) -> IterSep(Label(Unquoted(a), b), sep)
+    (_, b)) -> (IterSep(object, separator), [])
+  where
+    separator := <gen-assignable-terminal> sep
+  ; object    := <gen-assignable-terminal> b
