@@ -20,7 +20,8 @@ rules
 		where
 			name               := <id-to-name> names;
 			imports			   := <gen-imports> mixin;
-			sdf-sections	   := <map(gen-rule)> abstract-rules
+			start-symbol	   := <fetch-elem(gen-start-symbol)> abstract-rules;
+			sdf-sections	   := <conc> ([start-symbol], <map(gen-rule)> abstract-rules)
 		
 	gen-imports:
 		None() -> []
@@ -32,6 +33,9 @@ rules
 		GrammarID(names) -> Module(name)
 		where
 			name			:= <id-to-name> names
+
+	gen-start-symbol:
+		ParserRule(name, _, _, _) -> SDFSection(ContextFreeStartSymbols([Sort(name)]))
 
 	gen-rule:
 		ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts))
