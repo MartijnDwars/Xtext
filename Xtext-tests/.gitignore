@@ -2,3 +2,5 @@
 src-gen
 Dummy.*
 MyDsl.*
+*.aterm
+*.sdf3

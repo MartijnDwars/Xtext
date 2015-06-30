@@ -1,9 +1,0 @@
-TerminalRule(
-  Returns("DOC_COMMENT", None())
-, TerminalAlternatives(
-    [ TerminalGroup(
-        [TerminalToken(Keyword("'/**'"), None()), TerminalToken(UntilToken(Keyword("'*/'")), None())]
-      )
-    ]
-  )
-)
