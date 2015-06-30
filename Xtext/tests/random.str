@@ -1,0 +1,52 @@
+module random
+
+imports
+	libstratego-lib
+  	lib/editor-common.generated
+  	include/Xtext
+  	include/TemplateLang
+	generate/generate
+
+strategies
+	main =
+		test-suite(!"random",
+			test-alternatives;
+			test-expression
+		)
+		
+	test-alternatives =
+		apply-and-check(!"Testing Fj.xtext "
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  Constant: 
+			  	IntConstant | BoolConstant | StringConstant
+			  ;"
+			, !SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProduction(SortDef("Constant"), Rhs([Sort("IntConstant")]), NoAttrs())
+				    , SdfProduction(SortDef("Constant"), Rhs([Sort("BoolConstant")]), NoAttrs())
+				    , SdfProduction(SortDef("Constant"), Rhs([Sort("StringConstant")]), NoAttrs())
+				    ]
+				  )
+				)
+		)
+		
+	test-expression = 
+		apply-and-check(!"Testing Fj.xtext"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  Paren returns Expression: 
+			  	'(' Expression ')'
+			  ; 
+			  "
+			, !SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProduction(
+				        SortDef("Paren")
+				      , Rhs([Lit("\"(\""), Sort("Expression"), Lit("\")\"")])
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+		)

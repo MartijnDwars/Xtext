@@ -1,0 +1,137 @@
+module complex
+
+imports
+	libstratego-lib
+  	lib/editor-common.generated
+  	include/Xtext
+  	include/TemplateLang
+	generate/generate
+
+strategies
+	main = 
+		test-suite(!"complex",
+		test-complex-list-label;
+		test-complex-list-label-paran;
+		test-complex-list-no-label;
+		test-complex-list-no-label-paran
+		)
+		
+	test-complex-list-label =
+		apply-and-check(!"Check complex list convertion with label"
+		, gen-sdf-debug
+		, <parse-xtext-string> "
+		  Greeting:
+  			p += Q(',' p += Q)*
+  		  ;"
+  		,!SDFSection(
+			  ContextFreeSyntax(
+			    [ SdfProductionWithCons(
+			        SortCons(SortDef("Greeting"), Constructor("Greeting-11"))
+			      , Rhs([Opt(Sort("Greeting-SubRule-16"))])
+			      , NoAttrs()
+			      )
+			    , SdfProduction(
+			        SortDef("Greeting-SubRule-16")
+			      , Rhs(
+			          [Label(Unquoted("p"), Sort("Q")), IterStar(Sort("Greeting-SubRule-16-SubRule-0"))]
+			        )
+			      , NoAttrs()
+			      )
+			    , SdfProduction(
+			        SortDef("Greeting-SubRule-16-SubRule-0")
+			      , Rhs(
+			          [Lit("\",\""), Label(Unquoted("p"), Sort("Q"))]
+			        )
+			      , NoAttrs()
+			      )
+			    ]
+			  )
+			)
+		)
+		
+		test-complex-list-label-paran =
+			apply-and-check(!"Check complex list convertion with label and paranthesis"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  Greeting:
+	  			(p += Q(',' p += Q)*)?
+	  		  ;"
+	  		,!SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProductionWithCons(
+				        SortCons(SortDef("Greeting"), Constructor("Greeting-11"))
+				      , Rhs([Opt(Sort("Greeting-SubRule-16"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Greeting-SubRule-16")
+				      , Rhs(
+				          [Label(Unquoted("p"), Sort("Q")), IterStar(Sort("Greeting-SubRule-16-SubRule-0"))]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Greeting-SubRule-16-SubRule-0")
+				      , Rhs(
+				          [Lit("\",\""), Label(Unquoted("p"), Sort("Q"))]
+				        )
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+			)
+		
+		test-complex-list-no-label =
+			apply-and-check(!"Check complex list convertion without label"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+				Greeting:
+				  'a' ('.' 'a')*
+				;"
+	  		,!SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProduction(
+				        SortDef("Greeting")
+				      , Rhs([Lit("\"a\""), IterStar(Sort("Greeting-SubRule-4"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Greeting-SubRule-4")
+				      , Rhs([Lit("\".\""), Lit("\"a\"")])
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+			)
+			
+		test-complex-list-no-label-paran =
+			apply-and-check(!"Check complex list convertion without labels and with paranthesis"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+				Greeting:
+				  ('a' ('.' 'a')*)?
+				;"
+	  		,!SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProduction(
+				        SortDef("Greeting")
+				      , Rhs([Opt(Sort("Greeting-SubRule-17"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Greeting-SubRule-17")
+				      , Rhs([Lit("\"a\""), IterStar(Sort("Greeting-SubRule-17-SubRule-0"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Greeting-SubRule-17-SubRule-0")
+				      , Rhs([Lit("\".\""), Lit("\"a\"")])
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+			)
+		

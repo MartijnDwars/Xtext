@@ -119,7 +119,7 @@ rules // Pattern match left- and right associative ParserRules
   	!tokens; ?[AbstractTerminalAbstractToken(_, None()) | _];
   	
   	// "<last> tokens > group" has cardinality any
-  	<last> tokens; ?AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(sub-tokens)])]), Some(Multiple()));
+  	<last> tokens; ?AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(sub-tokens)])]), Some(Any()));
 
   	// "<last> tokens > group" starts with an action which assigns 'current'
   	!sub-tokens; ?[ActionAbstractToken(Action(TypeRef(None(), _), Some(ActionCurrent(_, Assignment())))) | _];
