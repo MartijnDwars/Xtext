@@ -306,7 +306,7 @@ rules
 		where
 			(output, nested_output) := <gen-assignable-terminal(|name, attr, cardinality-opt)> assignable-terminal;
 			gen-cardinality := <gen-cardinality(|output)> cardinality-opt;
-			rule := Label(Unquoted(feature), gen-cardinality)
+			rule := Label(Quoted(<double-quote> feature), gen-cardinality)
 	
 	extract-action-ID:
 		Action(TypeRef(_, name), _) -> name
