@@ -41,3 +41,17 @@ rules
                   , Some(Any())
                   ),
 		(a, b)) -> IterSep(Label(Unquoted(a), b), sep) 
+		
+	find-list-tail:
+		(AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(sep, None())
+                              , AbstractTerminalAbstractToken(b, None())
+                              ])
+                          ])
+                      ])
+                  , Some(Any())
+                  ),
+		(a, b)) -> IterSep(Label(Unquoted(a), b), sep)

@@ -11,7 +11,6 @@ strategies
   main =
     test-suite(!"associativity",
       test-is-left-assoc-simple
-    ; test-is-left-assoc-hard
     ; test-is-right-assoc-simple
     ; test-left-is-not-right-assoc
     ; test-right-is-not-left-assoc
@@ -23,15 +22,6 @@ strategies
     , <parse-xtext-string> "
         Add returns Expression:
           Mul ({Plus.left=current} '+' right=Mul)*;"
-    , id
-    )
-    
-  test-is-left-assoc-hard =
-    apply-and-check(!"match hard left-associativity pattern"
-    , is-right-assoc
-    , <parse-xtext-string> "
-				Addition:
-				  Multiplication ({Plus.left=current} '+' right=Multiplication)+;"
     , id
     )
   
