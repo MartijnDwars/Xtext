@@ -112,21 +112,48 @@ rules
     
 rules // Pattern match left- and right associative ParserRules
   
-  is-left-assoc:
+  is-left-assoc = is-simple-left-assoc + is-nested-left-assoc
+  
+  is-simple-left-assoc:
     ParserRule(name, _, _, Alternatives([UnorderedGroup([Group(tokens)])])) -> <true>
   where
-  	// "<first> tokens" is a RuleCall or a Keyword (we're more liberal here)
-  	!tokens; ?[AbstractTerminalAbstractToken(_, None()) | _];
-  	
-  	// "<last> tokens > group" has cardinality any
-  	<last> tokens; ?AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(sub-tokens)])]), Some(Any()));
-
-  	// "<last> tokens > group" starts with an action which assigns 'current'
-  	!sub-tokens; ?[ActionAbstractToken(Action(TypeRef(None(), _), Some(ActionCurrent(_, Assignment())))) | _];
-  	
-  	// "<last> tokens > group" ends with an action which assigns 'current'
-  	<last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(_), None())
+    <is-left-assoc-tokens> tokens
+  
+  is-nested-left-assoc:
+    ParserRule(name, _, _, Alternatives([
+      UnorderedGroup([
+        Group([
+          AbstractTerminalAbstractToken(
+            Alternatives([
+              UnorderedGroup([
+                Group(tokens)
+              ])
+            ]),
+            Some(Optional())
+          )
+        ])
+      ])
+    ])) -> <true>
+  where
+    debug;
+    <debug> 5;
+    <is-left-assoc-tokens> tokens
+  
+  is-left-assoc-tokens:
+    tokens -> <true>
+  where
+    // "<first> tokens" is a RuleCall or a Keyword (we're more liberal here)
+    !tokens; ?[AbstractTerminalAbstractToken(_, None()) | _];
     
+    // "<last> tokens > group" has cardinality any
+    <last> tokens; ?AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(sub-tokens)])]), Some(Any()));
+
+    // "<last> tokens > group" starts with an action which assigns 'current'
+    !sub-tokens; ?[ActionAbstractToken(Action(TypeRef(None(), _), Some(ActionCurrent(_, Assignment())))) | _];
+    
+    // "<last> tokens > group" ends with an action which assigns 'current'
+    <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(_), None())
+  
   is-right-assoc:
     ParserRule(name, _, _, Alternatives([UnorderedGroup([Group(tokens)])])) -> <true>
   where

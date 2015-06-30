@@ -25,3 +25,54 @@ rules
       
       start* := <collect(?ContextFreeStartSymbols(_))> sdf-sections;
       start-symbols := <collect(?Sort(_))> start*
+
+  post:
+    ContextFreeSyntax(productions) -> ContextFreeSyntax(<map(try(transform)); try(flatten-list)> productions)
+  where
+    <debug> 1
+  
+  /**
+   * Turn
+   *   Expression.Plus = {Expression "+"}+ {left}
+   * into
+   *   Expression.Plus = Expression "+" Expression {left}
+   */
+  transform:
+    x@SdfProductionWithCons(
+      SortCons(SortDef(rule-name), cons)
+    , Rhs([rhs])
+    , attrs
+    )
+    ->
+    [SdfProductionWithCons(
+      SortCons(SortDef(rule-name), cons)
+    , Rhs([Sort(rule-name), separator, Sort(rule-name)])
+    , attrs
+    )]
+  where
+  	!rhs; ?IterSep(Sort(rule-name), separator)
+  
+  /**
+   * Turn
+   *   Expression.Plus = {Expression "+"}+ {left}
+   * into
+   *   Expression.Plus = Expression "+" Expression {left}
+   */
+  transform:
+    x@SdfProductionWithCons(
+      SortCons(SortDef(rule-name), cons)
+    , Rhs([rhs])
+    , attrs
+    )
+    ->
+    [SdfProductionWithCons(
+      SortCons(SortDef(rule-name), cons)
+    , Rhs([Sort(rule-name), separator, Sort(rule-name)])
+    , attrs
+    ), SdfProductionWithCons(
+      SortCons(SortDef(rule-name), cons)
+    , Rhs([])
+    , NoAttrs()
+    )]
+  where
+    !rhs; ?IterStarSep(Sort(rule-name), separator)

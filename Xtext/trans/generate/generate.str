@@ -40,7 +40,7 @@ rules
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
 	gen-sdf-debug:
-		selected -> <(gen-grammar + gen-rule) ; try(post)> selected
+		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected
 	
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
