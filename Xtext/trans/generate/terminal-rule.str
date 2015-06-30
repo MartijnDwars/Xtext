@@ -6,6 +6,11 @@ imports
 	include/TemplateLang
 	generate/common
 
+signature
+
+  constructors
+    Parenthetical : Unknown -> Unknown
+    
 rules
 
 	list-to-conc:
@@ -15,13 +20,56 @@ rules
 		[head | tail] -> Conc(head, <list-to-conc> tail)
 	
 	gen-rule:
-		TerminalRule(Returns(terminal-name, _), terminal-token-element) ->
-			SDFSection(LexicalSyntax([SdfProduction(SortDef(terminal-name), Rhs([syntax-rules]), NoAttrs())]))
+		TerminalRule(head, alternatives) ->
+			SDFSection(LexicalSyntax([SdfProduction(SortDef(name), rhs, NoAttrs())]))
 			where
-				syntax-rules := <gen-terminal-token-element ; innermost(post-process-terminal-rule); remove-parenthetical> terminal-token-element
+				name := <gen-rule-name> head
+			; syntax-rules := <gen-terminal-token-element ; make-list> alternatives
+		  ; rhs          := <innermost(post-process-terminal-rule)> Rhs(syntax-rules)
+  
+  gen-rule-name:
+  	Fragment(name) -> name
+  
+  gen-rule-name:
+  	Returns(name, _) -> name
+  
+  /**
+   * Turn a non-list into a list or return the given list
+   */
+  make-list = is-list < id + ![<id>]
 	
-	post-process-terminal-rule:
-		CharClass(Simple(Present(Alt(x, y)))) -> Alt(x, y)
+  post-process-terminal-rule:
+    CharClass(Simple(Present(Alt(x, y)))) -> Alt(x, y)
+  
+  /**
+   * Final rule to remove outermost single parenthetical
+   */
+  post-process-terminal-rule:
+    Rhs([Parenthetical(x)]) -> Rhs([x])
+  
+  /**
+   * Remove redundant parenthesis. A CharClass already has square brackets.
+   */
+  post-process-terminal-rule:
+    Parenthetical(CharClass(x)) -> CharClass(x)
+
+  /**
+   * Remove redundant parenthesis. A Sequence already has parenthesis.
+   */
+  post-process-terminal-rule:
+    Parenthetical(Sequence(h, t)) -> Sequence(h, t)
+  
+  /**
+   * If the rhs only consists of a sequence, just make it an array (removes redundant parenthesis)
+   */
+  post-process-terminal-rule:
+    Rhs([Sequence(head, tail)]) -> Rhs([head | tail])
+  
+  /**
+   * In the post-processing, remove redundant parentheticals
+   */
+  post-process-terminal-rule:
+    Parenthetical(Parenthetical(x)) -> Parenthetical(x)
 	
 	gen-terminal-alternative:
 		TerminalGroup(terminal-group) -> gen-terminal-group
@@ -51,15 +99,27 @@ rules
 		Keyword(s) -> CiLit(s)
 	
 	gen-terminal-token-element:
-		CharacterRange(Keyword(x), Keyword(y)) -> CharClass(Simple(Present(Range(Short(x), Short(y)))))
+		CharacterRange(Keyword(from), Keyword(to)) -> CharClass(
+			Simple(
+				Present(
+					Range(
+						Short(<unquote(id)> from),
+						Short(<unquote(id)> to)
+				  )
+				)
+		  )
+		)
 	
 	gen-terminal-token-element:
-		RuleCall(reference) -> <fail>
-		where
-			<debug> "TODO"
+		RuleCall(reference) -> Sort(reference)
 		
+  /**
+   * Negated tokens require special attention, because they MUST be translated into SDF character classes but this mapping is less straightforward. 
+   */
 	gen-terminal-token-element:
-		NegatedToken(terminal-token-element) -> Comp(<gen-terminal-token-element> terminal-token-element)
+		NegatedToken(terminal-token-element) -> CiLit("'negated-token'")
+	where
+	  <debug> $[WARNING: Transforming negated tokens does not work correctly!]
 	
 	gen-terminal-token-element:
 		Wildcard(_) -> CharClass(Comp(Simple(Absent())))
