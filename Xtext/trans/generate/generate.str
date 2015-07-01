@@ -15,6 +15,7 @@ imports
 	generate/xtext-lift-alternative
 	generate/xtext-obtain-priorities
 	generate/add-actions
+	generate/sdf-priority-groups
 	
 rules
 	
@@ -31,17 +32,18 @@ rules
 			filename := $[[<remove-extension> path].sdf3.aterm]
 	
 	gen-sdf-debug:
-	  (ast, priorities) -> sdf-with-priorities
+	  (ast, priorities) -> priorities-with-assoc
 	where
-	  sdf                 := <gen-sdf-debug> ast
-	; sdf-with-priorities := <add-priorities> (sdf, priorities)
+	  sdf                   := <gen-sdf-debug> ast
+	; sdf-with-priorities   := <add-priorities> (sdf, priorities)
+	; priorities-with-assoc := <innermost(priority-group(|sdf-with-priorities))> sdf-with-priorities
 	  
 	add-priorities:
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
 	gen-sdf-debug:
-		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected
-	
+		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected 
+  
 	gen-sdf-debug:
 		selected -> <map(gen-sdf-debug)> selected
 		where

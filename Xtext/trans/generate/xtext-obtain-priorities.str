@@ -11,8 +11,7 @@ rules
 		ast -> <try(remove-return)> (ast, priorities)
   where
 		chains     := <collect-all(gen-priorities(|ast)); flatten-list> ast;
-		cleaned    := <try(cleanup_priorities)> chains;
-		priorities := SDFSection(ContextFreePriorities(cleaned))
+		priorities := SDFSection(ContextFreePriorities(chains))
 	
 	//Removing rules of type Exp = Exp can more easily be done in SDF
 	

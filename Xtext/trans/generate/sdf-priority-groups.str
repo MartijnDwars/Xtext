@@ -1,0 +1,28 @@
+module sdf-priority-groups
+
+imports
+  
+  include/Xtext
+  include/TemplateLang
+  
+rules
+  
+  /**
+   * Add associativity to the priority group
+   * 
+   * @type ProdsRefGroup -> AssocRefGroup
+   */
+  priority-group(|ast):
+    ProdsRefGroup([SortConsRef(Sort(sort), Constructor(cons))]) -> AssocRefGroup(associativity, [SortConsRef(Sort(sort), Constructor(cons))])
+  where
+  	associativity := <get-assoc(|ast)> (sort, cons)
+  
+  /**
+   * Get associativity for the given Sort.Cons
+   */ 
+  get-assoc(|ast):
+  	(sort, cons) -> <collect-one(
+      ?SdfProductionWithCons(
+        SortCons(SortDef(sort), Constructor(cons)), _, Attrs([Assoc(<id>)])
+      )
+    )> ast
