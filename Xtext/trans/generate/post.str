@@ -18,16 +18,26 @@ rules
     ])
     with
       cfs* := <collect(?ContextFreeSyntax(_))> sdf-sections;
-      cfs-productions := <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> cfs*;
+      cfs-productions := <filter(not(is-self-injection))> <map(try(add-bracket))> <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> cfs*;
 
       lex* := <collect(?LexicalSyntax(_))> sdf-sections;
-      lex-productions := <collect(?SdfProduction(_, _, _))> lex*;
+      lex-productions := <filter(not(is-self-injection))> <collect(?SdfProduction(_, _, _))> lex*;
       
       start* := <collect(?ContextFreeStartSymbols(_))> sdf-sections;
       start-symbols := <collect(?Sort(_))> start*
 
   post:
     ContextFreeSyntax(productions) -> ContextFreeSyntax(<map(try(transform)); try(flatten-list)> productions)
+  
+	add-bracket:
+		SdfProduction(SortDef(sort), Rhs([e1, Sort(sort), e2]), NoAttrs()) -> SdfProduction(SortDef(sort), Rhs([e1, Sort(sort), e2]), Attrs([Bracket()]))
+	
+	is-self-injection =
+		?SdfProduction(SortDef(sort), Rhs([Sort(sort)]), _)
+		
+	is-self-injection = 
+		?SdfProductionWithCons(SortCons(SortDef(sort), Constructor(_)), Rhs([Sort(sort)]), _)
+  
   
   /**
    * Turn
