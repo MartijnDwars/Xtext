@@ -13,7 +13,9 @@ strategies
 		test-complex-list-label;
 		test-complex-list-label-paran;
 		test-complex-list-no-label;
-		test-complex-list-no-label-paran
+		test-complex-list-no-label-paran;
+		test-complex-list-new;
+		test-complex-list-method
 		)
 		
 	test-complex-list-label =
@@ -134,4 +136,83 @@ strategies
 				  )
 				)
 			)
+		
+		test-complex-list-new =
+			apply-and-check(!"check for complex list convertion, new"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  	New: 
+			  		'new' type=ClassType '(' (args+=Argument (',' args+=Argument)*)? ')'
+			  ;"
+			, !SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProductionWithCons(
+				        SortCons(SortDef("New"), Constructor("New-2"))
+				      , Rhs(
+				          [ Lit("\"new\"")
+				          , Label(Quoted("\"type\""), Sort("ClassType"))
+				          , Lit("\"(\"")
+				          , Opt(Sort("New-SubRule-2"))
+				          , Lit("\")\"")
+				          ]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("New-SubRule-2")
+				      , Rhs(
+				          [Label(Quoted("\"args\""), Sort("Argument")), IterStar(Sort("New-SubRule-2-SubRule-0"))]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("New-SubRule-2-SubRule-0")
+				      , Rhs(
+				          [Lit("\",\""), Label(Quoted("\"args\""), Sort("Argument"))]
+				        )
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+			)
+			
+		test-complex-list-method =
+			apply-and-check(!"Complex list convertion, method"
+				, gen-sdf-debug
+				, <parse-xtext-string> "
+				  MethodCall: 
+				  	name=[Method] '(' (args+=Argument (',' args+=Argument)*)? ')'
+				  ;"
+				, !SDFSection(
+					  ContextFreeSyntax(
+					    [ SdfProductionWithCons(
+					        SortCons(SortDef("MethodCall"), Constructor("MethodCall-3"))
+					      , Rhs(
+					          [ Label(Quoted("\"name\""), Sort("ID"))
+					          , Lit("\"(\"")
+					          , Opt(Sort("MethodCall-SubRule-3"))
+					          , Lit("\")\"")
+					          ]
+					        )
+					      , NoAttrs()
+					      )
+					    , SdfProduction(
+					        SortDef("MethodCall-SubRule-3")
+					      , Rhs(
+					          [Label(Quoted("\"args\""), Sort("Argument")), IterStar(Sort("MethodCall-SubRule-3-SubRule-0"))]
+					        )
+					      , NoAttrs()
+					      )
+					    , SdfProduction(
+					        SortDef("MethodCall-SubRule-3-SubRule-0")
+					      , Rhs(
+					          [Lit("\",\""), Label(Quoted("\"args\""), Sort("Argument"))]
+					        )
+					      , NoAttrs()
+					      )
+					    ]
+					  )
+					)
+			 )
 		

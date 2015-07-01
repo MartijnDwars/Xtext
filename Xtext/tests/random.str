@@ -7,15 +7,18 @@ imports
   	include/TemplateLang
 	generate/generate
 
+// Various test cases from example files
 strategies
 	main =
 		test-suite(!"random",
 			test-alternatives;
-			test-expression
+			test-expression;
+			test-alternative-terminal;
+			test-parameter
 		)
 		
 	test-alternatives =
-		apply-and-check(!"Testing Fj.xtext "
+		apply-and-check(!"testing alternatives..."
 			, gen-sdf-debug
 			, <parse-xtext-string> "
 			  Constant: 
@@ -32,13 +35,12 @@ strategies
 		)
 		
 	test-expression = 
-		apply-and-check(!"Testing Fj.xtext"
+		apply-and-check(!"testing expressions..."
 			, gen-sdf-debug
 			, <parse-xtext-string> "
 			  Paren returns Expression: 
 			  	'(' Expression ')'
-			  ; 
-			  "
+			  ;"
 			, !SDFSection(
 				  ContextFreeSyntax(
 				    [ SdfProduction(
@@ -50,3 +52,81 @@ strategies
 				  )
 				)
 		)
+		
+	test-alternative-terminal = 
+		apply-and-check(!"testing alternative terminals" 
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  BoolConstant:
+			 	constant = ('true' | 'false')
+			  ;"
+			, !SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProductionWithCons(
+				        SortCons(SortDef("BoolConstant"), Constructor("BoolConstant-1"))
+				      , Rhs([Label(Quoted("\"constant\""), Sort("BoolConstant-SubRule-1"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(SortDef("BoolConstant-SubRule-1"), Rhs([Lit("\"true\"")]), NoAttrs())
+				    , SdfProduction(SortDef("BoolConstant-SubRule-1"), Rhs([Lit("\"false\"")]), NoAttrs())
+				    ]
+				  )
+				)
+		)
+		
+	test-parameter =
+		apply-and-check(!"testing parameter list"
+			, gen-sdf-debug
+			, <parse-xtext-string> "
+			  Parameters:
+				{Parameters}
+				(
+					(parameters+=Parameter (',' parameters+=Parameter)* (',' vararg='...')?)? |
+					vararg='...'
+				)
+			  ;"
+		    , !SDFSection(
+				  ContextFreeSyntax(
+				    [ SdfProductionWithCons(
+				        SortCons(SortDef("Parameters"), Constructor("Parameters"))
+				      , Rhs(["", Sort("Parameters-SubRule-1")])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Parameters-SubRule-1")
+				      , Rhs([Opt(Sort("Parameters-SubRule-1-SubRule-0"))])
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Parameters-SubRule-1-SubRule-0")
+				      , Rhs(
+				          [ Label(Quoted("\"parameters\""), Sort("Parameter"))
+				          , IterStar(Sort("Parameters-SubRule-1-SubRule-0-SubRule-0"))
+				          , Opt(Sort("Parameters-SubRule-1-SubRule-0-SubRule-1"))
+				          ]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Parameters-SubRule-1-SubRule-0-SubRule-0")
+				      , Rhs(
+				          [Lit("\",\""), Label(Quoted("\"parameters\""), Sort("Parameter"))]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Parameters-SubRule-1-SubRule-0-SubRule-1")
+				      , Rhs(
+				          [Lit("\",\""), Label(Quoted("\"vararg\""), Lit("\"...\""))]
+				        )
+				      , NoAttrs()
+				      )
+				    , SdfProduction(
+				        SortDef("Parameters-SubRule-1")
+				      , Rhs([Label(Quoted("\"vararg\""), Lit("\"...\""))])
+				      , NoAttrs()
+				      )
+				    ]
+				  )
+				)
+ 			)
