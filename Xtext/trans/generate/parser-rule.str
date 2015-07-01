@@ -166,9 +166,10 @@ rules
 			output := Sort(new_name);
 			nested := <try(concat)> <map(gen-unordered-group(|SortDef(new_name), attr, 0))> unordered-groups
 			
-	/* Revised Sections */
+	/* Revised Sections */			
 	gen-abstract-token-rule(|name, attr):
-		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> (gen-cardinality, <flatten-list> nested_output)
+		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) 
+			-> (gen-cardinality, <flatten-list> nested_output)
 		with
 			(output, nested_output) := <try(gen-abstract-terminal(|name, attr, cardinality-opt))> abstract-terminal;
 			gen-cardinality         := <gen-cardinality(|output)> cardinality-opt
@@ -215,7 +216,7 @@ rules
 			output := Sort(new_name);
 			nested := <try(concat)> <map(gen-abstract-alternative(|SortDef(new_name), attr,cardinality-opt))> alternatives
 			
-		gen-abstract-alternative(|name, attr, cardinality-opt):
+	gen-abstract-alternative(|name, attr, cardinality-opt):
 		input -> [SdfProduction(name, Rhs([rule]), attr) | extra_rules]
 		where
 			(rule, nested) := <gen-assignable-terminal(|name, attr, cardinality-opt)> input;		
@@ -234,7 +235,14 @@ rules
 		Keyword(word) -> output
 		where
 			output := <if(<equal(|None())> cardinality-opt, <gen-keyword-wo-cardinality(|name, attr)> Keyword(word), <gen-keyword-w-cardinality(|name, attr)> Keyword(word))>
-			
+	
+	/* Predicated RuleCall */
+	gen-abstract-terminal(|name, attr, cardinality-opt):
+		PredicatedRuleCall(Predicated(), rulecall) -> output
+		where
+			output := <gen-abstract-terminal(|name, attr, cardinality-opt)> rulecall;
+			<debug> "WARNING: Predicated rulecalls are treated as regular rulecalls"
+				
 	gen-keyword-wo-cardinality(|name, attr):
 		Keyword(word) -> (<gen-quoted-word> word, [])
 		
