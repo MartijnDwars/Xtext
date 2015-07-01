@@ -27,11 +27,14 @@ rules
 			; syntax-rules := <gen-terminal-token-element ; make-list> alternatives
 		  ; rhs          := <innermost(post-process-terminal-rule)> Rhs(syntax-rules)
   
+  /**
+   * Turn the head into a name. Head of a parserRule can be either a Fragment or Returns.
+   */
   gen-rule-name:
-  	Fragment(name) -> name
+  	Fragment(name) -> <sort-name> name
   
   gen-rule-name:
-  	Returns(name, _) -> name
+  	Returns(name, _) -> <sort-name> name
   
   /**
    * Turn a non-list into a list or return the given list
@@ -135,7 +138,7 @@ rules
 	 * Turn RuleCall into Sort
 	 */
 	gen-terminal-token-element:
-		RuleCall(reference) -> Sort(reference)
+		RuleCall(name) -> Sort(<sort-name> name)
 		
   /**
    * Negated tokens require special attention, because they MUST be translated into SDF character classes but this mapping is less straightforward. 

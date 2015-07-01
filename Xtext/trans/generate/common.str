@@ -105,6 +105,10 @@ rules
    */
   append:
     (list, e) -> <reverse> [e | <reverse> list]
+
+rules // Rewrite reserved words
+  
+  sort-name = string-as-chars(map(try(?'_'; !'-')))
   
 rules // Pattern match left- and right associative ParserRules
   
