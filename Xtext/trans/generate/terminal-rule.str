@@ -94,10 +94,31 @@ rules
 	
 	list-to-alt:
 		[head | tail] -> Alt(head, <list-to-alt> tail)
+
+  /**
+   * Turn special keywords into character classes, or normal keywords into CiLits
+   */
+  gen-terminal-token-element:
+    Keyword(s) -> <gen-terminal-token-element-special + gen-terminal-token-element-normal>
+  
+  gen-terminal-token-element-special:
+    Keyword(char) -> CharClass(Simple(Present(Short(<unquote(id)> char))))
+  where
+    <gen-terminal-token-is-special> char
+  
+  gen-terminal-token-is-special:
+    char -> <true>
+  where
+    ?"'\\r'"
+  + ?"'\\n'"
+  + ?"'\\t'"
 	
-	gen-terminal-token-element:
-		Keyword(s) -> CiLit(s)
-	
+  gen-terminal-token-element-normal:
+     Keyword(s) -> CiLit(s)
+  
+  /**
+   * Turn CharacterRange into CharClass
+   */
 	gen-terminal-token-element:
 		CharacterRange(Keyword(from), Keyword(to)) -> CharClass(
 			Simple(
@@ -110,6 +131,9 @@ rules
 		  )
 		)
 	
+	/**
+	 * Turn RuleCall into Sort
+	 */
 	gen-terminal-token-element:
 		RuleCall(reference) -> Sort(reference)
 		
@@ -121,5 +145,8 @@ rules
 	where
 	  <debug> $[WARNING: Transforming negated tokens does not work correctly!]
 	
+	/**
+	 * Turn Wildcard into the complement of an empty CharClass
+	 */
 	gen-terminal-token-element:
 		Wildcard(_) -> CharClass(Comp(Simple(Absent())))
