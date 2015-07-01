@@ -12,7 +12,8 @@ imports
 	generate/common
 	generate/generate
 	generate/terminal-rule
-  generate/xtext-complex-list
+  	generate/xtext-complex-list
+  	generate/xtext-extract-crossreferences
   
 rules 
 	
@@ -22,7 +23,8 @@ rules
 			name               := <id-to-name> names;
 			imports			   := <gen-imports> mixin;
 			start-symbol	   := <fetch-elem(gen-start-symbol)> abstract-rules;
-			sdf-sections	   := [start-symbol | <map(gen-rule)> abstract-rules]
+			reference-rules	   := <gen-crossreference-rules> abstract-rules;
+			sdf-sections	   := [start-symbol | <conc>(<map(gen-rule)> abstract-rules, reference-rules)]
 		
 	gen-imports:
 		None() -> []
@@ -186,12 +188,9 @@ rules
 			output := <if(<equal(|None())> cardinality-opt, <gen-keyword-wo-cardinality(|name, attr)> Keyword(word), <gen-keyword-w-cardinality(|name, attr)> Keyword(word))>
 			
 	gen-assignable-terminal(|name, attr, cardinality-opt):
-		CrossReference(TypeRef(_, _), None()) -> (Sort("ID"), [])
-		
-	gen-assignable-terminal(|name, attr, cardinality-opt):
-		CrossReference(TypeRef(_, _), Some(CrossReferenceableTerminal(RuleCall(terminal-rule)))) -> (Sort(new_name), [])
+		CrossReference(TypeRef(_, n), _) -> (Sort(new_name), [])
 		where
-			new_name := <conc-strings> (terminal-rule, "_Ref")
+			new_name := <conc-strings> (n, "-Ref")
 	
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		AssignableAlternatives(alternatives) -> (output, nested)

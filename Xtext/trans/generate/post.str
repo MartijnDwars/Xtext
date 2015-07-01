@@ -28,8 +28,6 @@ rules
 
   post:
     ContextFreeSyntax(productions) -> ContextFreeSyntax(<map(try(transform)); try(flatten-list)> productions)
-  where
-    <debug> 1
   
   /**
    * Turn
