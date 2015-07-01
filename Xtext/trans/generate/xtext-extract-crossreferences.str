@@ -1,0 +1,25 @@
+module xtext-extract-crossreferences
+
+imports
+	include/Xtext
+	include/Templatelang
+	
+rules
+	
+	gen-crossreference-rules:
+		ast -> [SDFSection(ContextFreeSyntax(generated_rules))]
+		where
+			references := <nub> <collect-all(is-crossreference)> ast;
+			generated_rules := <map(generate-crossreference-rule)> references
+			
+	is-crossreference = ?CrossReference(_,_)
+
+	generate-crossreference-rule:
+		CrossReference(TypeRef(_,name), None()) -> SdfProductionWithCons(SortCons(SortDef(new_name), Constructor(new_name)), Rhs([Sort("ID")]), NoAttrs())
+		where
+			new_name := <conc-strings> (name, "-Ref")
+			
+	generate-crossreference-rule:
+		CrossReference(TypeRef(_,name), Some(CrossReferenceableTerminal(RuleCall(type)))) -> SdfProductionWithCons(SortCons(SortDef(new_name), Constructor(new_name)), Rhs([Sort(type)]), NoAttrs())
+		where
+			new_name := <conc-strings> (name, "-Ref")
