@@ -135,8 +135,6 @@ rules // Pattern match left- and right associative ParserRules
       ])
     ])) -> <true>
   where
-    debug;
-    <debug> 5;
     <is-left-assoc-tokens> tokens
   
   is-left-assoc-tokens:

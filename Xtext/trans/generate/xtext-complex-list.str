@@ -10,8 +10,6 @@ rules
 	
 	replace-complex-list:
 		input -> <try(find-consecutive-elements(find-list-initiator, find-list-tail))> input
-	where
-	  <debug> input
 	
 	find-consecutive-elements(filter1, filter2):
 		[head | [head_tail | tail]] -> <flatten-list> out
