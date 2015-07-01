@@ -12,7 +12,7 @@ rules
 			references := <nub> <collect-all(is-crossreference)> ast;
 			generated_rules := <map(generate-crossreference-rule)> references
 			
-	is-crossreference = ?CrossReference(_,_)
+	is-crossreference = ?CrossReference(TypeRef(_,_),_)
 
 	generate-crossreference-rule:
 		CrossReference(TypeRef(_,name), None()) -> SdfProductionWithCons(SortCons(SortDef(new_name), Constructor(new_name)), Rhs([Sort("ID")]), NoAttrs())

@@ -163,3 +163,7 @@ rules // Pattern match left- and right associative ParserRules
     
     // "<last> tokens > group" ends with assignment with rulecall to same as name
     <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(name), None())
+    
+   		
+	is-empty = ?[]
+
