@@ -12,20 +12,23 @@ imports
 	generate/common
 	generate/generate
 	generate/terminal-rule
-  	generate/xtext-complex-list
-  	generate/xtext-extract-crossreferences
+	generate/xtext-complex-list
+	generate/xtext-extract-crossreferences
   
-rules 
+rules
 	
 	gen-grammar:
 		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> Module(name,imports,sdf-sections)
 		where
-			name               := <id-to-name> names;
-			imports			   := <gen-imports> mixin;
-			start-symbol	   := <fetch-elem(gen-start-symbol)> abstract-rules;
-			reference-rules	   := <gen-crossreference-rules> abstract-rules;
-			sdf-sections	   := [start-symbol | <conc>(<map(gen-rule)> abstract-rules, reference-rules)]
-		
+			name            := <id-to-name> names;
+			imports         := <gen-imports> mixin;
+			reference-rules := <gen-crossreference-rules> abstract-rules;
+			if <fetch-elem(gen-start-symbol)> abstract-rules then
+			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <conc>(<map(gen-rule)> abstract-rules, reference-rules)]
+			else
+			  sdf-sections  := [<conc>(<map(gen-rule)> abstract-rules, reference-rules)]
+			end
+			
 	gen-imports:
 		None() -> []
 		
