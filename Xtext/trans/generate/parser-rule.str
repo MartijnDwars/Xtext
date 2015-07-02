@@ -242,6 +242,12 @@ rules
 		where
 			output := <gen-abstract-terminal(|name, attr, cardinality-opt)> rulecall;
 			<debug> "WARNING: Predicated rulecalls are treated as regular rulecalls"
+	
+	gen-abstract-terminal(|name, attr, cardinality-opt):
+		PredicatedKeyword(Predicated(), rulecall) -> output
+		where
+			output := <gen-abstract-terminal(|name, attr, cardinality-opt)> rulecall;
+			<debug> "WARNING: Predicated rulecalls are treated as regular rulecalls"
 				
 	gen-keyword-wo-cardinality(|name, attr):
 		Keyword(word) -> (<gen-quoted-word> word, [])
