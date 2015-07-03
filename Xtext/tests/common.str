@@ -1,0 +1,19 @@
+module common
+
+imports
+  libstratego-lib
+  include/Xtext
+  trans/generate/common
+  
+strategies
+  main =
+    test-suite(!"common",
+      test-replace-underscore
+    )
+
+  test-replace-underscore =
+    apply-test(!"turn PARSER_RULE into PARSER-RULE"
+    , sort-name
+    , !"PARSER_RULE"
+    , !"PARSER-RULE"
+    )
