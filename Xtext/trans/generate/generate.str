@@ -43,17 +43,15 @@ rules
 	
 	gen-sdf-debug:
 		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected 
-  
-	gen-sdf-debug:
-		selected -> <map(gen-sdf-debug)> selected
-		where
-			<is-list> selected
 	
 	// Menu
 	gen-xtext-sdf:
-		(selected, position, ast, path, project-path) -> (filename, <gen-xtext ; gen-sdf-debug ; sdf-pp> selected)
+		(selected, position, ast, path, project-path) -> (filename, result)
 		where
 			filename := $[[<remove-extension> path].sdf3]
+		; xtext    := <gen-xtext> selected
+		; sdf      := <gen-sdf-debug> xtext
+		; result   := <sdf-pp> sdf
 	
 	// Menu
 	gen-xtext:
@@ -61,10 +59,14 @@ rules
 		where
 			filename := <guarantee-extension(|"xtextng.aterm")> path
 	
-	// Desugar selection.
-	// - Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
-	// - Do a add-action over the whole tree afterwards to add actions where necessary
-	// - Extract priorities from Xtext and return a pair (xtext grammar, sdf priorities)
+	/**
+	 * Desugar selection.
+	 * - Do a flatten-list over the whole tree afterwards to prevent nested parser rules directly in a Grammar()
+	 * - Do a add-action over the whole tree afterwards to add actions where necessary
+	 * - Extract priorities from Xtext and return a pair (xtext grammar, sdf priorities)
+	 *
+	 * @type Xtext AST -> (modified Xtext AST, priority tuples)
+	 */
 	gen-xtext:
 		ast -> xtext-with-priorities
 	  where
