@@ -168,8 +168,7 @@ rules
 			
 	/* Revised Sections */			
 	gen-abstract-token-rule(|name, attr):
-		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) 
-			-> (gen-cardinality, <flatten-list> nested_output)
+		AbstractTerminalAbstractToken(abstract-terminal, cardinality-opt) -> (gen-cardinality, <flatten-list> nested_output)
 		with
 			(output, nested_output) := <try(gen-abstract-terminal(|name, attr, cardinality-opt))> abstract-terminal;
 			gen-cardinality         := <gen-cardinality(|output)> cardinality-opt
@@ -244,10 +243,10 @@ rules
 			<debug> "WARNING: Predicated rulecalls are treated as regular rulecalls"
 	
 	gen-abstract-terminal(|name, attr, cardinality-opt):
-		PredicatedKeyword(Predicated(), rulecall) -> output
+		PredicatedKeyword(Predicated(), keyword) -> output
 		where
-			output := <gen-abstract-terminal(|name, attr, cardinality-opt)> rulecall;
-			<debug> "WARNING: Predicated rulecalls are treated as regular rulecalls"
+			output := <gen-abstract-terminal(|name, attr, cardinality-opt)> keyword;
+			<debug> "WARNING: Predicated keywords are treated as regular keywords"
 				
 	gen-keyword-wo-cardinality(|name, attr):
 		Keyword(word) -> (<gen-quoted-word> word, [])
