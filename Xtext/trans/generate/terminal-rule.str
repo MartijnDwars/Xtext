@@ -156,6 +156,12 @@ rules
   
   escape-short:
   	"*" -> "\\*"
+  	
+  escape-short:
+  	"\"" -> "\\\""
+  
+  escape-short:
+  	"'" -> "\\'"
   
   gen-terminal-token-element-neg:
     TerminalAlternatives(groups) -> result
