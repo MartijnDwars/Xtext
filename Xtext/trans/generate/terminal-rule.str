@@ -104,6 +104,11 @@ rules
   gen-terminal-token-element:
     Keyword(s) -> <gen-terminal-token-element-special + gen-terminal-token-element-normal>
   
+  gen-terminal-token-element:
+  	UntilToken(Keyword(s)) -> Sequence(CharClass(Comp(Simple(Absent()))),[CiLit(s)])
+  	where
+  		<debug> "WARNING: UntilToken isn't correctly converted"
+  
   gen-terminal-token-element-special:
     Keyword(char) -> CharClass(Simple(Present(Short(<unquote(id)> char))))
   where
