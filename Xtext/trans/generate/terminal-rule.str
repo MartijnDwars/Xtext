@@ -152,15 +152,18 @@ rules
     )
   
   gen-terminal-token-element-neg:
-    Keyword(s) -> Short(<unquote(id)> s)
-
+    Keyword(s) -> Short(<unquote(id) ; try(escape-short)> s)
+  
+  escape-short:
+  	"*" -> "\\*"
+  
   gen-terminal-token-element-neg:
     TerminalAlternatives(groups) -> result
   where
-    result := <map(gen-terminal-token-rule); list-to-conc> groups
+    result := <map(gen-terminal-token-neg-rule); list-to-conc> groups
   
-  gen-terminal-token-rule:
-    TerminalGroup([TerminalToken(Keyword(s), None())]) -> Short(<unquote(id)> s)
+  gen-terminal-token-neg-rule:
+    TerminalGroup([TerminalToken(Keyword(s), None())]) -> <gen-terminal-token-element-neg> Keyword(s)
 	
 	/**
 	 * Turn Wildcard into the complement of an empty CharClass
