@@ -5,6 +5,7 @@ imports
 	libstratego-gpp
 	include/TemplateLang
 	include/Xtext
+	generate/common
 	
 rules
 	obtain-priorities:
@@ -12,6 +13,7 @@ rules
   where
 		chains     := <collect-all(gen-priorities(|ast)); flatten-list> ast;
 		priorities := SDFSection(ContextFreePriorities(chains))
+
 	
 	//Removing rules of type Exp = Exp can more easily be done in SDF
 	
@@ -39,82 +41,74 @@ rules
 		RuleCall(name) -> name
 	
 	
-	//Functionality for cleaning priority rules	
+	//Functionality for cleaning priority rules
+	
 	cleanup_priorities:
-		original@[head|chains] -> cleaned_LHS
+		chains -> cleaned
 		where
-			cleaned := <clean_LHS(|head) + clean_RHS(|head)> chains;
-			<not(equal)> (original, cleaned);
-			cleaned_LHS := <try(cleanup_priorities)> cleaned
-	
-	clean_LHS(|head):
-		chains -> cleaned_LHS
-		where
-			equal := <collect-all(equal_LHS(|head))> chains;
-			<not(equal)> (equal,[]);
-			n_equal := <collect-all(not_equal_LHS(|head))> chains;
-			merged := <merge_RHS(|head)> equal;
-			cleaned_LHS := <conc> (n_equal, merged)
-	
-	clean_RHS(|head):
-		chains -> cleaned_RHS
-		where
-			equal := <collect-all(equal_RHS(|head))> chains;
-			<not(equal)> (equal,[]);
-			n_equal := <collect-all(not_equal_RHS(|head))> chains;
-			merged := <merge_LHS(|head)> equal;
-			cleaned_RHS := <conc> (n_equal, merged)
-	
-	equal_LHS(|head):
-		chain -> <id>
-		where
-			c_LHS := <extract_LHS> chain;
-			h_LHS := <extract_LHS> head;
-			<equal> (h_LHS, c_LHS)
+			cleaned := <try(cleanup_priorities)> <clean_LHS + clean_RHS> chains
 			
-	not_equal_LHS(|head):
-		chain -> <id>
+	clean_LHS:
+		[Chain([le, re])|tail] -> output
 		where
-			c_LHS := <extract_LHS> chain;
-			h_LHS := <extract_LHS> head;
-			<not(equal)> (h_LHS, c_LHS)
+			equal_chains := <collect-all(?Chain([le,_])); collect-all(match-right-assoc(|re))> tail;
+			<not(is-empty)> equal_chains;
+			not_equal := <diff> (tail, equal_chains);
+			extracted_rhs := <flatten-list; nub> <map(extract-right-element)> equal_chains;
+			new_rhs := <merge-elements> (re, extracted_rhs);
+			new_chain := Chain([le, new_rhs]);
+			output := [new_chain|<try(cleanup_priorities)> not_equal]
 	
-	equal_RHS(|head):
-		chain -> <id>
+	clean_RHS:
+		[Chain([le, re])|tail] -> output
 		where
-			c_RHS := <extract_RHS> chain;
-			h_RHS := <extract_RHS> head;
-			<equal> (h_RHS, c_RHS)
+			equal_chains := <collect-all(?Chain([_,re])); collect-all(match-left-assoc(|le))> tail;
+			<not(is-empty)> equal_chains;
+			not_equal := <diff> (tail, equal_chains);
+			extracted_lhs := <flatten-list; nub> <map(extract-left-element)> equal_chains;
+			new_lhs := <merge-elements> (le, extracted_lhs);
+			new_chain := Chain([new_lhs, re]);
+			output := [new_chain|<try(cleanup_priorities)> not_equal]	
 			
-	not_equal_RHS(|head):
-		chain -> <id>
+	match-right-assoc(|re):
+		Chain([_,ProdsRefGroup(elements)]) -> <id>
 		where
-			c_RHS := <extract_RHS> chain;
-			h_RHS := <extract_RHS> head;
-			<not(equal)> (h_RHS, c_RHS)
+			<?ProdsRefGroup(_)> re
 			
-	extract_LHS:
-		Chain([ProdsRefGroup(lhs), ProdsRefGroup(rhs)]) -> lhs
+	match-right-assoc(|re):
+		Chain([_,AssocRefGroup(as, elements)]) -> <id>
+		where
+			<?AssocRefGroup(as,_)> re	
+	
+	match-left-assoc(|le):
+		Chain([ProdsRefGroup(elements),_]) -> <id>
+		where
+			<?ProdsRefGroup(_)> le
+			
+	match-left-assoc(|le):
+		Chain([AssocRefGroup(as, elements),_]) -> <id>
+		where
+			<?AssocRefGroup(as,_)> le	
+						
+	extract-right-element:
+		Chain([_,ProdsRefGroup(elements)]) -> elements
+	
+	extract-right-element:
+		Chain([_,AssocRefGroup(as, elements)]) -> elements
+	
+	extract-left-element:
+		Chain([ProdsRefGroup(elements),_]) -> elements
 		
-	extract_RHS:
-		Chain([ProdsRefGroup(lhs), ProdsRefGroup(rhs)]) -> rhs
+	extract-left-element:
+		Chain([AssocRefGroup(as, elements),_]) -> elements
 		
-	merge_RHS(|head):
-		chains -> [Chain([ProdsRefGroup(h_LHS), ProdsRefGroup(new_RHS)])]
-		where
-			h_RHS := <extract_RHS> head;
-			h_LHS := <extract_LHS> head;
-			c_RHS := <flatten-list> <map(extract_RHS)> chains;
-			new_RHS := <conc> (h_RHS, c_RHS)	
-		
-	merge_LHS(|head):
-		chains -> [Chain([ProdsRefGroup(new_LHS), ProdsRefGroup(h_RHS)])]
-		where
-			h_RHS := <extract_RHS> head;
-			h_LHS := <extract_LHS> head;
-			c_LHS := <flatten-list> <map(extract_LHS)> chains;
-			new_LHS := <conc> (h_LHS, c_LHS)
-			
+    merge-elements:
+    	(ProdsRefGroup(original), nw) -> ProdsRefGroup(<conc> (original, nw))
+    	
+    merge-elements:
+    	(AssocRefGroup(as, original), nw) -> AssocRefGroup(as, <conc> (original, nw))
+	
+	//Remove Returns		
 	remove-return:
 		ast -> output
 		where
@@ -128,7 +122,7 @@ rules
 		RuleCall(old) -> RuleCall(new)
 		
 	replace(|old, new):
-		CrossReference(old, opt) -> CrossReference(new, opt)
+		CrossReference(TypeRef(e,old), opt) -> CrossReference(TypeRef(e,old), opt)
 		
 	replace(|old, new):
 		ParserRule(old, return, e1, e2) -> ParserRule(new, None(), e1, e2)

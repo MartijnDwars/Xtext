@@ -32,11 +32,12 @@ rules
 			filename := $[[<remove-extension> path].sdf3.aterm]
 	
 	gen-sdf-debug:
-	  (ast, priorities) -> priorities-with-assoc
+	  (ast, priorities) -> cleaned-up-priorities
 	where
 	  sdf                   := <gen-sdf-debug> ast
 	; sdf-with-priorities   := <add-priorities> (sdf, priorities)
 	; priorities-with-assoc := <innermost(priority-group(|sdf-with-priorities))> sdf-with-priorities
+	; cleaned-up-priorities := <innermost(cleanup_priorities)> priorities-with-assoc
 	  
 	add-priorities:
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
