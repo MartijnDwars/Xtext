@@ -46,14 +46,26 @@ rules
 		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected 
 	
 	// Menu
+	gen-xtext-sdf-nolabel:
+	  (selected, position, ast, path, project-path) -> (filename, result)
+	where
+    filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf; topdown(try(?Label(_, s); !s))> selected
+  
+	// Menu
 	gen-xtext-sdf:
 		(selected, position, ast, path, project-path) -> (filename, result)
-		where
-			filename := $[[<remove-extension> path].sdf3]
-		; xtext    := <gen-xtext> selected
-		; sdf      := <gen-sdf-debug> xtext
-		; result   := <sdf-pp> sdf
+	where
+    filename := $[[<remove-extension> path].sdf3]
+  ; result   := <gen-xtext-sdf> selected
 	
+	gen-xtext-sdf:
+	  ast -> result
+	where
+    xtext    := <gen-xtext> ast
+  ; sdf      := <gen-sdf-debug> xtext
+  ; result   := <sdf-pp> sdf
+  
 	// Menu
 	gen-xtext:
 		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
