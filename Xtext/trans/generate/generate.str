@@ -50,21 +50,20 @@ rules
 	  (selected, position, ast, path, project-path) -> (filename, result)
 	where
     filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf; topdown(try(?Label(_, s); !s))> selected
+  ; result   := <gen-xtext-sdf; topdown(try(?Label(_, <id>))); sdf-pp> selected
   
 	// Menu
 	gen-xtext-sdf:
 		(selected, position, ast, path, project-path) -> (filename, result)
 	where
-    filename := $[[<remove-extension> path].sdf3]
-  ; result   := <gen-xtext-sdf> selected
+    filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf; sdf-pp> selected
 	
 	gen-xtext-sdf:
-	  ast -> result
+	  ast -> sdf
 	where
     xtext    := <gen-xtext> ast
   ; sdf      := <gen-sdf-debug> xtext
-  ; result   := <sdf-pp> sdf
   
 	// Menu
 	gen-xtext:
