@@ -12,12 +12,6 @@ signature
     Parenthetical : Unknown -> Unknown
     
 rules
-
-	list-to-conc:
-		[singleton] -> singleton
-	
-	list-to-conc:
-		[head | tail] -> Conc(head, <list-to-conc> tail)
 	
 	gen-rule:
 		TerminalRule(head, alternatives) ->
@@ -146,12 +140,36 @@ rules
 		RuleCall(name) -> Sort(<sort-name> name)
 		
   /**
-   * Negated tokens require special attention, because they MUST be translated into SDF character classes but this mapping is less straightforward. 
+   * Negated terms 
    */
-	gen-terminal-token-element:
-		NegatedToken(terminal-token-element) -> CiLit("'negated-token'")
-	where
-	  <debug> $[WARNING: Transforming negated tokens does not work correctly!]
+  gen-terminal-token-element:
+    NegatedToken(token) -> CharClass(
+      Comp(
+        Simple(
+          Present(<gen-terminal-token-element-neg> token)
+        )
+      )
+    )
+  
+  gen-terminal-token-element-neg:
+    Keyword(s) -> Short(<unquote(id) ; try(escape-short)> s)
+  
+  escape-short:
+  	"*" -> "\\*"
+  	
+  escape-short:
+  	"\"" -> "\\\""
+  
+  escape-short:
+  	"'" -> "\\'"
+  
+  gen-terminal-token-element-neg:
+    TerminalAlternatives(groups) -> result
+  where
+    result := <map(gen-terminal-token-neg-rule); list-to-conc> groups
+  
+  gen-terminal-token-neg-rule:
+    TerminalGroup([TerminalToken(Keyword(s), None())]) -> <gen-terminal-token-element-neg> Keyword(s)
 	
 	/**
 	 * Turn Wildcard into the complement of an empty CharClass

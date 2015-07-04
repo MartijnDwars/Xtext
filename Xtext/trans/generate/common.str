@@ -167,3 +167,8 @@ rules // Pattern match left- and right associative ParserRules
    		
 	is-empty = ?[]
 
+  list-to-conc:
+    [singleton] -> singleton
+  
+  list-to-conc:
+    [head | tail] -> Conc(head, <list-to-conc> tail)

@@ -1,0 +1,25 @@
+module terminal-rule-neg
+
+imports
+  
+  include/Xtext
+  include/TemplateLang
+  generate/common
+
+rules
+  
+  gen-terminal-token-element:
+    NegatedToken(token) -> result
+  where
+    result := <gen-terminal-token-element-neg> token
+  
+  gen-terminal-token-element-neg:
+    Keyword(s) -> CharClass(
+      Comp(
+	      Simple(
+	        Present(
+	          Short(<unquote(id)> s)
+	        )
+	      )
+	    )
+    )
