@@ -197,13 +197,9 @@ rules
 	
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		CrossReference(MetaModelDeclaration(_), None()) -> (Sort("ID"), [])
-		where
-			debug
 		
 	gen-assignable-terminal(|name, attr, cardinality-opt):
 		CrossReference(MetaModelDeclaration(Classifier(_)), Some(CrossReferenceableTerminal(RuleCall(sort)))) -> (Sort(sort), [])
-			where
-			debug
 
 	
 	gen-assignable-terminal(|name, attr, cardinality-opt):
