@@ -6,10 +6,10 @@ imports
 	sdf/src-gen/pp/TemplateLang-pp
 	sdf/src-gen/pp/modules/Modules-pp
 	lib/editor-common.generated
-	generate/parser-rule
 	include/Xtext
 	include/TemplateLang
 	generate/common
+	generate/parser-rule
 	generate/post
   generate/parser-rule
   generate/terminal-rule
@@ -30,14 +30,14 @@ rules // Generating SDF
 	gen-sdf-file:
 		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> sdf)
 		where
-			filename := $[[<remove-extension> path].sdf3]
+			filename := <guarantee-extension(|"sdf3")> path
 		; sdf      := <gen-sdf-debug> selected
 	
 	// Menu: "Generate SDF (ATerm)"
 	gen-sdf:
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where
-			filename := $[[<remove-extension> path].sdf3.aterm]
+			filename := <guarantee-extension(|"sdf3.aterm")> path
 	
 	gen-sdf-debug:
 	  (ast, priorities) -> cleaned-up-priorities
@@ -72,13 +72,20 @@ rules // Generating SDF
 	where
     xtext    := <gen-xtext> ast
   ; sdf      := <gen-sdf-debug> xtext
-  // Does not work yet..
-	; <debug> "Nu de mixins.."
-	; <mixin-get; map(mixin-get-name; mixin-get-source; parse-xtext-string; gen-xtext-sdf)> ast
+	; <mixin-get; map(mixin-generate)> ast
 	
 	mixin-get:
-		ast -> <collect-one(?Grammar(_, Some(Mixin(<id>)), _, _, _)) + []>
-	
+		ast -> <collect-one(?Grammar(_, Some(Mixin(<id>)), _, _, _)) + ![]>
+
+  mixin-generate:
+    mixin -> <true>
+  where
+  	name   := <mixin-get-name> mixin
+  ; source := <mixin-get-source> name
+  ; xtext  := <parse-xtext-string> source
+  ; sdf    := <gen-xtext-sdf ; sdf-pp> xtext
+  ; <mixin-output-sdf(|name)> sdf
+  
 	mixin-get-name:
 		GrammarID(ids) -> <last> ids
 	
@@ -89,7 +96,11 @@ rules // Generating SDF
 	; path     := <conc-strings> ("Examples/", filename)
 	; result   := <read-text-file> path
 	
-	
+  mixin-output-sdf(|name):
+    content -> <write-text-file> (filename, content)
+  where
+    filename := <guarantee-extension(|"sdf3")> name
+  
 rules // Generating intermediate Xtext
   
 	// Menu: "Generate Xtext"

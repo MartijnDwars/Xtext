@@ -142,3 +142,24 @@ rules // Pattern match left- and right associative ParserRules
     // "<last> tokens > group" ends with assignment with rulecall to same as name
     <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(name), None())
     
+   		
+	is-empty = ?[]
+
+  list-to-conc:
+    [singleton] -> singleton
+  
+  list-to-conc:
+    [head | tail] -> Conc(head, <list-to-conc> tail)
+
+rules // Files
+  
+  /**
+   * Write content to path
+   * 
+   * @type (String, String) -> true
+   */
+  write-text-file =
+    ?(path, content)
+  ; fd := <fopen> (path, "w")
+  ; <fputs> (content, fd)
+  ; <fclose> fd
