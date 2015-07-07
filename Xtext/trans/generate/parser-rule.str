@@ -17,16 +17,16 @@ imports
   
 rules
 	
-	gen-grammar:
+	gen-grammar(|ast):
 		Grammar(GrammarID(names), mixin, _, _, abstract-rules) -> Module(name,imports,sdf-sections)
 		where
 			name            := <id-to-name> names;
 			imports         := <gen-imports> mixin;
 			reference-rules := <gen-crossreference-rules> abstract-rules;
 			if <fetch-elem(gen-start-symbol)> abstract-rules then
-			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <conc>(<map(gen-rule)> abstract-rules, reference-rules)]
+			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
 			else
-			  sdf-sections  := [<conc>(<map(gen-rule)> abstract-rules, reference-rules)]
+			  sdf-sections  := [<conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
 			end
 			
 	gen-imports:
@@ -42,8 +42,8 @@ rules
 
 	gen-start-symbol:
 		ParserRule(name, _, _, _) -> SDFSection(ContextFreeStartSymbols([Sort(name)]))
-
-	gen-rule:
+  
+	gen-rule(|ast):
 		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts-with-assoc))
 		where
 			alts := <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
