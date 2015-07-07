@@ -57,34 +57,36 @@ rules // Generating SDF
 	gen-xtext-sdf-nolabel:
 	  (selected, position, ast, path, project-path) -> (filename, result)
 	where
-    filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf; topdown(try(?Label(_, <id>))); sdf-pp> selected
+    dirname  := <dirname> path
+  ; filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> selected
   
 	// Menu: "Generate Xtext > SDF
 	gen-xtext-sdf:
 		(selected, position, ast, path, project-path) -> (filename, result)
 	where
-    filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf; sdf-pp> selected
+    dirname  := <dirname> path
+  ; filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf(|dirname); sdf-pp> selected
   
-	gen-xtext-sdf:
+	gen-xtext-sdf(|dirname):
 	  ast -> sdf
 	where
     xtext    := <gen-xtext> ast
   ; sdf      := <gen-sdf-debug> xtext
-	; <mixin-get; map(mixin-generate)> ast
+	; <mixin-get; map(mixin-generate(|dirname))> ast
 	
 	mixin-get:
 		ast -> <collect-one(?Grammar(_, Some(Mixin(<id>)), _, _, _)) + ![]>
 
-  mixin-generate:
+  mixin-generate(|dir):
     mixin -> <true>
   where
   	name   := <mixin-get-name> mixin
   ; source := <mixin-get-source> name
   ; xtext  := <parse-xtext-string> source
-  ; sdf    := <gen-xtext-sdf ; sdf-pp> xtext
-  ; <mixin-output-sdf(|name)> sdf
+  ; sdf    := <gen-xtext-sdf(|dir) ; sdf-pp> xtext
+  ; <mixin-output-sdf(|dir, name)> sdf
   
 	mixin-get-name:
 		GrammarID(ids) -> <last> ids
@@ -96,10 +98,11 @@ rules // Generating SDF
 	; path     := <conc-strings> ("Examples/", filename)
 	; result   := <read-text-file> path
 	
-  mixin-output-sdf(|name):
-    content -> <write-text-file> (filename, content)
+  mixin-output-sdf(|dir, name):
+    content -> <write-text-file> (path, content)
   where
     filename := <guarantee-extension(|"sdf3")> name
+  ; path     := <concat-strings> [dir, "/", filename]
   
 rules // Generating intermediate Xtext
   
