@@ -32,7 +32,8 @@ menus
   
   menu: "Generation"                   (openeditor) (realtime)
 
-    action: "Generate Xtext"         = gen-xtext
-    action: "Generate Xtext > SDF"   = gen-xtext-sdf
-    action: "Generate SDF (ATerm)"   = gen-sdf
-	action: "Generate SDF"           = gen-sdf-file
+    action: "Generate Xtext"                 = gen-xtext
+    action: "Generate Xtext > SDF"           = gen-xtext-sdf
+    action: "Generate Xtext > SDF > Nolabel" = gen-xtext-sdf-nolabel
+    action: "Generate SDF (ATerm)"           = gen-sdf
+    action: "Generate SDF"                   = gen-sdf-file
