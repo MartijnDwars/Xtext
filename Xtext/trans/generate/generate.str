@@ -103,7 +103,8 @@ rules // Generating SDF
   where
     filename := <guarantee-extension(|"sdf3")> name
   ; path     := <concat-strings> [dir, "/", filename]
-  
+  ; <refresh-workspace-file> path
+
 rules // Generating intermediate Xtext
   
 	// Menu: "Generate Xtext"
