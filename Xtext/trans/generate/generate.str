@@ -83,22 +83,22 @@ rules // Generating SDF
     mixin -> <true>
   where
   	name   := <mixin-get-name> mixin
-  ; source := <mixin-get-source> name
+  ; source := <mixin-read-xtext(|dir)> name
   ; xtext  := <parse-xtext-string> source
   ; sdf    := <gen-xtext-sdf(|dir) ; sdf-pp> xtext
-  ; <mixin-output-sdf(|dir, name)> sdf
+  ; <mixin-write-sdf(|dir, name)> sdf
   
 	mixin-get-name:
 		GrammarID(ids) -> <last> ids
 	
-	mixin-get-source:
+	mixin-read-xtext(|dir):
 	  name -> result
 	where
 	  filename := <guarantee-extension(|"xtext")> name
-	; path     := <conc-strings> ("Examples/", filename)
+	; path     := <concat-strings> [dir, "/", filename]
 	; result   := <read-text-file> path
 	
-  mixin-output-sdf(|dir, name):
+  mixin-write-sdf(|dir, name):
     content -> <write-text-file> (path, content)
   where
     filename := <guarantee-extension(|"sdf3")> name
