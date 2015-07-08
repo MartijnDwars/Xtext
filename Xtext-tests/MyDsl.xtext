@@ -53,3 +53,7 @@ terminal STRING	:
 		; 
 
 terminal ANY_OTHER: .;
+
+Constant:
+	=>b
+;
