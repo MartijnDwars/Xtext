@@ -26,7 +26,7 @@ rules
 	// First
   find-list-initiator:
     AssignmentAbstractToken(_, a, _, b, None()) -> (a, b)
-	
+
 	find-list-tail:
 		(AbstractTerminalAbstractToken(
                     Alternatives(
@@ -58,6 +58,43 @@ rules
                               [ ActionAbstractToken(_)
                               , AbstractTerminalAbstractToken(sep, None())
                               , AssignmentAbstractToken(None(), _, _, b, None())
+                              ])
+                          ])
+                      ])
+                  , Some(Any())
+                  ),
+    (_, b)) -> (IterSep(object, separator), [])
+  where
+    separator := <gen-assignable-terminal> sep
+  ; object    := <gen-assignable-terminal> b
+    
+  // Third
+  find-list-tail:
+    (AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ AbstractTerminalAbstractToken(sep, None())
+                              , AbstractTerminalAbstractToken(b, None())
+                              ])
+                          ])
+                      ])
+                  , Some(Any())
+                  ),
+    (_, b)) -> (IterSep(object, separator), [])
+  where
+    separator := <gen-assignable-terminal> sep
+  ; object    := <gen-assignable-terminal> b
+    
+    // Fourth
+  find-list-tail:
+    (AbstractTerminalAbstractToken(
+                    Alternatives(
+                      [ UnorderedGroup(
+                          [ Group(
+                              [ ActionAbstractToken(_)
+                              , AbstractTerminalAbstractToken(sep, None())
+                              , AbstractTerminalAbstractToken(b, None())
                               ])
                           ])
                       ])
