@@ -140,8 +140,8 @@ rules // Pattern match left- and right associative ParserRules
   is-left-assoc-tokens:
     tokens -> <true>
   where
-    // "<first> tokens" is a RuleCall or a Keyword (we're more liberal here)
-    !tokens; ?[AbstractTerminalAbstractToken(_, None()) | _];
+    // "<first> tokens" is a RuleCall with a name
+    ?[AbstractTerminalAbstractToken(RuleCall(name), None()) | _];
     
     // "<last> tokens > group" has cardinality any
     <last> tokens; ?AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group(sub-tokens)])]), Some(Any()));
@@ -149,8 +149,8 @@ rules // Pattern match left- and right associative ParserRules
     // "<last> tokens > group" starts with an action which assigns 'current'
     !sub-tokens; ?[ActionAbstractToken(Action(TypeRef(None(), _), Some(ActionCurrent(_, Assignment())))) | _];
     
-    // "<last> tokens > group" ends with an action which assigns 'current'
-    <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(_), None())
+    // "<last> tokens > group" ends with an assignment that calls a rule with the same name as above
+    <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(name), None())
   
   is-right-assoc:
     ParserRule(name, _, _, Alternatives([UnorderedGroup([Group(tokens)])])) -> <true>
