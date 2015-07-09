@@ -227,6 +227,7 @@ rules
   gen-terminal-token-element-neg:
     Keyword(s) -> Short(<unquote(id) ; try(escape-short)> s)
   
+  escape-short: " "  -> "\\ "
   escape-short: "*"  -> "\\*"
   escape-short: "'"  -> "\\'"
   escape-short: "_"  -> "\\_"
