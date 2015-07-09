@@ -68,6 +68,79 @@ rules
   post-process-terminal-rule:
     Parenthetical(Parenthetical(x)) -> Parenthetical(x)
 	
+	// TODO: Make this abstracter
+	
+  post-process-terminal-rule:
+    Alt(CharClass(Simple(Present(r))), CiLit(s)) -> CharClass(Simple(Present(Conc(r, Short(<unquote(id) ; try(escape-short)> s)))))
+    
+  post-process-terminal-rule:
+    Alt(CiLit(s), CharClass(Simple(Present(r)))) -> CharClass(Simple(Present(Conc(Short(<unquote(id) ; try(escape-short)> s), r))))
+  
+  post-process-terminal-rule:
+    Alt(CharClass(Simple(Present(r))), CharClass(Simple(Present(s)))) -> CharClass(Simple(Present(<conc-class> (r, s))))
+  
+  conc-class:
+    (Conc(a, b), Conc(c, d)) -> Conc(a, Conc(b, Conc(c, d)))
+  
+  conc-class:
+    (Conc(a, b), c) -> Conc(a, Conc(b, c))
+    
+  conc-class:
+    (a, Conc(b, c)) -> Conc(a, Conc(b, c))
+
+  conc-class:
+    (a, b) -> Conc(a, b)
+  
+	/*
+	/**
+	 * Fold merge-classes over alternatives. Only folds a character
+	 * class directly followed a character class or a CiLit. 
+	 *
+  post-process-terminal-rule:
+  	alt -> <fold-alt(merge-classes)> alt
+  where
+    ?Alt(_, _)
+  
+  merge-classes:
+    (CharClass(Simple(Present(r1))), CharClass(Simple(Present(r2)))) -> CharClass(Simple(Present(<merge> (r1, r2))))
+  
+  merge-classes:
+    (CharClass(Simple(Present(r))), Conc(a, b)) -> <merge> (r, Conc(a, b))
+
+  merge-classes:
+    (CharClass(Simple(Present(r1))), CiLit(lit)) -> <merge> (r1, Short("\\_")) // Short("_") = lit
+
+  // DEBUG
+  merge-classes:
+    x -> <id>
+  where
+    <debug> x
+
+  merge:
+    (Conc(a, b), Conc(c, d)) -> Conc(a, Conc(b, Conc(c, d)))
+  
+  merge:
+    (Conc(a, b), c) -> Conc(a, Conc(b, c))
+  
+  merge:
+    (a, Conc(b, c)) -> Conc(a, Conc(b, c))
+  
+  merge:
+  	(a, b) -> Conc(a, b)
+  
+  /**
+   * Fold Alt(.., Alt(.., ..)) with given strategy s
+   *
+  fold-alt(s):
+    x@Alt(c1, Alt(c2, tail)) -> <fold-alt(s)> Alt(<s> (c1, c2), tail)
+  
+  fold-alt(s):
+    Alt(c1, c2) -> <s> (c1, c2)
+	*/
+	
+	
+	
+	
 	gen-terminal-alternative:
 		TerminalGroup(terminal-group) -> gen-terminal-group
 		where
@@ -154,14 +227,11 @@ rules
   gen-terminal-token-element-neg:
     Keyword(s) -> Short(<unquote(id) ; try(escape-short)> s)
   
-  escape-short:
-  	"*" -> "\\*"
-  	
-  escape-short:
-  	"\"" -> "\\\""
-  
-  escape-short:
-  	"'" -> "\\'"
+  escape-short: " "  -> "\\ "
+  escape-short: "*"  -> "\\*"
+  escape-short: "'"  -> "\\'"
+  escape-short: "_"  -> "\\_"
+  escape-short: "\"" -> "\\\""
   
   gen-terminal-token-element-neg:
     TerminalAlternatives(groups) -> result
