@@ -14,6 +14,7 @@ strategies
     ; test-is-right-assoc-simple
     ; test-left-is-not-right-assoc
     ; test-right-is-not-left-assoc
+    ; test-left-assoc-same-sort
     )
 
   test-is-left-assoc-simple =
@@ -48,4 +49,13 @@ strategies
     , <parse-xtext-string> "
         Add returns Expression:
           Mul ({Add.left=current} '+' right=Add)?;"
+    )
+  
+  test-left-assoc-same-sort =
+    apply-and-fail(!"the left-assoc pattern requires rules with the same sort"
+    , is-left-assoc
+    , <parse-xtext-string> "
+        Expression:
+          TerminalExpression ({Selection.receiver=current} '.' message=Message )*
+        ;"
     )
