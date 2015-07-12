@@ -6,7 +6,7 @@ FQN:
   ID ('.' ID)*
 ;
 
-FQN4:
+FQN2:
   ID ('.' n=ID)*
 ;
 
