@@ -1,0 +1,46 @@
+module terminal
+
+imports
+	libstratego-lib
+	lib/editor-common.generated
+	include/Xtext
+	include/TemplateLang
+	generate/generate
+
+strategies
+  main =
+    test-suite(!"terminal rules",
+      test-range-single-quotes
+    ; test-range-double-quotes
+    )
+    
+  test-range-single-quotes =
+    apply-and-check(!"Test character range with double quotes"
+      , gen-sdf-debug
+      , <parse-xtext-string> "
+				  terminal NUMBER:
+				    ('0'..'9');"
+      , !SdfProduction(
+				  SortDef("NUMBER")
+				, Rhs(
+				    [CharClass(Simple(Present(Range(Short("0"), Short("9")))))]
+				  )
+				, NoAttrs()
+				)
+    )
+    
+  test-range-double-quotes =
+    apply-and-check(!"Test character range with double quotes"
+      , gen-sdf-debug
+      , <parse-xtext-string> "
+          terminal NUMBER:
+            (\"0\"..\"9\");"
+      , !SdfProduction(
+          SortDef("NUMBER")
+        , Rhs(
+            [CharClass(Simple(Present(Range(Short("0"), Short("9")))))]
+          )
+        , NoAttrs()
+        )
+    )
+    

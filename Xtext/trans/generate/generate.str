@@ -5,9 +5,11 @@ imports
 	libstratego-gpp
 	sdf/src-gen/pp/TemplateLang-pp
 	sdf/src-gen/pp/modules/Modules-pp
+	lib/editor-common.generated
 	include/Xtext
 	include/TemplateLang
 	generate/common
+	generate/parser-rule
 	generate/post
   generate/parser-rule
   generate/terminal-rule
@@ -18,19 +20,24 @@ imports
 	generate/add-actions
 	generate/sdf-priority-groups
 	
-rules
+rules // Printing SDF
+  
+  sdf-pp = (prettyprint-sdf-Module + prettyprint-sdf-Grammar + prettyprint-Section); !V([], <id>); box2text-string(|120)
+  
+rules // Generating SDF
 	
-	sdf-pp = (prettyprint-sdf-Module + prettyprint-sdf-Grammar + prettyprint-Section); !V([], <id>); box2text-string(|120)
-	
+	// Menu: "Generate SDF"
 	gen-sdf-file:
-		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> <gen-sdf-debug> selected)
+		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> sdf)
 		where
-			filename := $[[<remove-extension> path].sdf3]
+			filename := <guarantee-extension(|"sdf3")> path
+		; sdf      := <gen-sdf-debug> selected
 	
+	// Menu: "Generate SDF (ATerm)"
 	gen-sdf:
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where
-			filename := $[[<remove-extension> path].sdf3.aterm]
+			filename := <guarantee-extension(|"sdf3.aterm")> path
 	
 	gen-sdf-debug:
 	  (ast, priorities) -> cleaned-up-priorities
@@ -46,27 +53,61 @@ rules
 	gen-sdf-debug:
 		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
 	
-	// Menu
+	// Menu: "Generate Xtext > SDF > Nolabel"
 	gen-xtext-sdf-nolabel:
 	  (selected, position, ast, path, project-path) -> (filename, result)
 	where
-    filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf; topdown(try(?Label(_, <id>))); sdf-pp> selected
+    dirname  := <dirname> path
+  ; filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> selected
   
-	// Menu
+	// Menu: "Generate Xtext > SDF
 	gen-xtext-sdf:
 		(selected, position, ast, path, project-path) -> (filename, result)
 	where
-    filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf; sdf-pp> selected
-	
-	gen-xtext-sdf:
+    dirname  := <dirname> path
+  ; filename := <guarantee-extension(|"sdf3")> path
+  ; result   := <gen-xtext-sdf(|dirname); sdf-pp> selected
+  
+	gen-xtext-sdf(|dirname):
 	  ast -> sdf
 	where
     xtext    := <gen-xtext> ast
   ; sdf      := <gen-sdf-debug> xtext
+	; <mixin-get; map(mixin-generate(|dirname))> ast
+	
+	mixin-get:
+		ast -> <collect-one(?Grammar(_, Some(Mixin(<id>)), _, _, _)) + ![]>
+
+  mixin-generate(|dir):
+    mixin -> <true>
+  where
+  	name   := <mixin-get-name> mixin
+  ; source := <mixin-read-xtext(|dir)> name
+  ; xtext  := <parse-xtext-string> source
+  ; sdf    := <gen-xtext-sdf(|dir) ; sdf-pp> xtext
+  ; <mixin-write-sdf(|dir, name)> sdf
   
-	// Menu
+	mixin-get-name:
+		GrammarID(ids) -> <last> ids
+	
+	mixin-read-xtext(|dir):
+	  name -> result
+	where
+	  filename := <guarantee-extension(|"xtext")> name
+	; path     := <concat-strings> [dir, "/", filename]
+	; result   := <read-text-file> path
+	
+  mixin-write-sdf(|dir, name):
+    content -> <write-text-file> (path, content)
+  where
+    filename := <guarantee-extension(|"sdf3")> name
+  ; path     := <concat-strings> [dir, "/", filename]
+  ; <refresh-workspace-file> path
+
+rules // Generating intermediate Xtext
+  
+	// Menu: "Generate Xtext"
 	gen-xtext:
 		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
 		where
