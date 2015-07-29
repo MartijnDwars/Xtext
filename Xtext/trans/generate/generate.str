@@ -5,11 +5,12 @@ imports
 	libstratego-gpp
 	sdf/src-gen/pp/TemplateLang-pp
 	sdf/src-gen/pp/modules/Modules-pp
-	generate/parser-rule
 	include/Xtext
 	include/TemplateLang
 	generate/common
 	generate/post
+  generate/parser-rule
+  generate/terminal-rule
 	generate/xtext-expand-optional
 	generate/xtext-expand-alternative
 	generate/xtext-lift-alternative
@@ -43,7 +44,7 @@ rules
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
 	gen-sdf-debug:
-		selected -> <(gen-grammar + gen-rule) ; topdown(try(post))> selected 
+		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
 	
 	// Menu
 	gen-xtext-sdf-nolabel:

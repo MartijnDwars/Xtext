@@ -13,13 +13,31 @@ signature
     
 rules
 	
-	gen-rule:
+	gen-rule(|ast):
 		TerminalRule(head, alternatives) ->
-			SDFSection(LexicalSyntax([SdfProduction(SortDef(name), rhs, NoAttrs())]))
-			where
-				name := <gen-rule-name> head
-			; syntax-rules := <gen-terminal-token-element ; make-list> alternatives
-		  ; rhs          := <innermost(post-process-terminal-rule)> Rhs(syntax-rules)
+			SDFSection(LexicalSyntax([SdfProduction(type, rhs, NoAttrs())]))
+	where
+		name   := <gen-rule-name> head
+  ; type   := <is-hidden(|ast) < !Layout() + !SortDef(name)> name
+	; syntax := <gen-terminal-token-element ; make-list> alternatives
+  ; rhs    := <innermost(post-process-terminal-rule)> Rhs(syntax)
+  
+  /**
+   * Determine if this rule is hidden in the grammar
+   */
+  is-hidden(|ast):
+  	name -> <true>
+  where
+    tokens := <hidden-tokens> ast
+  ; <elem> (name, tokens)
+  
+  /**
+   * Given an Xtext AST, get a list of strings of hidden tokens
+   *
+   * @type AST -> List(String)
+   */
+  hidden-tokens =
+    ?Grammar(_, _, Some(HiddenToken(<id>)), _, _); map(?RuleCall(<id>); sort-name)
   
   /**
    * Turn the head into a name. Head of a parserRule can be either a Fragment or Returns.

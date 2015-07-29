@@ -15,7 +15,7 @@ rules
 	remove-sortdef:
 		SortDef(name) -> name
 			
-	// Cardinality
+rules // Cardinality
 	
 	gen-cardinality(|abstract-terminal):
 		None() -> abstract-terminal
@@ -29,55 +29,23 @@ rules
 	gen-cardinality(|abstract-terminal):
 		Some(Optional()) -> Opt(abstract-terminal)
 	
-	//Permutations (Unordered-Groups)
-	/*
-		Might replace this by a more functional variant:
-			
-			-- | The 'permutations' function returns the list of all permutations of the argument.
-			--
-			-- > permutations "abc" == ["abc","bac","cba","bca","cab","acb"]
-				 permutations            :: [a] -> [[a]]
-				 permutations xs0        =  xs0 : perms xs0 []
-                 where
-    			 	perms []     _  = []
-    				perms (t:ts) is = foldr interleave (perms ts (t:is)) (permutations is)
-      				where interleave    xs     r = let (_,zs) = interleave' id xs r in zs
-            			interleave' _ []     r = (ts, r)
-            			interleave' f (y:ys) r = let (us,zs) = interleave' (f . (y:)) ys r
-                                     			 in  (y:us, f (t:y:us) : zs)
-	
-	*/
-	
-	// The only permutation of a singleton list is a list containing that element 
+rules // Permutations (new)
+  
 	permutations:
 		[x] -> [[x]]
 	
-	// do "permutations(|xs) x" for every x in xs
 	permutations:
 		xs -> <map(permutations(|xs)) ; concat> xs
 	
-	// Remove argument from xs, compute permutations of resulting list
 	permutations(|xs):
 		x -> <filter(not(?x)) ; permutations ; map(prepend(|x))> xs
 	
-	// Prepend x to every list of xs. E.g. prepend(1, [[2, 3], [3, 2]]) = [[1, 2, 3], [1, 3, 2]]
 	prepend-list:
 		(x, xss) -> <map(prepend(|x))> xss
 	
-	// Prepend x to the given list
 	prepend(|x) = ?t ; ![x | t]
 	
-	// Usage:
-	//
-	// test-prepend:
-	//  	_ -> <prepend-list> (2, [[2, 3], [11, 111]])
-	// 
-	test-permutations:
-		_ -> <permutations> [1, 2, 3]
-	
-	
-	
-
+rules // Permutations (old)
 	
 	gen-permutations(|perm-set):
 		_ -> permutations
@@ -98,6 +66,8 @@ rules
 	filter(|block):
 		set -> <set-eq> (block, set)
 
+rules // List utils
+  
   /**
    * Append an element to the tail of the list
    * 
@@ -105,6 +75,14 @@ rules
    */
   append:
     (list, e) -> <reverse> [e | <reverse> list]
+    
+  is-empty = ?[]
+
+  list-to-conc:
+    [singleton] -> singleton
+  
+  list-to-conc:
+    [head | tail] -> Conc(head, <list-to-conc> tail)
 
 rules // Rewrite reserved words
   
@@ -164,11 +142,3 @@ rules // Pattern match left- and right associative ParserRules
     // "<last> tokens > group" ends with assignment with rulecall to same as name
     <last> sub-tokens; ?AssignmentAbstractToken(None(), _, Assignment(), RuleCall(name), None())
     
-   		
-	is-empty = ?[]
-
-  list-to-conc:
-    [singleton] -> singleton
-  
-  list-to-conc:
-    [head | tail] -> Conc(head, <list-to-conc> tail)
