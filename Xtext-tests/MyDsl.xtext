@@ -2,58 +2,18 @@ grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
  
 generate MyDsl "http://www.xtext.org/example/mydsl/MyDsl"
 
-// terminal A:
-// 	!'a'
-// ;
-// 
-// terminal B:
-// 	!(a | b)
-// ;
-//  
-// terminal B:
-// 	!('a' | 'b')*
-// ;
-// 
-// terminal star:
-// 	!'"'
-// ;
-//  
-terminal neg:
-	!("'")
+FQN:
+  ID ('.' ID)*
 ;
- 
-terminal negation:
-	!('\\'|'"')
+
+FQN2:
+  ID ('.' n=ID)*
 ;
- 
-terminal NEGATIVE_INTEGER:
-	"-" INT;
-	
-terminal DOC_COMMENT:
-	'/**' -> '*/';		
-	
-terminal ML_COMMENT: 
-	'/*' !('*') -> '*/';
 
-terminal SL_COMMENT:
-	('//' !('\n' | '\r')* ('\r'? '\n')?) | ('--'->'\n');
-	
-terminal WS	: 
-	(' '|'\t'|'\r'|'\n')+;
+FQN3:
+  n=ID ('.' ID)*
+;
 
-terminal ID:
-	('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ("'" | '"')*;
-	
-terminal INT returns ecore::EInt: 
-	('0'..'9')+ ;
-
-terminal STRING	: 
-	'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
-	"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
-		; 
-
-terminal ANY_OTHER: .;
-
-Constant:
-	=>b
+FQN4:
+  n=ID ('.' n=ID)*
 ;
