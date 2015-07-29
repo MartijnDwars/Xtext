@@ -1,7 +1,12 @@
 module Xtext-Refactorings
 
-imports Xtext-Refactorings.generated
+imports
+
+  Xtext-Refactorings.generated
 
 refactorings
 
   text reconstruction : construct-textual-change
+  
+  refactoring AbstractRule.ParserRule : "To SDF" = refactor-to-sdf
+    
