@@ -4,9 +4,13 @@ imports
 
   Xtext-Refactorings.generated
 
+keybindings
+
+  Shift + Alt + R = "xtext.refactor"
+
 refactorings
 
   text reconstruction : construct-textual-change
   
-  refactoring AbstractRule.ParserRule : "To SDF" = refactor-to-sdf
-    
+  refactoring AbstractRule.ParserRule : "To SDF" = refactor-to-sdf (cursor)
+  shortcut: Shift + Alt + R

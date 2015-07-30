@@ -8,13 +8,7 @@ imports
 rules
 	
   refactor-to-sdf:
-    (newname, selected, position, ast, path, project-path) -> ([(selected, new-ast)], fatal-errors, errors, warnings)
+    (newname, selected, position, ast, path, project-path) -> ([(selected, new-ast)], [], [], [])
   where
-  	<dbg(|"refactor")> "a"
-  ; dirname := <dirname> path
-  ; <dbg(|"refactor")> "aa"
+    dirname := <dirname> path
   ; new-ast := <gen-xtext-sdf-nolabel(|dirname)> selected
-  ; <dbg(|"refactor")> "b"
-  ; (errors, warnings) := /*<check-semantics> (ast, new-ast)*/ ([], [])
-  ; <dbg(|"refactor")> "c"
-  ; fatal-errors := []
