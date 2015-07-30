@@ -43,13 +43,9 @@ rules // Generating SDF
 	  (ast, priorities) -> cleaned-up-priorities
 	where
 	  sdf                   := <gen-sdf-debug> ast
-	; <debug> "Now add priorities"
 	; sdf-with-priorities   := <add-priorities> (sdf, priorities)
-	; <debug> "Added priorities"
 	; priorities-with-assoc := <innermost(priority-group(|sdf-with-priorities))> sdf-with-priorities
-	; <debug> "SDF with priorities"
 	; cleaned-up-priorities := <innermost(cleanup_priorities)> priorities-with-assoc
-	; <debug> "Cleaned priorities"
 	  
 	add-priorities:
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
@@ -59,9 +55,6 @@ rules // Generating SDF
 	
 	gen-sdf-debug:
 		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
-  where
-    <debug> "De rule is:"
-  ; <debug> <gen-rule(|ast)> ast
 	
 	// "Generate Xtext > SDF > Nolabel"
 	menu-gen-xtext-sdf-nolabel:
