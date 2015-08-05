@@ -1,6 +1,10 @@
-# Xtext to SDF transformer
+# XtextXT
 
-This project aims to help a developer in transforming Xtext to SDF.
+Transform Xtext to SDF.
+
+## Building
+
+Run `./build.sh` to build the project. The update site will be located at `nl.tudelft.xtext.updatesite/target/site/`.
 
 ## Installing
 

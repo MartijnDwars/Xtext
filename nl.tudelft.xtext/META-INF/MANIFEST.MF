@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Xtext Plug-in
-Bundle-SymbolicName: Xtext;singleton:=true
+Bundle-SymbolicName: nl.tudelft.xtext;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: Xtext.Activator
 Require-Bundle: org.eclipse.core.runtime,

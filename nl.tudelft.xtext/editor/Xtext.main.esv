@@ -13,7 +13,7 @@ imports
 language General properties
   
   name:          Xtext
-  id:            Xtext
+  id:            nl.tudelft.xtext
   extends:       Root
   
   description:   "Spoofax-generated editor for the Xtext language"
