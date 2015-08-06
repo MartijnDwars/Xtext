@@ -8,23 +8,21 @@ imports
 
 rules
 	
-	// gen-rule:
-	// 	EnumRule(name, enum-literals) -> $[
-	// 		lexical syntax
-	// 	    	[<map(gen-enum-literal ; prefix(|name)) ; separate-by(|"\n") ; concat-strings> enum-literals]
-	// 	]
-		
-	gen-rule:
-		EnumRule(name, enum-literals) -> SDFSection(LexicalSyntax(<map(gen-enum-literal(|name))> enum-literals))
-	
-	// gen-enum-literal:
-	// 	EnumLiteral(name) -> $["[name]"]
-	
+  gen-rule(|ast):
+    e@EnumRule(name, enum-literals) -> SDFSection(LexicalSyntax(<gen-rule-sub> e))
+  where
+    <debug> enum-literals
+
+	gen-rule(|ast):
+	  enum-rules -> SDFSection(LexicalSyntax(<map(gen-rule-sub)> enum-rules))
+	where
+	  <is-list> enum-rules
+  
+  gen-rule-sub:
+    EnumRule(name, enum-literals) -> <map(gen-enum-literal(|name))> enum-literals
+  
 	gen-enum-literal(|name):
 		EnumLiteral(value) -> SdfProduction(SortDef(name), Rhs([Lit(<double-quote> value)]), NoAttrs())
 	
 	gen-enum-literal(|name):
 		EnumLiteral(_, value) -> SdfProduction(SortDef(name), Rhs([Lit(<double-quote> value)]), NoAttrs())
-	
-	// prefix(|name):
-	// 	result -> $[[name] = [result]]

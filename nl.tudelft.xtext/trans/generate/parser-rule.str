@@ -38,23 +38,36 @@ rules
 	gen-import-name:
 		GrammarID(names) -> Module(name)
 		where
-			name			:= <id-to-name> names
+			name := <id-to-name> names
 
 	gen-start-symbol:
 		ParserRule(name, _, _, _) -> SDFSection(ContextFreeStartSymbols([Sort(name)]))
   
+  // Transform a single ParserRule
 	gen-rule(|ast):
 		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts-with-assoc))
 		where
-			alts := <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
-		; if <is-left-assoc> p then
-		    alts-with-assoc := <add-associativity(|Left())> alts
-		  else if <is-right-assoc> p then
-	      alts-with-assoc := <add-associativity(|Right())> alts
-	    else
-	      alts-with-assoc := alts
-	    end end
+		  alts-with-assoc := <gen-rule-sub(|ast)> p
 	
+	// Transform a list of ParserRule's
+	gen-rule(|ast):
+	  parser-rules -> SDFSection(ContextFreeSyntax(<map(gen-rule-sub(|ast))> parser-rules))
+	where
+	  <is-list> parser-rules
+ 
+  // Common functionality for transforming either list/single ParserRule
+	gen-rule-sub(|ast):
+	  p@ParserRule(name, _,_, alternatives) -> alts-with-assoc
+    where
+      alts := <gen-alternatives(|SortDef(name), NoAttrs())> alternatives
+    ; if <is-left-assoc> p then
+        alts-with-assoc := <add-associativity(|Left())> alts
+      else if <is-right-assoc> p then
+        alts-with-assoc := <add-associativity(|Right())> alts
+      else
+        alts-with-assoc := alts
+      end end
+
 	add-associativity(|associativity):
 	  productions -> <map(try(add-associativity(|associativity)))> productions
 	where

@@ -16,7 +16,7 @@ https://dl.bintray.com/martijndwars/xtext/
 
 ## Usage
 
-After installing the transformer you can either:
+After installing the transformer you can do one of the following:
 
-1. transform a piece of Xtext by selecting it using the 'Refactor' option in the context menu (e.g. an Xtext ParserRule)
-2. transform a complete file by using the builder
+- transform a ParserRule or EnumRule by selecting it and then using the 'Refactor' > 'To SDF' option from the context menu (or use Cmd + Alt + R on OS X, Shift + Alt + R on Windows).
+- transform a complete file by using the builder
