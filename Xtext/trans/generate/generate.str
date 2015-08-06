@@ -26,15 +26,15 @@ rules // Printing SDF
   
 rules // Generating SDF
 	
-	// Menu: "Generate SDF"
-	gen-sdf-file:
+	// "Generate SDF"
+	menu-gen-sdf-file:
 		(selected, position, ast, path, project-path) -> (filename, <sdf-pp> sdf)
 		where
 			filename := <guarantee-extension(|"sdf3")> path
 		; sdf      := <gen-sdf-debug> selected
 	
-	// Menu: "Generate SDF (ATerm)"
-	gen-sdf:
+	// "Generate SDF (ATerm)"
+	menu-gen-sdf:
 		(selected, position, ast, path, project-path) -> (filename, <gen-sdf-debug> selected)
 		where
 			filename := <guarantee-extension(|"sdf3.aterm")> path
@@ -50,19 +50,27 @@ rules // Generating SDF
 	add-priorities:
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
+	add-priorities:
+	  (sdf, _) -> sdf
+	
 	gen-sdf-debug:
 		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
 	
-	// Menu: "Generate Xtext > SDF > Nolabel"
-	gen-xtext-sdf-nolabel:
+	// "Generate Xtext > SDF > Nolabel"
+	menu-gen-xtext-sdf-nolabel:
 	  (selected, position, ast, path, project-path) -> (filename, result)
 	where
     dirname  := <dirname> path
   ; filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> selected
+  ; result   := <gen-xtext-sdf-nolabel(|dirname)> selected
   
-	// Menu: "Generate Xtext > SDF
-	gen-xtext-sdf:
+  gen-xtext-sdf-nolabel(|dirname):
+    ast -> result
+  where
+    result := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> ast
+  
+	// "Generate Xtext > SDF
+	menu-gen-xtext-sdf:
 		(selected, position, ast, path, project-path) -> (filename, result)
 	where
     dirname  := <dirname> path
@@ -72,8 +80,8 @@ rules // Generating SDF
 	gen-xtext-sdf(|dirname):
 	  ast -> sdf
 	where
-    xtext    := <gen-xtext> ast
-  ; sdf      := <gen-sdf-debug> xtext
+    xtext := <gen-xtext> ast
+  ; sdf   := <gen-sdf-debug> xtext
 	; <mixin-get; map(mixin-generate(|dirname))> ast
 	
 	mixin-get:
@@ -107,8 +115,8 @@ rules // Generating SDF
 
 rules // Generating intermediate Xtext
   
-	// Menu: "Generate Xtext"
-	gen-xtext:
+	// "Generate Xtext"
+	menu-gen-xtext:
 		(selected, _, _, path, _) -> (filename, <gen-xtext> selected)
 		where
 			filename := <guarantee-extension(|"xtextng.aterm")> path

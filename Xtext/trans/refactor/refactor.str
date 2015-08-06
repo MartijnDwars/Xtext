@@ -1,0 +1,14 @@
+module refactor
+
+imports
+	
+	generate/generate
+	include/TemplateLang
+	
+rules
+	
+  refactor-to-sdf:
+    (newname, selected, position, ast, path, project-path) -> ([(selected, new-ast)], [], [], [])
+  where
+    dirname := <dirname> path
+  ; new-ast := <gen-xtext-sdf-nolabel(|dirname)> selected

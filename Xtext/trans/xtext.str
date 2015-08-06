@@ -19,6 +19,7 @@ imports
 	check
 	generate/-
 	generate/generate
+	refactor/refactor
 	pp
 
 rules // Analysis
