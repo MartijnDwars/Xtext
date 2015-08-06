@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <description name="XtextXT">
+    Eclipse plugin for XtextXT, a tool for transforming Xtext to SDF.
+  </description>
+  
+  <feature url="features/nl.tudelft.xtext_1.0.0.qualifier.jar" id="nl.tudelft.xtext.feature" version="1.0.0.qualifier">
+    <category name="XtextXT"/>
+  </feature>
+  
+   <category-def name="XtextXT" label="XtextXT">
+      <description>
+         Eclipse plugin for XtextXT, a tool for transforming Xtext to SDF.
+      </description>
+   </category-def>
+</site>

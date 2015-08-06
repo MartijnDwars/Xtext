@@ -8,16 +8,16 @@
             description="Xtext"
             language="Xtext"
             derivedFrom="DynamicRoot"
-            validator="Xtext.XtextValidator"
-            validatorClass="Xtext.XtextValidator"
+            validator="nl.tudelft.xtext.XtextValidator"
+            validatorClass="nl.tudelft.xtext.XtextValidator"
       ></language>
    </extension>
    <extension
-         id="Xtext.parser"
+         id="nl.tudelft.xtext.parser"
          name="Xtext Parser"
          point="org.eclipse.imp.runtime.parser">
       <parser
-            class="Xtext.XtextParseController"
+            class="nl.tudelft.xtext.XtextParseController"
             language="Xtext">
       </parser>
    </extension>    
