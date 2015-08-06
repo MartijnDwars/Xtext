@@ -43,15 +43,25 @@ rules // Generating SDF
 	  (ast, priorities) -> cleaned-up-priorities
 	where
 	  sdf                   := <gen-sdf-debug> ast
+	; <debug> "Now add priorities"
 	; sdf-with-priorities   := <add-priorities> (sdf, priorities)
+	; <debug> "Added priorities"
 	; priorities-with-assoc := <innermost(priority-group(|sdf-with-priorities))> sdf-with-priorities
+	; <debug> "SDF with priorities"
 	; cleaned-up-priorities := <innermost(cleanup_priorities)> priorities-with-assoc
+	; <debug> "Cleaned priorities"
 	  
 	add-priorities:
 	  (Module(x, y, sections), priorities) -> Module(x, y, <append> (sections, priorities))
 	
+	add-priorities:
+	  (sdf, _) -> sdf
+	
 	gen-sdf-debug:
 		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
+  where
+    <debug> "De rule is:"
+  ; <debug> <gen-rule(|ast)> ast
 	
 	// "Generate Xtext > SDF > Nolabel"
 	menu-gen-xtext-sdf-nolabel:
@@ -59,7 +69,12 @@ rules // Generating SDF
 	where
     dirname  := <dirname> path
   ; filename := <guarantee-extension(|"sdf3")> path
-  ; result   := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> selected
+  ; result   := <gen-xtext-sdf-nolabel(|dirname)> selected
+  
+  gen-xtext-sdf-nolabel(|dirname):
+    ast -> result
+  where
+    result := <gen-xtext-sdf(|dirname); topdown(try(?Label(_, <id>))); sdf-pp> ast
   
 	// "Generate Xtext > SDF
 	menu-gen-xtext-sdf:
@@ -72,8 +87,8 @@ rules // Generating SDF
 	gen-xtext-sdf(|dirname):
 	  ast -> sdf
 	where
-    xtext    := <gen-xtext> ast
-  ; sdf      := <gen-sdf-debug> xtext
+    xtext := <gen-xtext> ast
+  ; sdf   := <gen-sdf-debug> xtext
 	; <mixin-get; map(mixin-generate(|dirname))> ast
 	
 	mixin-get:
