@@ -12,5 +12,5 @@ refactorings
 
   text reconstruction : construct-textual-change
   
-  refactoring AbstractRule.ParserRule : "To SDF" = refactor-to-sdf (cursor)
+  refactoring AbstractRule : "To SDF" = refactor-to-sdf (cursor)
   shortcut: Shift + Alt + R
