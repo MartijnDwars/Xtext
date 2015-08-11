@@ -5,11 +5,6 @@ imports
   Common
   ParserRule
 
-context-free start-symbols
-  
-  // These sorts are only added to allow testing:
-  AbstractRule
-  
 context-free syntax
   
   AbstractRule.TerminalRule = <terminal <TerminalName> : <TerminalAlternatives> ;>
@@ -30,8 +25,8 @@ context-free syntax
   TerminalTokenElement.Wildcard = WILDCARD
   TerminalTokenElement.NegatedToken = <! <TerminalTokenElement>>
   TerminalTokenElement.UntilToken = "->" TerminalTokenElement
-  TerminalTokenElement.TerminalTokenElement = EOF
+  TerminalTokenElement.TerminalTokenElement = Eof
   
   Keyword.Keyword = STRING
   
-  EOF.EOF = <EOF>
+  Eof.EOF = "EOF"

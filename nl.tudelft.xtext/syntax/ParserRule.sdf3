@@ -3,16 +3,9 @@ module ParserRule
 imports
   
   Common
-
-context-free start-symbols
-  
-  // These sorts are only added to allow testing:
-  AbstractRule
   
 context-free syntax
 
-  // AbstractToken.List = <(<AbstractToken>(<STRING> <AbstractToken>)<Cardinality>)<Cardinality>>
-  
   Operator.Assignment = "="
   Operator.AddAssignment = "+="
   Operator.BooleanAssignment = "?="
