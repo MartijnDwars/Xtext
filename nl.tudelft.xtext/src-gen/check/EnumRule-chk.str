@@ -1,0 +1,69 @@
+module src-gen/check/EnumRule-chk
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  src-gen/signatures/EnumRule-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+
+
+imports
+  src-gen/check/Common-chk
+
+
+strategies
+  check-SDF-start-symbols =
+    check-AbstractRule
+
+
+strategies
+  check-example =
+    check-AbstractRule
+
+  check-example =
+    check-EnumLiteral
+
+  check-AbstractRule :
+    EnumRule(t1__, t2__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+    with <map(check-EnumLiteral <+ error-EnumLiteral)> t2__
+
+  is-AbstractRule-with-constructor =
+    ?EnumRule(_, _)
+
+  check-EnumLiteral :
+    EnumLiteral(t1__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+
+  is-EnumLiteral-with-constructor =
+    ?EnumLiteral(_)
+
+  check-EnumLiteral :
+    EnumLiteral(t1__, t2__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+    with <(check-STRING <+ error-STRING)> t2__
+
+  is-EnumLiteral-with-constructor =
+    ?EnumLiteral(_, _)
+
+  is-AbstractRule-with-constructor =
+    fail
+
+  is-EnumLiteral-with-constructor =
+    fail
+
+  check-AbstractRule :
+    amb([h|hs]) -> <check-AbstractRule> h
+
+  check-EnumLiteral :
+    amb([h|hs]) -> <check-EnumLiteral> h
+
+  error-AbstractRule =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractRule instead. ")
+
+  error-EnumLiteral =
+    debug(!"Unexpected constructor. Expected constructor from sort EnumLiteral instead. ")

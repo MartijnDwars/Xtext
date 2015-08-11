@@ -2,7 +2,7 @@ module xtext-extract-crossreferences
 
 imports
 	include/Xtext
-	include/Templatelang
+	lib/Templatelang
 	
 rules
 	
