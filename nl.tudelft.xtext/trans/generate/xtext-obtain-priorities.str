@@ -3,7 +3,7 @@ module xtext-obtain-priorities
 imports
 	
 	libstratego-gpp
-	include/TemplateLang
+	lib/TemplateLang
 	include/Xtext
 	generate/common
 	

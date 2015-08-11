@@ -1,0 +1,469 @@
+module src-gen/check/ParserRule-chk
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  src-gen/signatures/ParserRule-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+
+
+imports
+  src-gen/check/Common-chk
+
+
+strategies
+  check-example =
+    check-Operator
+
+  check-example =
+    check-TypeRef
+
+  check-example =
+    check-AbstractMetaModelReference
+
+  check-example =
+    check-Classifier
+
+  check-example =
+    check-AbstractRule
+
+  check-example =
+    check-Returns
+
+  check-example =
+    check-HiddenToken
+
+  check-example =
+    check-Alternatives
+
+  check-example =
+    check-UnorderedGroup
+
+  check-example =
+    check-Group
+
+  check-example =
+    check-AbstractToken
+
+  check-example =
+    check-Predicated
+
+  check-example =
+    check-AssignableTerminal
+
+  check-example =
+    check-CrossReferenceableTerminal
+
+  check-example =
+    check-RuleCall
+
+  check-example =
+    check-AssignableAlternatives
+
+  check-example =
+    check-Action
+
+  check-example =
+    check-ActionCurrent
+
+  check-example =
+    check-AbstractTerminal
+
+  check-Operator :
+    Assignment() -> <id>
+
+  is-Operator-with-constructor =
+    ?Assignment()
+
+  check-Operator :
+    AddAssignment() -> <id>
+
+  is-Operator-with-constructor =
+    ?AddAssignment()
+
+  check-Operator :
+    BooleanAssignment() -> <id>
+
+  is-Operator-with-constructor =
+    ?BooleanAssignment()
+
+  check-TypeRef :
+    TypeRef(t1__, t2__) -> <id>
+    with <(check-ID <+ error-ID)> t2__
+
+  is-TypeRef-with-constructor =
+    ?TypeRef(_, _)
+
+  check-TypeRef :
+    MetaModelDeclaration(t1__) -> <id>
+    with <(check-Classifier <+ error-Classifier)> t1__
+
+  is-TypeRef-with-constructor =
+    ?MetaModelDeclaration(_)
+
+  check-AbstractMetaModelReference :
+    AbstractMetaModelReference(t1__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-AbstractMetaModelReference-with-constructor =
+    ?AbstractMetaModelReference(_)
+
+  check-Classifier :
+    Classifier(t1__) -> <id>
+    with <(check-ECore <+ error-ECore)> t1__
+
+  is-Classifier-with-constructor =
+    ?Classifier(_)
+
+  check-AbstractRule :
+    ParserRule(t1__, t2__, t3__, t4__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+    with <(check-Alternatives <+ error-Alternatives)> t4__
+
+  is-AbstractRule-with-constructor =
+    ?ParserRule(_, _, _, _)
+
+  check-Returns :
+    Returns(t1__) -> <id>
+    with <(check-TypeRef <+ error-TypeRef)> t1__
+
+  is-Returns-with-constructor =
+    ?Returns(_)
+
+  check-HiddenToken :
+    HiddenToken(t1__) -> <id>
+    with <map(check-RuleCall <+ error-RuleCall)> t1__
+
+  is-HiddenToken-with-constructor =
+    ?HiddenToken(_)
+
+  check-Alternatives :
+    Alternatives(t1__) -> <id>
+    with <map(check-UnorderedGroup <+ error-UnorderedGroup)> t1__
+
+  is-Alternatives-with-constructor =
+    ?Alternatives(_)
+
+  check-UnorderedGroup :
+    UnorderedGroup(t1__) -> <id>
+    with <map(check-Group <+ error-Group)> t1__
+
+  is-UnorderedGroup-with-constructor =
+    ?UnorderedGroup(_)
+
+  check-Group :
+    Group(t1__) -> <id>
+    with <map(check-AbstractToken <+ error-AbstractToken)> t1__
+
+  is-Group-with-constructor =
+    ?Group(_)
+
+  check-AbstractToken :
+    AssignmentAbstractToken(t1__, t2__, t3__, t4__, t5__) -> <id>
+    with <(check-ID <+ error-ID)> t2__
+    with <(check-Operator <+ error-Operator)> t3__
+    with <(check-AssignableTerminal <+ error-AssignableTerminal)> t4__
+
+  is-AbstractToken-with-constructor =
+    ?AssignmentAbstractToken(_, _, _, _, _)
+
+  check-AbstractToken :
+    AbstractTerminalAbstractToken(t1__, t2__) -> <id>
+    with <(check-AbstractTerminal <+ error-AbstractTerminal)> t1__
+
+  is-AbstractToken-with-constructor =
+    ?AbstractTerminalAbstractToken(_, _)
+
+  check-AbstractToken :
+    ActionAbstractToken(t1__) -> <id>
+    with <(check-Action <+ error-Action)> t1__
+
+  is-AbstractToken-with-constructor =
+    ?ActionAbstractToken(_)
+
+  check-Predicated :
+    Predicated() -> <id>
+
+  is-Predicated-with-constructor =
+    ?Predicated()
+
+  check-Predicated :
+    FirstSetPredicated() -> <id>
+
+  is-Predicated-with-constructor =
+    ?FirstSetPredicated()
+
+  check-AssignableTerminal :
+    Keyword(t1__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-AssignableTerminal-with-constructor =
+    ?Keyword(_)
+
+  check-AssignableTerminal :
+    t1__ -> <id>
+    where not(is-AssignableTerminal-with-constructor)
+    where <(check-RuleCall <+ error-RuleCall)> t1__
+
+  check-AssignableTerminal :
+    Parenthetical(t1__) -> <id>
+    with <(check-AssignableAlternatives <+ error-AssignableAlternatives)> t1__
+
+  check-AssignableTerminal :
+    CrossReference(t1__, t2__) -> <id>
+    with <(check-TypeRef <+ error-TypeRef)> t1__
+
+  is-AssignableTerminal-with-constructor =
+    ?CrossReference(_, _)
+
+  check-CrossReferenceableTerminal :
+    CrossReferenceableTerminal(t1__) -> <id>
+    with <(check-RuleCall <+ error-RuleCall)> t1__
+
+  is-CrossReferenceableTerminal-with-constructor =
+    ?CrossReferenceableTerminal(_)
+
+  check-RuleCall :
+    RuleCall(t1__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+
+  is-RuleCall-with-constructor =
+    ?RuleCall(_)
+
+  check-AssignableAlternatives :
+    AssignableAlternatives(t1__) -> <id>
+    with <map(check-AssignableTerminal <+ error-AssignableTerminal)> t1__
+
+  is-AssignableAlternatives-with-constructor =
+    ?AssignableAlternatives(_)
+
+  check-Action :
+    Action(t1__, t2__) -> <id>
+    with <(check-TypeRef <+ error-TypeRef)> t1__
+
+  is-Action-with-constructor =
+    ?Action(_, _)
+
+  check-ActionCurrent :
+    ActionCurrent(t1__, t2__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+    with <(check-Operator <+ error-Operator)> t2__
+
+  is-ActionCurrent-with-constructor =
+    ?ActionCurrent(_, _)
+
+  check-AbstractTerminal :
+    Keyword(t1__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-AbstractTerminal-with-constructor =
+    ?Keyword(_)
+
+  check-AbstractTerminal :
+    t1__ -> <id>
+    where not(is-AbstractTerminal-with-constructor)
+    where <(check-Alternatives <+ error-Alternatives)> t1__
+
+  check-AbstractTerminal :
+    t1__ -> <id>
+    where not(is-AbstractTerminal-with-constructor)
+    where <(check-RuleCall <+ error-RuleCall)> t1__
+
+  check-AbstractTerminal :
+    PredicatedKeyword(t1__, t2__) -> <id>
+    with <(check-Predicated <+ error-Predicated)> t1__
+    with <(check-STRING <+ error-STRING)> t2__
+
+  is-AbstractTerminal-with-constructor =
+    ?PredicatedKeyword(_, _)
+
+  check-AbstractTerminal :
+    PredicatedRuleCall(t1__, t2__) -> <id>
+    with <(check-Predicated <+ error-Predicated)> t1__
+    with <(check-RuleCall <+ error-RuleCall)> t2__
+
+  is-AbstractTerminal-with-constructor =
+    ?PredicatedRuleCall(_, _)
+
+  check-AbstractTerminal :
+    PredicatedGroup(t1__, t2__) -> <id>
+    with <(check-Predicated <+ error-Predicated)> t1__
+    with <(check-Alternatives <+ error-Alternatives)> t2__
+
+  is-AbstractTerminal-with-constructor =
+    ?PredicatedGroup(_, _)
+
+  is-Operator-with-constructor =
+    fail
+
+  is-TypeRef-with-constructor =
+    fail
+
+  is-AbstractMetaModelReference-with-constructor =
+    fail
+
+  is-Classifier-with-constructor =
+    fail
+
+  is-AbstractRule-with-constructor =
+    fail
+
+  is-Returns-with-constructor =
+    fail
+
+  is-HiddenToken-with-constructor =
+    fail
+
+  is-Alternatives-with-constructor =
+    fail
+
+  is-UnorderedGroup-with-constructor =
+    fail
+
+  is-Group-with-constructor =
+    fail
+
+  is-AbstractToken-with-constructor =
+    fail
+
+  is-Predicated-with-constructor =
+    fail
+
+  is-AssignableTerminal-with-constructor =
+    fail
+
+  is-CrossReferenceableTerminal-with-constructor =
+    fail
+
+  is-RuleCall-with-constructor =
+    fail
+
+  is-AssignableAlternatives-with-constructor =
+    fail
+
+  is-Action-with-constructor =
+    fail
+
+  is-ActionCurrent-with-constructor =
+    fail
+
+  is-AbstractTerminal-with-constructor =
+    fail
+
+  check-Operator :
+    amb([h|hs]) -> <check-Operator> h
+
+  check-TypeRef :
+    amb([h|hs]) -> <check-TypeRef> h
+
+  check-AbstractMetaModelReference :
+    amb([h|hs]) -> <check-AbstractMetaModelReference> h
+
+  check-Classifier :
+    amb([h|hs]) -> <check-Classifier> h
+
+  check-AbstractRule :
+    amb([h|hs]) -> <check-AbstractRule> h
+
+  check-Returns :
+    amb([h|hs]) -> <check-Returns> h
+
+  check-HiddenToken :
+    amb([h|hs]) -> <check-HiddenToken> h
+
+  check-Alternatives :
+    amb([h|hs]) -> <check-Alternatives> h
+
+  check-UnorderedGroup :
+    amb([h|hs]) -> <check-UnorderedGroup> h
+
+  check-Group :
+    amb([h|hs]) -> <check-Group> h
+
+  check-AbstractToken :
+    amb([h|hs]) -> <check-AbstractToken> h
+
+  check-Predicated :
+    amb([h|hs]) -> <check-Predicated> h
+
+  check-AssignableTerminal :
+    amb([h|hs]) -> <check-AssignableTerminal> h
+
+  check-CrossReferenceableTerminal :
+    amb([h|hs]) -> <check-CrossReferenceableTerminal> h
+
+  check-RuleCall :
+    amb([h|hs]) -> <check-RuleCall> h
+
+  check-AssignableAlternatives :
+    amb([h|hs]) -> <check-AssignableAlternatives> h
+
+  check-Action :
+    amb([h|hs]) -> <check-Action> h
+
+  check-ActionCurrent :
+    amb([h|hs]) -> <check-ActionCurrent> h
+
+  check-AbstractTerminal :
+    amb([h|hs]) -> <check-AbstractTerminal> h
+
+  error-Operator =
+    debug(!"Unexpected constructor. Expected constructor from sort Operator instead. ")
+
+  error-TypeRef =
+    debug(!"Unexpected constructor. Expected constructor from sort TypeRef instead. ")
+
+  error-AbstractMetaModelReference =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractMetaModelReference instead. ")
+
+  error-Classifier =
+    debug(!"Unexpected constructor. Expected constructor from sort Classifier instead. ")
+
+  error-AbstractRule =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractRule instead. ")
+
+  error-Returns =
+    debug(!"Unexpected constructor. Expected constructor from sort Returns instead. ")
+
+  error-HiddenToken =
+    debug(!"Unexpected constructor. Expected constructor from sort HiddenToken instead. ")
+
+  error-Alternatives =
+    debug(!"Unexpected constructor. Expected constructor from sort Alternatives instead. ")
+
+  error-UnorderedGroup =
+    debug(!"Unexpected constructor. Expected constructor from sort UnorderedGroup instead. ")
+
+  error-Group =
+    debug(!"Unexpected constructor. Expected constructor from sort Group instead. ")
+
+  error-AbstractToken =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractToken instead. ")
+
+  error-Predicated =
+    debug(!"Unexpected constructor. Expected constructor from sort Predicated instead. ")
+
+  error-AssignableTerminal =
+    debug(!"Unexpected constructor. Expected constructor from sort AssignableTerminal instead. ")
+
+  error-CrossReferenceableTerminal =
+    debug(!"Unexpected constructor. Expected constructor from sort CrossReferenceableTerminal instead. ")
+
+  error-RuleCall =
+    debug(!"Unexpected constructor. Expected constructor from sort RuleCall instead. ")
+
+  error-AssignableAlternatives =
+    debug(!"Unexpected constructor. Expected constructor from sort AssignableAlternatives instead. ")
+
+  error-Action =
+    debug(!"Unexpected constructor. Expected constructor from sort Action instead. ")
+
+  error-ActionCurrent =
+    debug(!"Unexpected constructor. Expected constructor from sort ActionCurrent instead. ")
+
+  error-AbstractTerminal =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractTerminal instead. ")

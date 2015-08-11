@@ -1,0 +1,224 @@
+module src-gen/check/TerminalRule-chk
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  src-gen/signatures/TerminalRule-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+  src-gen/signatures/ParserRule-sig
+
+
+imports
+  src-gen/check/Common-chk
+  src-gen/check/ParserRule-chk
+
+
+strategies
+  check-example =
+    check-AbstractRule
+
+  check-example =
+    check-TerminalName
+
+  check-example =
+    check-TerminalAlternatives
+
+  check-example =
+    check-TerminalGroup
+
+  check-example =
+    check-TerminalToken
+
+  check-example =
+    check-TerminalTokenElement
+
+  check-example =
+    check-Keyword
+
+  check-example =
+    check-Eof
+
+  check-AbstractRule :
+    TerminalRule(t1__, t2__) -> <id>
+    with <(check-TerminalName <+ error-TerminalName)> t1__
+    with <(check-TerminalAlternatives <+ error-TerminalAlternatives)> t2__
+
+  is-AbstractRule-with-constructor =
+    ?TerminalRule(_, _)
+
+  check-TerminalName :
+    Fragment(t1__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+
+  is-TerminalName-with-constructor =
+    ?Fragment(_)
+
+  check-TerminalName :
+    Returns(t1__, t2__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+
+  is-TerminalName-with-constructor =
+    ?Returns(_, _)
+
+  check-TerminalAlternatives :
+    TerminalAlternatives(t1__) -> <id>
+    with <map(check-TerminalGroup <+ error-TerminalGroup)> t1__
+
+  is-TerminalAlternatives-with-constructor =
+    ?TerminalAlternatives(_)
+
+  check-TerminalGroup :
+    TerminalGroup(t1__) -> <id>
+    with <map(check-TerminalToken <+ error-TerminalToken)> t1__
+
+  is-TerminalGroup-with-constructor =
+    ?TerminalGroup(_)
+
+  check-TerminalToken :
+    TerminalToken(t1__, t2__) -> <id>
+    with <(check-TerminalTokenElement <+ error-TerminalTokenElement)> t1__
+
+  is-TerminalToken-with-constructor =
+    ?TerminalToken(_, _)
+
+  check-TerminalTokenElement :
+    t1__ -> <id>
+    where not(is-TerminalTokenElement-with-constructor)
+    where <(check-TerminalAlternatives <+ error-TerminalAlternatives)> t1__
+
+  check-TerminalTokenElement :
+    Keyword(t1__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-TerminalTokenElement-with-constructor =
+    ?Keyword(_)
+
+  check-TerminalTokenElement :
+    t1__ -> <id>
+    where not(is-TerminalTokenElement-with-constructor)
+    where <(check-RuleCall <+ error-RuleCall)> t1__
+
+  check-TerminalTokenElement :
+    CharacterRange(t1__, t2__) -> <id>
+    with <(check-Keyword <+ error-Keyword)> t1__
+    with <(check-Keyword <+ error-Keyword)> t2__
+
+  is-TerminalTokenElement-with-constructor =
+    ?CharacterRange(_, _)
+
+  check-TerminalTokenElement :
+    Wildcard(t1__) -> <id>
+    with <(check-WILDCARD <+ error-WILDCARD)> t1__
+
+  is-TerminalTokenElement-with-constructor =
+    ?Wildcard(_)
+
+  check-TerminalTokenElement :
+    NegatedToken(t1__) -> <id>
+    with <(check-TerminalTokenElement <+ error-TerminalTokenElement)> t1__
+
+  is-TerminalTokenElement-with-constructor =
+    ?NegatedToken(_)
+
+  check-TerminalTokenElement :
+    UntilToken(t1__) -> <id>
+    with <(check-TerminalTokenElement <+ error-TerminalTokenElement)> t1__
+
+  is-TerminalTokenElement-with-constructor =
+    ?UntilToken(_)
+
+  check-TerminalTokenElement :
+    TerminalTokenElement(t1__) -> <id>
+    with <(check-Eof <+ error-Eof)> t1__
+
+  is-TerminalTokenElement-with-constructor =
+    ?TerminalTokenElement(_)
+
+  check-Keyword :
+    Keyword(t1__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-Keyword-with-constructor =
+    ?Keyword(_)
+
+  check-Eof :
+    EOF() -> <id>
+
+  is-Eof-with-constructor =
+    ?EOF()
+
+  is-AbstractRule-with-constructor =
+    fail
+
+  is-TerminalName-with-constructor =
+    fail
+
+  is-TerminalAlternatives-with-constructor =
+    fail
+
+  is-TerminalGroup-with-constructor =
+    fail
+
+  is-TerminalToken-with-constructor =
+    fail
+
+  is-TerminalTokenElement-with-constructor =
+    fail
+
+  is-Keyword-with-constructor =
+    fail
+
+  is-Eof-with-constructor =
+    fail
+
+  check-AbstractRule :
+    amb([h|hs]) -> <check-AbstractRule> h
+
+  check-TerminalName :
+    amb([h|hs]) -> <check-TerminalName> h
+
+  check-TerminalAlternatives :
+    amb([h|hs]) -> <check-TerminalAlternatives> h
+
+  check-TerminalGroup :
+    amb([h|hs]) -> <check-TerminalGroup> h
+
+  check-TerminalToken :
+    amb([h|hs]) -> <check-TerminalToken> h
+
+  check-TerminalTokenElement :
+    amb([h|hs]) -> <check-TerminalTokenElement> h
+
+  check-Keyword :
+    amb([h|hs]) -> <check-Keyword> h
+
+  check-Eof :
+    amb([h|hs]) -> <check-Eof> h
+
+  error-AbstractRule =
+    debug(!"Unexpected constructor. Expected constructor from sort AbstractRule instead. ")
+
+  error-TerminalName =
+    debug(!"Unexpected constructor. Expected constructor from sort TerminalName instead. ")
+
+  error-TerminalAlternatives =
+    debug(!"Unexpected constructor. Expected constructor from sort TerminalAlternatives instead. ")
+
+  error-TerminalGroup =
+    debug(!"Unexpected constructor. Expected constructor from sort TerminalGroup instead. ")
+
+  error-TerminalToken =
+    debug(!"Unexpected constructor. Expected constructor from sort TerminalToken instead. ")
+
+  error-TerminalTokenElement =
+    debug(!"Unexpected constructor. Expected constructor from sort TerminalTokenElement instead. ")
+
+  error-Keyword =
+    debug(!"Unexpected constructor. Expected constructor from sort Keyword instead. ")
+
+  error-Eof =
+    debug(!"Unexpected constructor. Expected constructor from sort Eof instead. ")

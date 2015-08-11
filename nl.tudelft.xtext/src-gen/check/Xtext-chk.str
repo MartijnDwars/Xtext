@@ -1,0 +1,157 @@
+module src-gen/check/Xtext-chk
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  src-gen/signatures/Xtext-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+  src-gen/signatures/ParserRule-sig
+  src-gen/signatures/TerminalRule-sig
+  src-gen/signatures/EnumRule-sig
+
+
+imports
+  src-gen/check/Common-chk
+  src-gen/check/ParserRule-chk
+  src-gen/check/TerminalRule-chk
+  src-gen/check/EnumRule-chk
+
+
+strategies
+  check-SDF-start-symbols =
+    check-ID
+
+
+strategies
+  check-SDF-start-symbols =
+    check-Start
+
+
+strategies
+  check-example =
+    check-GrammarID
+
+  check-example =
+    check-Mixin
+
+  check-example =
+    check-HiddenToken
+
+  check-example =
+    check-Alias
+
+  check-example =
+    check-Metamodel
+
+  check-example =
+    check-Start
+
+  check-GrammarID :
+    GrammarID(t1__) -> <id>
+    with <map(check-ID <+ error-ID)> t1__
+
+  is-GrammarID-with-constructor =
+    ?GrammarID(_)
+
+  check-Mixin :
+    Mixin(t1__) -> <id>
+    with <map(check-GrammarID <+ error-GrammarID)> t1__
+
+  is-Mixin-with-constructor =
+    ?Mixin(_)
+
+  check-HiddenToken :
+    HiddenToken(t1__) -> <id>
+    with <map(check-RuleCall <+ error-RuleCall)> t1__
+
+  is-HiddenToken-with-constructor =
+    ?HiddenToken(_)
+
+  check-Alias :
+    Alias(t1__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+
+  is-Alias-with-constructor =
+    ?Alias(_)
+
+  check-Metamodel :
+    GeneratedMetamodel(t1__, t2__, t3__) -> <id>
+    with <(check-ID <+ error-ID)> t1__
+    with <(check-STRING <+ error-STRING)> t2__
+
+  is-Metamodel-with-constructor =
+    ?GeneratedMetamodel(_, _, _)
+
+  check-Metamodel :
+    ReferencedMetamodel(t1__, t2__) -> <id>
+    with <(check-STRING <+ error-STRING)> t1__
+
+  is-Metamodel-with-constructor =
+    ?ReferencedMetamodel(_, _)
+
+  check-Start :
+    Grammar(t1__, t2__, t3__, t4__, t5__) -> <id>
+    with <(check-GrammarID <+ error-GrammarID)> t1__
+    with <map(check-Metamodel <+ error-Metamodel)> t4__
+    with <map(check-AbstractRule <+ error-AbstractRule)> t5__
+
+  is-Start-with-constructor =
+    ?Grammar(_, _, _, _, _)
+
+  is-GrammarID-with-constructor =
+    fail
+
+  is-Mixin-with-constructor =
+    fail
+
+  is-HiddenToken-with-constructor =
+    fail
+
+  is-Alias-with-constructor =
+    fail
+
+  is-Metamodel-with-constructor =
+    fail
+
+  is-Start-with-constructor =
+    fail
+
+  check-GrammarID :
+    amb([h|hs]) -> <check-GrammarID> h
+
+  check-Mixin :
+    amb([h|hs]) -> <check-Mixin> h
+
+  check-HiddenToken :
+    amb([h|hs]) -> <check-HiddenToken> h
+
+  check-Alias :
+    amb([h|hs]) -> <check-Alias> h
+
+  check-Metamodel :
+    amb([h|hs]) -> <check-Metamodel> h
+
+  check-Start :
+    amb([h|hs]) -> <check-Start> h
+
+  error-GrammarID =
+    debug(!"Unexpected constructor. Expected constructor from sort GrammarID instead. ")
+
+  error-Mixin =
+    debug(!"Unexpected constructor. Expected constructor from sort Mixin instead. ")
+
+  error-HiddenToken =
+    debug(!"Unexpected constructor. Expected constructor from sort HiddenToken instead. ")
+
+  error-Alias =
+    debug(!"Unexpected constructor. Expected constructor from sort Alias instead. ")
+
+  error-Metamodel =
+    debug(!"Unexpected constructor. Expected constructor from sort Metamodel instead. ")
+
+  error-Start =
+    debug(!"Unexpected constructor. Expected constructor from sort Start instead. ")

@@ -3,7 +3,7 @@ module generate/common
 imports
 	
 	include/Xtext
-	include/TemplateLang
+	lib/TemplateLang
 
 rules 
 

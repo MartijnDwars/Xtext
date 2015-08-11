@@ -3,7 +3,7 @@ module sdf-priority-groups
 imports
   
   include/Xtext
-  include/TemplateLang
+  lib/TemplateLang
   
 rules
   

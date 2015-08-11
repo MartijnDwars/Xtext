@@ -7,7 +7,7 @@ imports
 	sdf/src-gen/pp/modules/Modules-pp
 	lib/editor-common.generated
 	include/Xtext
-	include/TemplateLang
+	lib/TemplateLang
 	generate/common
 	generate/parser-rule
 	generate/post

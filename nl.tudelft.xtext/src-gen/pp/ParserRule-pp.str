@@ -1,0 +1,597 @@
+module src-gen/pp/ParserRule-pp
+
+imports
+  libstratego-gpp
+  runtime/tmpl/pp
+  libstratego-sglr
+  src-gen/signatures/ParserRule-sig
+
+
+imports
+  src-gen/signatures/Common-sig
+
+
+imports
+  src-gen/pp/Common-pp
+
+
+strategies
+  prettyprint-example =
+    prettyprint-Operator
+
+  prettyprint-example =
+    prettyprint-TypeRef
+
+  prettyprint-example =
+    prettyprint-AbstractMetaModelReference
+
+  prettyprint-example =
+    prettyprint-Classifier
+
+  prettyprint-example =
+    prettyprint-AbstractRule
+
+  prettyprint-example =
+    prettyprint-Returns
+
+  prettyprint-example =
+    prettyprint-HiddenToken
+
+  prettyprint-example =
+    prettyprint-Alternatives
+
+  prettyprint-example =
+    prettyprint-UnorderedGroup
+
+  prettyprint-example =
+    prettyprint-Group
+
+  prettyprint-example =
+    prettyprint-AbstractToken
+
+  prettyprint-example =
+    prettyprint-Predicated
+
+  prettyprint-example =
+    prettyprint-AssignableTerminal
+
+  prettyprint-example =
+    prettyprint-CrossReferenceableTerminal
+
+  prettyprint-example =
+    prettyprint-RuleCall
+
+  prettyprint-example =
+    prettyprint-AssignableAlternatives
+
+  prettyprint-example =
+    prettyprint-Action
+
+  prettyprint-example =
+    prettyprint-ActionCurrent
+
+  prettyprint-example =
+    prettyprint-AbstractTerminal
+
+  prettyprint-Operator :
+    Assignment() -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [S("=")]
+                      )
+                    ]
+
+  is-Operator =
+    ?Assignment()
+
+  prettyprint-Operator :
+    AddAssignment() -> [ H(
+                           [SOpt(HS(), "0")]
+                         , [S("+=")]
+                         )
+                       ]
+
+  is-Operator =
+    ?AddAssignment()
+
+  prettyprint-Operator :
+    BooleanAssignment() -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [S("?=")]
+                             )
+                           ]
+
+  is-Operator =
+    ?BooleanAssignment()
+
+  prettyprint-TypeRef :
+    TypeRef(t1__, t2__) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [t1__', S(" "), t2__']
+                             )
+                           ]
+    with t1__' := <pp-option(pp-one-Z(prettyprint-AbstractMetaModelReference))> t1__
+    with t2__' := <pp-one-Z(prettyprint-ID)> t2__
+
+  is-TypeRef =
+    ?TypeRef(_, _)
+
+  prettyprint-TypeRef :
+    MetaModelDeclaration(t1__) -> [ H(
+                                      [SOpt(HS(), "0")]
+                                    , [t1__']
+                                    )
+                                  ]
+    with t1__' := <pp-one-Z(prettyprint-Classifier)> t1__
+
+  is-TypeRef =
+    ?MetaModelDeclaration(_)
+
+  prettyprint-AbstractMetaModelReference :
+    AbstractMetaModelReference(t1__) -> [ H(
+                                            [SOpt(HS(), "0")]
+                                          , [t1__', S(" ::")]
+                                          )
+                                        ]
+    with t1__' := <pp-one-Z(prettyprint-STRING)> t1__
+
+  is-AbstractMetaModelReference =
+    ?AbstractMetaModelReference(_)
+
+  prettyprint-Classifier :
+    Classifier(t1__) -> [ H(
+                            [SOpt(HS(), "0")]
+                          , [t1__']
+                          )
+                        ]
+    with t1__' := <pp-one-Z(prettyprint-ECore)> t1__
+
+  is-Classifier =
+    ?Classifier(_)
+
+  prettyprint-AbstractRule :
+    ParserRule(t1__, t2__, t3__, t4__) -> [ H(
+                                              [SOpt(HS(), "0")]
+                                            , [ t1__'
+                                              , S(" ")
+                                              , t2__'
+                                              , S(" ")
+                                              , t3__'
+                                              , S(": ")
+                                              , t4__'
+                                              , S(" ;")
+                                              ]
+                                            )
+                                          ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Returns))> t2__
+    with t3__' := <pp-option(pp-one-Z(prettyprint-HiddenToken))> t3__
+    with t4__' := <pp-one-Z(prettyprint-Alternatives)> t4__
+
+  is-AbstractRule =
+    ?ParserRule(_, _, _, _)
+
+  prettyprint-Returns :
+    Returns(t1__) -> [ H(
+                         [SOpt(HS(), "0")]
+                       , [S("returns "), t1__']
+                       )
+                     ]
+    with t1__' := <pp-one-Z(prettyprint-TypeRef)> t1__
+
+  is-Returns =
+    ?Returns(_)
+
+  prettyprint-HiddenToken :
+    HiddenToken(t1__) -> [ H(
+                             [SOpt(HS(), "0")]
+                           , [ S("hidden ( ")
+                             , t1__'
+                             , S(" )")
+                             ]
+                           )
+                         ]
+    with t1__' := <pp-H-list(prettyprint-RuleCall|",")> t1__
+
+  is-HiddenToken =
+    ?HiddenToken(_)
+
+  prettyprint-Alternatives :
+    Alternatives(t1__) -> [ H(
+                              [SOpt(HS(), "0")]
+                            , [t1__']
+                            )
+                          ]
+    with t1__' := <pp-H-list(prettyprint-UnorderedGroup|"|")> t1__
+
+  is-Alternatives =
+    ?Alternatives(_)
+
+  prettyprint-UnorderedGroup :
+    UnorderedGroup(t1__) -> [ H(
+                                [SOpt(HS(), "0")]
+                              , [t1__']
+                              )
+                            ]
+    with t1__' := <pp-H-list(prettyprint-Group|"&")> t1__
+
+  is-UnorderedGroup =
+    ?UnorderedGroup(_)
+
+  prettyprint-Group :
+    Group(t1__) -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [t1__']
+                     )
+                   ]
+    with t1__' := <pp-H-list(prettyprint-AbstractToken)> t1__
+
+  is-Group =
+    ?Group(_)
+
+  prettyprint-AbstractToken :
+    AssignmentAbstractToken(t1__, t2__, t3__, t4__, t5__) -> [ H(
+                                                                 [SOpt(HS(), "0")]
+                                                               , [ t1__'
+                                                                 , S(" ")
+                                                                 , t2__'
+                                                                 , S(" ")
+                                                                 , t3__'
+                                                                 , S(" ")
+                                                                 , t4__'
+                                                                 , S(" ")
+                                                                 , t5__'
+                                                                 ]
+                                                               )
+                                                             ]
+    with t1__' := <pp-option(pp-one-Z(prettyprint-Predicated))> t1__
+    with t2__' := <pp-one-Z(prettyprint-ID)> t2__
+    with t3__' := <pp-one-Z(prettyprint-Operator)> t3__
+    with t4__' := <pp-one-Z(prettyprint-AssignableTerminal)> t4__
+    with t5__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t5__
+
+  is-AbstractToken =
+    ?AssignmentAbstractToken(_, _, _, _, _)
+
+  prettyprint-AbstractToken :
+    AbstractTerminalAbstractToken(t1__, t2__) -> [ H(
+                                                     [SOpt(HS(), "0")]
+                                                   , [t1__', S(" "), t2__']
+                                                   )
+                                                 ]
+    with t1__' := <pp-one-Z(prettyprint-AbstractTerminal)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-Cardinality))> t2__
+
+  is-AbstractToken =
+    ?AbstractTerminalAbstractToken(_, _)
+
+  prettyprint-AbstractToken :
+    ActionAbstractToken(t1__) -> [ H(
+                                     [SOpt(HS(), "0")]
+                                   , [t1__']
+                                   )
+                                 ]
+    with t1__' := <pp-one-Z(prettyprint-Action)> t1__
+
+  is-AbstractToken =
+    ?ActionAbstractToken(_)
+
+  prettyprint-Predicated :
+    Predicated() -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [S("=>")]
+                      )
+                    ]
+
+  is-Predicated =
+    ?Predicated()
+
+  prettyprint-Predicated :
+    FirstSetPredicated() -> [ H(
+                                [SOpt(HS(), "0")]
+                              , [S("->")]
+                              )
+                            ]
+
+  is-Predicated =
+    ?FirstSetPredicated()
+
+  prettyprint-AssignableTerminal :
+    Keyword(t1__) -> [ H(
+                         [SOpt(HS(), "0")]
+                       , [t1__']
+                       )
+                     ]
+    with t1__' := <pp-one-Z(prettyprint-STRING)> t1__
+
+  is-AssignableTerminal =
+    ?Keyword(_)
+
+  prettyprint-AssignableTerminal :
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [t1__']
+              )
+            ]
+    where not(is-AssignableTerminal)
+    where t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
+
+  prettyprint-AssignableTerminal :
+    Parenthetical(t1__) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [ S("( ")
+                               , t1__'
+                               , S(" )")
+                               ]
+                             )
+                           ]
+    with t1__' := <pp-one-Z(prettyprint-AssignableAlternatives)> t1__
+
+  prettyprint-AssignableTerminal :
+    CrossReference(t1__, t2__) -> [ H(
+                                      [SOpt(HS(), "0")]
+                                    , [ S("[ ")
+                                      , t1__'
+                                      , S(" ")
+                                      , t2__'
+                                      , S(" ]")
+                                      ]
+                                    )
+                                  ]
+    with t1__' := <pp-one-Z(prettyprint-TypeRef)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-CrossReferenceableTerminal))> t2__
+
+  is-AssignableTerminal =
+    ?CrossReference(_, _)
+
+  prettyprint-CrossReferenceableTerminal :
+    CrossReferenceableTerminal(t1__) -> [ H(
+                                            [SOpt(HS(), "0")]
+                                          , [S("| "), t1__']
+                                          )
+                                        ]
+    with t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
+
+  is-CrossReferenceableTerminal =
+    ?CrossReferenceableTerminal(_)
+
+  prettyprint-RuleCall :
+    RuleCall(t1__) -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [t1__']
+                        )
+                      ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+
+  is-RuleCall =
+    ?RuleCall(_)
+
+  prettyprint-AssignableAlternatives :
+    AssignableAlternatives(t1__) -> [ H(
+                                        [SOpt(HS(), "0")]
+                                      , [t1__']
+                                      )
+                                    ]
+    with t1__' := <pp-H-list(prettyprint-AssignableTerminal|"|")> t1__
+
+  is-AssignableAlternatives =
+    ?AssignableAlternatives(_)
+
+  prettyprint-Action :
+    Action(t1__, t2__) -> [ H(
+                              [SOpt(HS(), "0")]
+                            , [ S("{ ")
+                              , t1__'
+                              , S(" ")
+                              , t2__'
+                              , S(" }")
+                              ]
+                            )
+                          ]
+    with t1__' := <pp-one-Z(prettyprint-TypeRef)> t1__
+    with t2__' := <pp-option(pp-one-Z(prettyprint-ActionCurrent))> t2__
+
+  is-Action =
+    ?Action(_, _)
+
+  prettyprint-ActionCurrent :
+    ActionCurrent(t1__, t2__) -> [ H(
+                                     [SOpt(HS(), "0")]
+                                   , [ S(". ")
+                                     , t1__'
+                                     , S(" ")
+                                     , t2__'
+                                     , S(" current")
+                                     ]
+                                   )
+                                 ]
+    with t1__' := <pp-one-Z(prettyprint-ID)> t1__
+    with t2__' := <pp-one-Z(prettyprint-Operator)> t2__
+
+  is-ActionCurrent =
+    ?ActionCurrent(_, _)
+
+  prettyprint-AbstractTerminal :
+    Keyword(t1__) -> [ H(
+                         [SOpt(HS(), "0")]
+                       , [t1__']
+                       )
+                     ]
+    with t1__' := <pp-one-Z(prettyprint-STRING)> t1__
+
+  is-AbstractTerminal =
+    ?Keyword(_)
+
+  prettyprint-AbstractTerminal :
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [ S("( ")
+                , t1__'
+                , S(" )")
+                ]
+              )
+            ]
+    where not(is-AbstractTerminal)
+    where t1__' := <pp-one-Z(prettyprint-Alternatives)> t1__
+
+  prettyprint-AbstractTerminal :
+    t1__ -> [ H(
+                [SOpt(HS(), "0")]
+              , [t1__']
+              )
+            ]
+    where not(is-AbstractTerminal)
+    where t1__' := <pp-one-Z(prettyprint-RuleCall)> t1__
+
+  prettyprint-AbstractTerminal :
+    PredicatedKeyword(t1__, t2__) -> [ H(
+                                         [SOpt(HS(), "0")]
+                                       , [t1__', S(" "), t2__']
+                                       )
+                                     ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-STRING)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedKeyword(_, _)
+
+  prettyprint-AbstractTerminal :
+    PredicatedRuleCall(t1__, t2__) -> [ H(
+                                          [SOpt(HS(), "0")]
+                                        , [t1__', S(" "), t2__']
+                                        )
+                                      ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-RuleCall)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedRuleCall(_, _)
+
+  prettyprint-AbstractTerminal :
+    PredicatedGroup(t1__, t2__) -> [ H(
+                                       [SOpt(HS(), "0")]
+                                     , [ t1__'
+                                       , S(" ( ")
+                                       , t2__'
+                                       , S(" )")
+                                       ]
+                                     )
+                                   ]
+    with t1__' := <pp-one-Z(prettyprint-Predicated)> t1__
+    with t2__' := <pp-one-Z(prettyprint-Alternatives)> t2__
+
+  is-AbstractTerminal =
+    ?PredicatedGroup(_, _)
+
+  is-Operator =
+    fail
+
+  is-TypeRef =
+    fail
+
+  is-AbstractMetaModelReference =
+    fail
+
+  is-Classifier =
+    fail
+
+  is-AbstractRule =
+    fail
+
+  is-Returns =
+    fail
+
+  is-HiddenToken =
+    fail
+
+  is-Alternatives =
+    fail
+
+  is-UnorderedGroup =
+    fail
+
+  is-Group =
+    fail
+
+  is-AbstractToken =
+    fail
+
+  is-Predicated =
+    fail
+
+  is-AssignableTerminal =
+    fail
+
+  is-CrossReferenceableTerminal =
+    fail
+
+  is-RuleCall =
+    fail
+
+  is-AssignableAlternatives =
+    fail
+
+  is-Action =
+    fail
+
+  is-ActionCurrent =
+    fail
+
+  is-AbstractTerminal =
+    fail
+
+  prettyprint-Operator :
+    amb([h|hs]) -> <prettyprint-Operator> h
+
+  prettyprint-TypeRef :
+    amb([h|hs]) -> <prettyprint-TypeRef> h
+
+  prettyprint-AbstractMetaModelReference :
+    amb([h|hs]) -> <prettyprint-AbstractMetaModelReference> h
+
+  prettyprint-Classifier :
+    amb([h|hs]) -> <prettyprint-Classifier> h
+
+  prettyprint-AbstractRule :
+    amb([h|hs]) -> <prettyprint-AbstractRule> h
+
+  prettyprint-Returns :
+    amb([h|hs]) -> <prettyprint-Returns> h
+
+  prettyprint-HiddenToken :
+    amb([h|hs]) -> <prettyprint-HiddenToken> h
+
+  prettyprint-Alternatives :
+    amb([h|hs]) -> <prettyprint-Alternatives> h
+
+  prettyprint-UnorderedGroup :
+    amb([h|hs]) -> <prettyprint-UnorderedGroup> h
+
+  prettyprint-Group :
+    amb([h|hs]) -> <prettyprint-Group> h
+
+  prettyprint-AbstractToken :
+    amb([h|hs]) -> <prettyprint-AbstractToken> h
+
+  prettyprint-Predicated :
+    amb([h|hs]) -> <prettyprint-Predicated> h
+
+  prettyprint-AssignableTerminal :
+    amb([h|hs]) -> <prettyprint-AssignableTerminal> h
+
+  prettyprint-CrossReferenceableTerminal :
+    amb([h|hs]) -> <prettyprint-CrossReferenceableTerminal> h
+
+  prettyprint-RuleCall :
+    amb([h|hs]) -> <prettyprint-RuleCall> h
+
+  prettyprint-AssignableAlternatives :
+    amb([h|hs]) -> <prettyprint-AssignableAlternatives> h
+
+  prettyprint-Action :
+    amb([h|hs]) -> <prettyprint-Action> h
+
+  prettyprint-ActionCurrent :
+    amb([h|hs]) -> <prettyprint-ActionCurrent> h
+
+  prettyprint-AbstractTerminal :
+    amb([h|hs]) -> <prettyprint-AbstractTerminal> h

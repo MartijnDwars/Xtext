@@ -1,0 +1,52 @@
+
+module ParserRule
+imports Common
+
+exports
+  context-free syntax
+    "="                                                     -> Operator                   {cons("Assignment")}
+    "+="                                                    -> Operator                   {cons("AddAssignment")}
+    "?="                                                    -> Operator                   {cons("BooleanAssignment")}
+    AbstractMetaModelReference? ID                          -> TypeRef                    {cons("TypeRef")}
+    Classifier                                              -> TypeRef                    {cons("MetaModelDeclaration")}
+    STRING "::"                                             -> AbstractMetaModelReference {cons("AbstractMetaModelReference")}
+    ECore                                                   -> Classifier                 {cons("Classifier")}
+    ID Returns? HiddenToken? ":" Alternatives ";"           -> AbstractRule               {cons("ParserRule")}
+    "returns" TypeRef                                       -> Returns                    {cons("Returns")}
+    "hidden" "(" {RuleCall ","}+ ")"                        -> HiddenToken                {cons("HiddenToken")}
+    {UnorderedGroup "|"}+                                   -> Alternatives               {cons("Alternatives")}
+    {Group "&"}+                                            -> UnorderedGroup             {cons("UnorderedGroup")}
+    AbstractToken+                                          -> Group                      {cons("Group")}
+    Predicated? ID Operator AssignableTerminal Cardinality? -> AbstractToken              {cons("AssignmentAbstractToken")}
+    AbstractTerminal Cardinality?                           -> AbstractToken              {cons("AbstractTerminalAbstractToken")}
+    Action                                                  -> AbstractToken              {cons("ActionAbstractToken")}
+    "=>"                                                    -> Predicated                 {cons("Predicated")}
+    "->"                                                    -> Predicated                 {cons("FirstSetPredicated")}
+    STRING                                                  -> AssignableTerminal         {cons("Keyword")}
+    RuleCall                                                -> AssignableTerminal         
+    "(" AssignableAlternatives ")"                          -> AssignableTerminal         {bracket}
+    "[" TypeRef CrossReferenceableTerminal? "]"             -> AssignableTerminal         {cons("CrossReference")}
+    "|" RuleCall                                            -> CrossReferenceableTerminal {cons("CrossReferenceableTerminal")}
+    ID                                                      -> RuleCall                   {cons("RuleCall")}
+    {AssignableTerminal "|"}+                               -> AssignableAlternatives     {cons("AssignableAlternatives")}
+    "{" TypeRef ActionCurrent? "}"                          -> Action                     {cons("Action")}
+    "." ID Operator "current"                               -> ActionCurrent              {cons("ActionCurrent")}
+    STRING                                                  -> AbstractTerminal           {cons("Keyword")}
+    "(" Alternatives ")"                                    -> AbstractTerminal           
+    RuleCall                                                -> AbstractTerminal           
+    Predicated STRING                                       -> AbstractTerminal           {cons("PredicatedKeyword")}
+    Predicated RuleCall                                     -> AbstractTerminal           {cons("PredicatedRuleCall")}
+    Predicated "(" Alternatives ")"                         -> AbstractTerminal           {cons("PredicatedGroup")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> AbstractMetaModelReference {cons("COMPLETION-AbstractMetaModelReference")}
+    CONTENTCOMPLETE -> AbstractRule               {cons("COMPLETION-AbstractRule")}
+    CONTENTCOMPLETE -> Returns                    {cons("COMPLETION-Returns")}
+    CONTENTCOMPLETE -> HiddenToken                {cons("COMPLETION-HiddenToken")}
+    CONTENTCOMPLETE -> Alternatives               {cons("COMPLETION-Alternatives")}
+    CONTENTCOMPLETE -> UnorderedGroup             {cons("COMPLETION-UnorderedGroup")}
+    CONTENTCOMPLETE -> AssignableTerminal         {cons("COMPLETION-AssignableTerminal")}
+    CONTENTCOMPLETE -> CrossReferenceableTerminal {cons("COMPLETION-CrossReferenceableTerminal")}
+    CONTENTCOMPLETE -> Action                     {cons("COMPLETION-Action")}
+    CONTENTCOMPLETE -> ActionCurrent              {cons("COMPLETION-ActionCurrent")}
+    CONTENTCOMPLETE -> AbstractTerminal           {cons("COMPLETION-AbstractTerminal")}
