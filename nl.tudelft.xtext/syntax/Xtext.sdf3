@@ -1,5 +1,3 @@
-// See https://github.com/eclipse/xtext/blob/v2.8.0/plugins/org.eclipse.xtext/src/org/eclipse/xtext/Xtext.xtext
-
 module Xtext
 
 imports
@@ -9,18 +7,19 @@ imports
   TerminalRule
   EnumRule
 
+context-free start-symbols // For testing only
+
+  ID
+  
 context-free start-symbols
   
   Start
-  
-  // These sorts are only added to allow testing:
-  ID
 
 context-free syntax
 
   GrammarID.GrammarID           = <<{ID "."}+>>
   Mixin.Mixin                   = <with <{GrammarID ","}+>>
-  HiddenToken.HiddenToken		= <hidden ( <{RuleCall ","}+> )>
+  HiddenToken.HiddenToken	      = <hidden ( <{RuleCall ","}+> )>
   Alias.Alias                   = <as <ID>>
   Metamodel.GeneratedMetamodel  = <generate <ID> <STRING> <Alias?>>
   Metamodel.ReferencedMetamodel = <import <STRING> <Alias?>>
