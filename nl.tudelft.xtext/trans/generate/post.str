@@ -2,7 +2,7 @@ module post
 
 imports
 	
-	include/TemplateLang
+	lib/TemplateLang
 
 rules
 		

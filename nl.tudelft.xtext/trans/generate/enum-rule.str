@@ -2,7 +2,7 @@ module enum-rule
 
 imports
 
-	include/TemplateLang
+	lib/TemplateLang
 	include/Xtext
 	generate/common
 

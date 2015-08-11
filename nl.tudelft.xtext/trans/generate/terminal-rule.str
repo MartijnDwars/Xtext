@@ -3,7 +3,7 @@ module terminal-rule
 imports
 	
 	include/Xtext
-	include/TemplateLang
+	lib/TemplateLang
 	generate/common
 
 signature

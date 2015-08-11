@@ -3,7 +3,7 @@ module refactor
 imports
 	
 	generate/generate
-	include/TemplateLang
+	lib/TemplateLang
 	
 rules
 	

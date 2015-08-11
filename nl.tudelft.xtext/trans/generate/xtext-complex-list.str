@@ -3,7 +3,7 @@ module xtext-complex-list
 imports
 	
 	include/Xtext
-	include/TemplateLang
+	lib/TemplateLang
 	generate/parser-rule
   
 rules
