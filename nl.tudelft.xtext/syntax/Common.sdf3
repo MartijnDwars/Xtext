@@ -28,7 +28,8 @@ lexical syntax
  					  "EString" | 
  					  "EPackage" | 
  					  "EClassifier" | 
- 					  "EEnumLiteral"
+ 					  "EEnumLiteral" |
+ 					  "EDouble"
 
   // Reserved keywords
   ID = "terminal" {reject}
