@@ -14,7 +14,12 @@ rules
 	
 	remove-sortdef:
 		SortDef(name) -> name
-			
+ 
+  unordered(s):
+    (x, y) -> result
+  where
+    result := <s> (x,y) + <s> (y,x)
+  
 rules // Cardinality
 	
 	gen-cardinality(|abstract-terminal):
@@ -69,7 +74,7 @@ rules // Permutations (old)
 rules // List utils
   
   /**
-   * Append an element to the tail of the list
+   * Append an element to the end of a list
    * 
    * @type (List(a), a) -> List(a)
    */
@@ -83,7 +88,9 @@ rules // List utils
   
   list-to-conc:
     [head | tail] -> Conc(head, <list-to-conc> tail)
-
+  
+  alt-to-list = ?Alt(x, y); ![x | <alt-to-list> y] <+ ![<id>]
+  
 rules // Rewrite reserved words
   
   sort-name = string-as-chars(map(try(?'_'; !'-')))

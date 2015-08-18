@@ -10,8 +10,6 @@ rules
 	
   gen-rule(|ast):
     e@EnumRule(name, enum-literals) -> SDFSection(LexicalSyntax(<gen-rule-sub> e))
-  where
-    <debug> enum-literals
 
 	gen-rule(|ast):
 	  enum-rules -> SDFSection(LexicalSyntax(<map(gen-rule-sub)> enum-rules))

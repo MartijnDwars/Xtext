@@ -19,6 +19,7 @@ imports
 	generate/xtext-obtain-priorities
 	generate/add-actions
 	generate/sdf-priority-groups
+	generate/restrictions
 	
 rules // Printing SDF
   
@@ -54,7 +55,7 @@ rules // Generating SDF
 	  (sdf, _) -> sdf
 	
 	gen-sdf-debug:
-		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post))> ast
+		ast -> <(gen-grammar(|ast) + gen-rule(|ast)); topdown(try(post)); try(add-restrictions)> ast
 	
 	// "Generate Xtext > SDF > Nolabel"
 	menu-gen-xtext-sdf-nolabel:
