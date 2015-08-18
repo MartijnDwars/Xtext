@@ -14,6 +14,7 @@ imports
 	generate/terminal-rule
 	generate/xtext-complex-list
 	generate/xtext-extract-crossreferences
+	generate/post
   
 rules
 	
@@ -22,11 +23,10 @@ rules
 		where
 			name            := <id-to-name> names;
 			imports         := <gen-imports> mixin;
-			reference-rules := <gen-crossreference-rules> abstract-rules;
 			if <fetch-elem(gen-start-symbol)> abstract-rules then
-			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
+			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <map(gen-rule(|ast))> abstract-rules]
 			else
-			  sdf-sections  := [<conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
+			  sdf-sections  := [<map(gen-rule(|ast))> abstract-rules]
 			end
 			
 	gen-imports:
@@ -45,16 +45,21 @@ rules
   
   // Transform a single ParserRule
 	gen-rule(|ast):
-		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts-with-assoc))
+		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(filtered-rules))
 		where
-		  alts-with-assoc := <gen-rule-sub(|ast)> p
-	
+		  alts-with-assoc := <gen-rule-sub(|ast)> p;
+		  references := <gen-crossreference-rules> p;
+		  merged-rules := <conc> (alts-with-assoc, references);
+		  filtered-rules := <nub> <filter(not(is-self-injection))> <map(try(add-bracket))> merged-rules
+
 	// Transform a list of ParserRule's
 	gen-rule(|ast):
-	  parser-rules -> SDFSection(ContextFreeSyntax(<map(gen-rule-sub(|ast))> parser-rules))
-	where
-	  <is-list> parser-rules
- 
+	  	parser-rules -> SDFSection(ContextFreeSyntax(productions))
+		where
+	  		<is-list> parser-rules;
+	  		generated-rules := <map(gen-rule(|ast))> parser-rules;
+	  		productions := <nub> <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> generated-rules
+	
   // Common functionality for transforming either list/single ParserRule
 	gen-rule-sub(|ast):
 	  p@ParserRule(name, _,_, alternatives) -> alts-with-assoc

@@ -7,7 +7,7 @@ imports
 rules
 	
 	gen-crossreference-rules:
-		ast -> [SDFSection(ContextFreeSyntax(generated_rules))]
+		ast -> generated_rules
 		where
 			references := <nub> <collect-all(is-crossreference)> ast;
 			generated_rules := <map(generate-crossreference-rule)> references
