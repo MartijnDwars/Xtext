@@ -1,0 +1,209 @@
+module generate-constructor-names
+
+imports
+	lib/TemplateLang
+	
+rules
+	
+	is-Injection=
+		?SdfProduction(SortDef(name), Rhs([Sort(_)]), attr)
+			
+	add-missing-constructor:
+		a@SdfProduction(SortDef(name),elements,attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(name)), elements, attr)
+		where
+			<not(is-Injection)> a;
+			<not(collect-one(Bracket()))> attr
+	
+	nested-complex-list:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), Rhs(elements), attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), Rhs(elements), attr)
+		where
+			<string-tokenize(|['-']); fetch("SR")> cons;
+			<collect-one(?IterSep(Label(_, Sort(list_name@_)), sep) + ?IterStarSep(Label(_, Sort(list_name@_)), sep))> elements;
+			new_cons := <conc-strings>(list_name, "List")
+	
+	// nested-complex-list:
+	// 	a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), Rhs(elements), attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), Rhs(elements), attr)
+	// 	where
+	// 		[sort|rest] := <string-tokenize(|['-']); fetch("SR")> cons;
+	// 		<?[Label(Quoted(label@_),Sort(_))]> <collect-all(?Label(Quoted(_),Sort(_)))> elements;
+	// 		new_cons := <conc-strings>(sort, <un-double-quote; first-to-uc> label)
+	// 
+	// nested-complex-list:
+	// 	a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), Rhs(elements), attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), Rhs(elements), attr)
+	// 	where
+	// 		<string-tokenize(|['-']); fetch("SR")> cons;
+	// 		keywords := <map(get-keyword)> elements;
+	// 		new_cons := <concat-strings> keywords 
+	// 
+	 nested-complex-list:
+	 a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), Rhs(elements), attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), Rhs(elements), attr)
+	 	where
+	 		<string-tokenize(|['-']); fetch("KW")> cons;
+	 		keywords := <map(get-element)> elements;
+	 		new_cons := <concat-strings> keywords 
+	
+	nested-complex-list:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), Rhs(elements), attr) -> SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), Rhs(elements), attr)
+		where
+			<string-tokenize(|['-']); fetch("SR")> cons;
+			keywords := <map(get-element)> elements;
+			new_cons := <concat-strings> keywords 
+	
+	get-element:
+		Label(_, element) -> <get-element-content> element
+		
+	get-element:
+		element -> <get-element-content> element
+	
+	get-element-content:
+		Opt(element) -> <get-sort + get-keyword> element
+		
+	get-element-content:
+		IterStar(element) -> <get-sort + get-keyword> element
+		
+	get-element-content:
+		Iter(element) -> <get-sort + get-keyword> element
+	
+	get-element-content:
+		element -> <get-sort + get-keyword> element 
+	
+	get-sort:
+		Sort(word) -> <first-to-uc> word
+	
+	get-keyword:
+		Lit(quoted-word) -> output
+		where
+			word := <un-double-quote> quoted-word;
+			output := <first-to-uc> <to-alpha + is-alpha> word
+	
+	remove-duplicate-sortcons:
+		ast -> new_ast
+		where
+			new_ast := <map(try(is-duplicated-sortcons(|ast)))> ast
+			
+	is-duplicated-sortcons(|ast):
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new_rule
+		where
+			<debug> "begin";
+			<debug> a;
+			<debug> "end";
+			<not(?[_] + ?[])> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), _, _))> ast;
+			suffix := <map(get-element)> elements;
+			new_cons := <concat-strings> [cons| suffix];
+			new_rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), e, attr)
+	
+	is-duplicated-sortcons(|ast):
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new_rule
+		where
+			<not(?[_] + ?[])> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), _, _))> ast;
+			new_cons := <newname> <conc-strings> (cons, "-");
+			new_rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), e, attr)
+		
+	remove-stupid:
+		ast -> new_ast
+		where
+			(name, cons) := <debug><fetch-elem(is-converted-subrule)> ast;
+			<debug> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); debug; ?[_]> ast;
+			<debug> ast;
+			new_ast := <try(remove-stupid)> <topdown(try((SortDef(name) -> SortDef(cons)) + (Sort(name) -> Sort(cons)) + (string-replace(|name, cons))))> ast
+	
+	remove-stupid:
+		ast -> new_ast
+		where
+			(name, cons) := <debug><fetch-elem(is-converted-subrule)> ast;
+			<debug> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); debug; not(?[_])> ast;
+			new_name := <string-replace(|"SR", "SubRule")> name;
+			new_ast := <try(remove-stupid)> <topdown(try((SortDef(name) -> SortDef(new_name)) + (Sort(name) -> Sort(new_name)) + (string-replace(|name, new_name))))> ast
+			
+			
+	is-converted-subrule:
+		SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), elements, attr) -> (name, cons)
+		where
+			<debug> name;
+			<string-tokenize(|['-']); (fetch("SR")+fetch("KW"))>  name;
+			<not(equal)> (cons, name)
+			
+	first-to-uc:
+		word -> <implode-string> [<try(to-upper)> head| tail]
+		where
+			[head|tail] := <explode-string> word
+			
+	to-alpha:
+		"`" -> "Apostrophe"
+	to-alpha:
+		"'" -> "Apostrope"
+	to-alpha:
+		":" -> "Colon"
+	to-alpha:
+		";" -> "Semicolon"
+	to-alpha:
+		"," -> "Comma"
+	to-alpha:
+		"." -> "Dot"
+	to-alpha:
+		"..." -> "Ellipsis"
+	to-alpha:
+		"-" -> "Dash"
+	to-alpha:
+		"_" -> "Underscore"
+	to-alpha:
+		"!" -> "Exclamation"	
+	to-alpha:
+		"?" -> "Question"
+	to-alpha:
+		"/" -> "Slash"
+	to-alpha:
+		"&" -> "Amp"
+	to-alpha:
+		"@" -> "At"
+	to-alpha:
+		"+" -> "Plus"
+	to-alpha:
+		"*" -> "Star"
+	to-alpha:
+		"%" -> "Percentage"	
+	to-alpha:
+		"|" -> "Bar"
+	to-alpha:
+		"||" -> "OR"
+	to-alpha:
+		"&&" -> "AND"
+	to-alpha:
+		"++" -> "Inc"
+	to-alpha:
+		"=" -> "Is"
+	to-alpha:
+		"==" -> "Equals"
+	to-alpha:
+		"0" -> "Zero"	
+	to-alpha:
+		"1" -> "One"	
+	to-alpha:
+		"2" -> "Two"	
+	to-alpha:
+		"3" -> "Three"	
+	to-alpha:
+		"4" -> "Four"	
+	to-alpha:
+		"5" -> "Five"	
+	to-alpha:
+		"6" -> "Six"	
+	to-alpha:
+		"7" -> "Seven"	
+	to-alpha:
+		"8" -> "Eight"	
+	to-alpha:
+		"9" -> "Nine"	
+	to-alpha:
+		"(" -> "OpenBr"	
+	to-alpha:
+		"{" -> "OpenBr"
+	to-alpha:
+		"[" -> "OpenBr"	
+	to-alpha:
+		")" -> "CloseBr"	
+	to-alpha:
+		"}" -> "CloseBr"	
+	to-alpha:
+		"]" -> "CloseBr"				
+	
