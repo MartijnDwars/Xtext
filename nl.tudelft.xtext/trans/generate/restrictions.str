@@ -66,6 +66,9 @@ rules
   
   escape-lit: "'_'" -> "\\_"
   escape-lit: "' '" -> "\\ "
+  escape-lit: "'-'" -> "\\-"
+  escape-lit: "'.'" -> "\\."
+  escape-lit: "'$'" -> "\\$"
 
   // Remove redundant parentheticals
   remove-paren:
