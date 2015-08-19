@@ -1,0 +1,86 @@
+module restriction
+
+imports
+  libstratego-lib
+  lib/editor-common.generated
+  include/Xtext
+  lib/TemplateLang
+  trans/generate/common
+  trans/generate/restrictions
+
+strategies
+  main =
+    test-suite(!"restriction",
+      test-fold-alt-simple
+    ; test-fold-alt-mixed
+    ; test-fold-alt-hard
+    )
+    
+  test-fold-alt-simple =
+    apply-and-check(!"Test folding of alt (simple)"
+    , fold-alt(merge-class)
+    , !Alt(
+        CharClass(Simple(Present(Short("\\r"))))
+      , CharClass(Simple(Present(Short("\\n"))))
+      )
+    , !CharClass(
+        Simple(
+        	Present(
+      			Conc(
+      				Short("\\r")
+      			, Short("\\r")
+    			  )
+          )
+        )
+      )
+    )
+
+  test-fold-alt-mixed =
+    apply-and-check(!"Test folding of alt (mixed CiLit and CharClass)"
+    , fold-alt(unordered(merge-class))
+    , !Alt(
+        CiLit("' '")
+      , CharClass(Simple(Present(Short("\\t"))))
+      )
+    , !CharClass(
+        Simple(
+        	Present(
+        		Conc(
+        			Short("\\t")
+        		, Short("\\ ")
+      			)
+    			)
+        )
+      )
+    )
+
+  test-fold-alt-hard =
+    apply-and-check(!"Test folding of alt (hard)"
+    , fold-alt(unordered(merge-class))
+    , !Alt(
+        CiLit("' '")
+      , Alt(
+          CharClass(Simple(Present(Short("\\t"))))
+        , Alt(
+            CharClass(Simple(Present(Short("\\r"))))
+          , CharClass(Simple(Present(Short("\\n"))))
+          )
+        )
+      )
+    , !CharClass(
+      	Simple(
+      		Present(
+      			Conc(
+      				Conc(
+      					Short("\\t")
+    					, Conc(
+    					    Short("\\r")
+    					  , Short("\\n")
+  					    )
+					    ),
+				      Short("\\ ")
+			      )
+		      )
+	      )
+      )
+    )
