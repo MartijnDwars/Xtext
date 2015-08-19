@@ -16,9 +16,7 @@ rules
 		SortDef(name) -> name
  
   unordered(s):
-    (x, y) -> result
-  where
-    result := <s> (x,y) + <s> (y,x)
+    (x, y) -> <<s> (x,y) + <s> (y,x)>
   
 rules // Cardinality
 	

@@ -8,7 +8,12 @@ imports
   
   lib/TemplateLang
   trans/generate/common
-  
+
+signature
+
+  constructors
+    Parenthetical : X -> X
+
 rules
 
   add-restrictions:
@@ -21,15 +26,16 @@ rules
   gen-restriction:
     SdfProduction(sort-def, Rhs(symbols), _) -> result
   where
-    restriction := <is-multiplicity < topdown(try(fold-alt(unordered(merge-class)))) + !None()> <last> symbols
+    simplified  := <last ; innermost(fold-alt(unordered(merge-class))) ; topdown(try(remove-paren))> symbols
+  ; restriction := <is-multiplicity <+ !None()> simplified
   ; result      := <?None() + !Follow([<gen-reference> sort-def], Single(<id>))> restriction
   
   // Check if this production needs a follow restriction
   is-multiplicity:
-    IterStar(x) -> x
+    IterStar(CharClass(x)) -> CharClass(x)
   
   is-multiplicity:
-    Iter(x) -> x
+    Iter(CharClass(x)) -> CharClass(x)
   
   // Generate reference (take care of layout vs. sort def)
   gen-reference:
@@ -42,12 +48,12 @@ rules
   fold-alt(s):
   	Alt(x, Alt(y, z)) -> result
   where
-  	result := <fold-alt(s)> Alt(<s> (x, y), z)
+    result := <fold-alt(s)> Alt(<s> (x, y), z)
   
   fold-alt(s):
     Alt(x, y) -> <s> (x, y)
-  
-  // Merge two character classes
+  	
+  // Merge two character classes  
   merge-class:
     (CharClass(Simple(Present(a))), CharClass(Simple(Present(b))))
   ->
@@ -56,7 +62,14 @@ rules
   merge-class:
     (CharClass(Simple(Present(a))), CiLit(lit))
   ->
-    CharClass(Simple(Present(Conc(a, Short(<escape-lit> lit)))))
+    CharClass(Simple(Present(Conc(a, Short(<try(escape-lit)> lit)))))
   
   escape-lit: "'_'" -> "\\_"
   escape-lit: "' '" -> "\\ "
+
+  // Remove redundant parentheticals
+  remove-paren:
+    Parenthetical(c@CharClass(_)) -> c
+
+  remove-paren:
+    Parenthetical(a@Alt(_, _)) -> a
