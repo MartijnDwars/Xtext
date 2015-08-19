@@ -6,10 +6,14 @@ lexical syntax
 	
 	STRING  	        = "\"" DoubleStringChar* "\""
 	STRING           	= "'" SingleStringChar* "'"
-	DoubleStringChars 	=  DoubleStringChar*
+	
+	DoubleStringChars =  DoubleStringChar*
 	DoubleStringChar 	= ~[\"\n]
-	SingleStringChars 	= SingleStringChar*
+	DoubleStringChar  = [\\][\"]
+	
+	SingleStringChars = SingleStringChar*
 	SingleStringChar 	= ~[\'\n] 
+	SingleStringChar  = [\\][\']
 	 
 	LAYOUT         = [\ \t\n\r] 
 	CommentChar    = [\*] 
