@@ -23,12 +23,12 @@ imports
 
 strategies
   prettyprint-SDF-start-symbols =
-    prettyprint-ID
+    prettyprint-Start
 
 
 strategies
   prettyprint-SDF-start-symbols =
-    prettyprint-Start
+    prettyprint-ID
 
 
 strategies

@@ -3,10 +3,10 @@ imports Common ParserRule TerminalRule EnumRule
 
 exports
   context-free start-symbols
-    ID
+    Start
 
   context-free start-symbols
-    Start
+    ID
 
   context-free syntax
     {ID "."}+                                                        -> GrammarID   {cons("GrammarID")}
