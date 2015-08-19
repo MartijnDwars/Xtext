@@ -1,25 +1,27 @@
 module Common
 exports
   lexical syntax
-    "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*                                             -> ID                
-    "\"" DoubleStringChar* "\""                                                -> STRING            
-    "'" SingleStringChar* "'"                                                  -> STRING            
-    DoubleStringChar*                                                          -> DoubleStringChars 
-    ~[\"\n]                                                                    -> DoubleStringChar  
-    SingleStringChar*                                                          -> SingleStringChars 
-    ~[\'\n]                                                                    -> SingleStringChar  
-    [\ \t\n\r]                                                                 -> LAYOUT            
-    [\*]                                                                       -> CommentChar       
-    "/*" InsideComment* "*/"                                                   -> LAYOUT            
-    ~[\*]                                                                      -> InsideComment     
-    CommentChar                                                                -> InsideComment     
-    "//" ~[\n\r]* NewLineEOF                                                   -> LAYOUT            
-    [\n\r]                                                                     -> NewLineEOF        
-    EOF                                                                        -> NewLineEOF        
-                                                                               -> EOF               
-    [\.]                                                                       -> WILDCARD          
-    "ecore::" "EInt" | "EString" | "EPackage" | "EClassifier" | "EEnumLiteral" -> ECore             
-    "terminal"                                                                 -> ID                {reject}
+    "^"? [a-zA-Z\_] [a-zA-Z\_0-9]*                                                         -> ID                
+    "\"" DoubleStringChar* "\""                                                            -> STRING            
+    "'" SingleStringChar* "'"                                                              -> STRING            
+    DoubleStringChar*                                                                      -> DoubleStringChars 
+    ~[\"\n]                                                                                -> DoubleStringChar  
+    [\\] [\"]                                                                              -> DoubleStringChar  
+    SingleStringChar*                                                                      -> SingleStringChars 
+    ~[\'\n]                                                                                -> SingleStringChar  
+    [\\] [\']                                                                              -> SingleStringChar  
+    [\ \t\n\r]                                                                             -> LAYOUT            
+    [\*]                                                                                   -> CommentChar       
+    "/*" InsideComment* "*/"                                                               -> LAYOUT            
+    ~[\*]                                                                                  -> InsideComment     
+    CommentChar                                                                            -> InsideComment     
+    "//" ~[\n\r]* NewLineEOF                                                               -> LAYOUT            
+    [\n\r]                                                                                 -> NewLineEOF        
+    EOF                                                                                    -> NewLineEOF        
+                                                                                           -> EOF               
+    [\.]                                                                                   -> WILDCARD          
+    "ecore::" "EInt" | "EString" | "EPackage" | "EClassifier" | "EEnumLiteral" | "EDouble" -> ECore             
+    "terminal"                                                                             -> ID                {reject}
 
   lexical restrictions
     CommentChar -/- [\/]

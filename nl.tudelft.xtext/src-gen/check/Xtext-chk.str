@@ -23,12 +23,12 @@ imports
 
 strategies
   check-SDF-start-symbols =
-    check-ID
+    check-Start
 
 
 strategies
   check-SDF-start-symbols =
-    check-Start
+    check-ID
 
 
 strategies
