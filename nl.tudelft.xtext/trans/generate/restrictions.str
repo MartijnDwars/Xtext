@@ -1,0 +1,75 @@
+module restrictions
+
+/*
+ * Adds lexical restrictions to the module
+ */
+ 
+imports
+  
+  lib/TemplateLang
+  trans/generate/common
+
+signature
+
+  constructors
+    Parenthetical : X -> X
+
+rules
+
+  add-restrictions:
+    Module(name, imports, sections) -> Module(name, imports, <append> (sections, section))
+  where
+    productions  := <collect-all(?LexicalSyntax(<id>)) ; concat> sections
+  ; restrictions := <map(gen-restriction) ; filter(?None() < fail + id)> productions
+  ; section      := SDFSection(LexicalRestrictions(restrictions))
+  
+  gen-restriction:
+    SdfProduction(sort-def, Rhs(symbols), _) -> result
+  where
+    simplified  := <last ; innermost(fold-alt(unordered(merge-class))) ; topdown(try(remove-paren))> symbols
+  ; restriction := <is-multiplicity <+ !None()> simplified
+  ; result      := <?None() + !Follow([<gen-reference> sort-def], Single(<id>))> restriction
+  
+  // Check if this production needs a follow restriction
+  is-multiplicity:
+    IterStar(CharClass(x)) -> CharClass(x)
+  
+  is-multiplicity:
+    Iter(CharClass(x)) -> CharClass(x)
+  
+  // Generate reference (take care of layout vs. sort def)
+  gen-reference:
+    SortDef(name) -> Sort(name)
+  
+  gen-reference:
+    Layout() -> Layout()
+  
+  // Fold Alt(.., Alt(.., ..)) with given strategy s
+  fold-alt(s):
+  	Alt(x, Alt(y, z)) -> result
+  where
+    result := <fold-alt(s)> Alt(<s> (x, y), z)
+  
+  fold-alt(s):
+    Alt(x, y) -> <s> (x, y)
+  	
+  // Merge two character classes  
+  merge-class:
+    (CharClass(Simple(Present(a))), CharClass(Simple(Present(b))))
+  ->
+    CharClass(Simple(Present(Conc(a, b))))
+  
+  merge-class:
+    (CharClass(Simple(Present(a))), CiLit(lit))
+  ->
+    CharClass(Simple(Present(Conc(a, Short(<try(escape-lit)> lit)))))
+  
+  escape-lit: "'_'" -> "\\_"
+  escape-lit: "' '" -> "\\ "
+
+  // Remove redundant parentheticals
+  remove-paren:
+    Parenthetical(c@CharClass(_)) -> c
+
+  remove-paren:
+    Parenthetical(a@Alt(_, _)) -> a
