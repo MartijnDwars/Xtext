@@ -14,6 +14,8 @@ imports
 	generate/terminal-rule
 	generate/xtext-complex-list
 	generate/xtext-extract-crossreferences
+	generate/post
+	generate/generate-constructor-names
   
 rules
 	
@@ -22,11 +24,10 @@ rules
 		where
 			name            := <id-to-name> names;
 			imports         := <gen-imports> mixin;
-			reference-rules := <gen-crossreference-rules> abstract-rules;
 			if <fetch-elem(gen-start-symbol)> abstract-rules then
-			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
+			  sdf-sections  := [<fetch-elem(gen-start-symbol)> abstract-rules | <map(gen-rule(|ast))> abstract-rules]
 			else
-			  sdf-sections  := [<conc>(<map(gen-rule(|ast))> abstract-rules, reference-rules)]
+			  sdf-sections  := [<map(gen-rule(|ast))> abstract-rules]
 			end
 			
 	gen-imports:
@@ -45,16 +46,22 @@ rules
   
   // Transform a single ParserRule
 	gen-rule(|ast):
-		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(alts-with-assoc))
+		p@ParserRule(name, _,_, alternatives) -> SDFSection(ContextFreeSyntax(filtered-rules))
 		where
-		  alts-with-assoc := <gen-rule-sub(|ast)> p
-	
+		  alts-with-assoc := <gen-rule-sub(|ast)> p;
+		  references := <gen-crossreference-rules> p;
+		  merged-rules := <conc> (alts-with-assoc, references);
+		  filtered-rules := <nub> <filter(not(is-self-injection))> <map(try(add-bracket))> merged-rules;
+		  cleaned-rules := <nub> <try(remove-stupid)> <remove-duplicate-sortcons> <map(try(nested-complex-list))> <try(remove-stupid)> <map(try(add-missing-constructor))> filtered-rules
+
 	// Transform a list of ParserRule's
 	gen-rule(|ast):
-	  parser-rules -> SDFSection(ContextFreeSyntax(<map(gen-rule-sub(|ast))> parser-rules))
-	where
-	  <is-list> parser-rules
- 
+	  	parser-rules -> SDFSection(ContextFreeSyntax(productions))
+		where
+	  		<is-list> parser-rules;
+	  		generated-rules := <map(gen-rule(|ast))> parser-rules;
+	  		productions := <nub> <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> generated-rules
+	
   // Common functionality for transforming either list/single ParserRule
 	gen-rule-sub(|ast):
 	  p@ParserRule(name, _,_, alternatives) -> alts-with-assoc
@@ -79,17 +86,22 @@ rules
 	gen-alternatives(|name, attr):
 		//Input: Alternative with listof unorderedgroups
 		//Output: List of Contextfree rules
-		Alternatives(unordered-groups) -> <flatten-list> <map(gen-unordered-group(|name, attr, 1))> unordered-groups
+		Alternatives(unordered-groups) -> <flatten-list> <map(gen-unordered-group(|name, attr))> unordered-groups
 			
-	gen-unordered-group(|name, attr, main):
+	gen-unordered-group(|name, attr):
 		//Input: UnorderedGroup with list of groups
 		//Convert input to its final form
 		//If necessary create permutations
 		//Output: One or more permutations of the rules formed by the groups
 		UnorderedGroup(groups) -> output
 		where
-			output := <if(?[_], singular-group-constructor(|name, attr, main), perm-group-constructor(|name, attr))> groups
-		
+			output := <if(?[_], singular-group-constructor(|name, attr), perm-group-constructor(|name, attr))> groups
+	
+	//Input: List of Groups
+	//Convert each into their respective sdf variants
+	//Generate permutations from the sdf elements
+	//Put each version into a sort-cons production
+	//Output: Permutated rules followed by any generated subrules	
 	perm-group-constructor(|name, attr):
 		input -> <flatten-list>[rule_set | extra_rules]
 		where
@@ -99,6 +111,9 @@ rules
 			rule_set := <map(group-constructor(|name, attr))> permutations;
 			extra_rules		:= <try(concat)> <map(extract-nested-outputs)> rules_generated
 	
+	//Input: Single group consisting of a list of xtext elements
+	//Generate sdf of each element, extract nested left and right sides
+	//Output: Tuple of generate rule and any needed generated rules
 	gen-group-content(|name, attr):
 		Group(content) -> (rule, extra_rules)
 		where
@@ -106,24 +121,29 @@ rules
 			rule			:= <try(concat)> <map(extract-outputs)> rules_generated;
 			extra_rules		:= <try(concat)> <map(extract-nested-outputs)> rules_generated
 
+	//Input: Generated SDF rules
+	//Ouput: SDF sort-cons production with generated -Perm- name
 	group-constructor(|name, attr):
 		input -> SdfProductionWithCons(SortCons(name, Constructor(new_constructor)), Rhs(input), attr)
 		where
 			new_constructor := <newname> <conc-strings>(<remove-sortdef> name, "-Perm-")
-			
-	singular-group-constructor(|name, attr, main):
-		//If any of the contents is of type assignment or action, then return a constructor name
+	
+	//Input: List of a single group
+	//Determine whether there is an action or assignment
+	//If not, generate sdf sort production, else generate sdf sort-cons production
+	//Output: Completely flatten all rules, both original and newly generated
+	singular-group-constructor(|name, attr):
 		[Group(content)] -> rule
 		where
 			constructor := <collect-one(is-action) + collect-one(is-assignment) + id> content;
-			output := <if(or(<equal(|content)> constructor, <equal(|0)> main) , <gen-sortdef-rule(|name, attr)> content, <gen-sortconstructordef-rule(|name, attr, constructor)> content)>;
+			output := <if(<equal(|content)> constructor, <gen-sortdef-rule(|name, attr)> content, <gen-sortconstructordef-rule(|name, attr, constructor)> content)>;
 			rule := <flatten-list> [<try(concat)> <(extract-outputs)> output | <try(concat)> <(extract-nested-outputs)> output]
 	
-
-
+	//input: [List of AbstractTokens]
+	//Generate tuple of converted original rule and generated rules
+	//Extract each
+	//output: SdfProduction with no constructor + nested rules
 	gen-sortdef-rule(|name, attr):
-		//input: [List of AbstractTokens]
-		//output: SdfProduction with no constructor + nested rules
 		input -> (SdfProduction(name, Rhs(rule), attr), extra_rules)
 		where
 			rules_generated := <map(gen-abstract-token-rule(|name, attr))> input;
@@ -133,12 +153,14 @@ rules
 	gen-sortconstructordef-rule(|name, attr, constructor):
 		input -> (SdfProductionWithCons(SortCons(name, Constructor(new_constructor)), Rhs(rule), attr), extra_rules)
 		where
-      input_converted_complexlist := <topdown(try(replace-complex-list))> input;
-			new_constructor := <if(<equal(|constructor)> "AssignmentToken", <newname> <conc-strings> (<remove-sortdef> name, "-"), !constructor)>;
+      		input_converted_complexlist := <topdown(try(replace-complex-list))> input;
+			new_constructor := <if(<equal(|constructor)> "AssignmentToken", <remove-sortdef> name, !constructor)>;
 			rules_generated := <map(try(gen-abstract-token-rule(|name, attr)))> input_converted_complexlist;
 			rule	      		:= <try(concat)> <map(extract-outputs)> rules_generated;
 			extra_rules	   	:= <try(concat)> <map(extract-nested-outputs)> rules_generated		
-		
+	
+	//Input: Assignment
+	//Output: Labeled rule and any nested generated rules	
 	gen-abstract-token-rule(|name, attr):
 		AssignmentAbstractToken(_, feature, type, assignable-terminal, cardinality-opt) -> (rule, nested_output)
 		where
@@ -146,38 +168,49 @@ rules
 			gen-cardinality := <gen-cardinality(|output)> cardinality-opt;
 			rule := Label(Quoted(<double-quote> feature), gen-cardinality)
 	
+	//If it is a complex list, skip over it
 	gen-abstract-token-rule(|name, attr):
 	  x@(IterSep(_, _),[]) -> x
 
+	//If it is a complex list in an optional alternative, turn it into a complex list *
 	gen-abstract-token-rule(|name, attr):
 	  AbstractTerminalAbstractToken(Alternatives([UnorderedGroup([Group([(IterSep(a, b),[])])])]), Some(Optional())) ->
 	    (IterStarSep(a, b), [])
 	
+	//Extract action name
 	extract-action-ID:
 		Action(TypeRef(_, name), _) -> name
 		
+	//Extract first element of a tuple (Can be replaced by standard function, didn't realise back then)
 	extract-outputs:
 		(output, nested_output) -> output
 		
+	//Extract second element of a tuple (Can be replaced by standard function, didn't realise back then)
 	extract-nested-outputs:
 		(output, nested_output) -> nested_output
 	
+	//Match action and extract action name
 	is-action:
 		ActionAbstractToken(action) -> output
 		where
 			output := <extract-action-ID> action
-		
+	
+	//If it is an assignment return AssignentToken string	
 	is-assignment:
 		AssignmentAbstractToken(_, _, _, _, _) -> "AssignmentToken"
 	
+	//Needed to find labels in already converted complex lists
+	is-assignment:
+		Label(_, _) -> "AssignmentToken"
 	
+	//If it is an alternative a new rule is needed, then the nested rule has to be converted
 	gen-abstract-terminal(|name, attr, cardinality-opt):
 		Alternatives(unordered-groups) -> (output,nested)
 		where
 			name_string := <remove-sortdef> name;
-			new_name := <newname> <conc-strings> (name_string, "-SubRule-");
+			new_name := <newname> <conc-strings> (name_string, "-SR-");
 			output := Sort(new_name);
-			nested := <try(concat)> <map(gen-unordered-group(|SortDef(new_name), attr, 0))> unordered-groups
+			nested := <try(concat)> <map(gen-unordered-group(|SortDef(new_name), attr))> <topdown(try(remove-all(is-action)))> unordered-groups
 			
 	/* Revised Sections */			
 	gen-abstract-token-rule(|name, attr):
@@ -219,13 +252,12 @@ rules
 		AssignableAlternatives(alternatives) -> (output, nested)
 		where
 			name_string := <remove-sortdef> name;
-			new_name := <newname> <conc-strings> (name_string, "-SubRule-");
-			//new_name := <newname> "SubRule-";
+			new_name := <newname> <conc-strings> (name_string, "-SR-");
 			output := Sort(new_name);
-			nested := <try(concat)> <map(gen-abstract-alternative(|SortDef(new_name), attr,cardinality-opt))> alternatives
+			nested := <try(concat)> <map(gen-abstract-alternative(|new_name, attr,cardinality-opt))> alternatives
 			
 	gen-abstract-alternative(|name, attr, cardinality-opt):
-		input -> [SdfProduction(name, Rhs([rule]), attr) | extra_rules]
+		input -> [SdfProductionWithCons(SortCons(SortDef(name), Constructor(name)), Rhs([rule]), attr) | extra_rules]
 		where
 			(rule, nested) := <gen-assignable-terminal(|name, attr, cardinality-opt)> input;		
 			extra_rules		:= <try(concat)> nested
@@ -263,7 +295,7 @@ rules
 	gen-keyword-w-cardinality(|name, attr):
 		Keyword(word) -> (Sort(rulename),[subrule])
 		where
-			rulename := <newname> "Keyword-";
+			rulename := <newname> "KW-";
 			subrule := SdfProduction(SortDef(rulename), Rhs([<gen-quoted-word> word]), attr)
   
   gen-quoted-word:

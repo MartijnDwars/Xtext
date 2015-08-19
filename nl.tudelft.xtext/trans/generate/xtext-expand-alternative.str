@@ -11,15 +11,33 @@ rules
 		where
 			unordered-groups := <collect-one(is-double-alt)> alternatives
 	
+	expand:
+		p@ParserRule(_, _, _, alternatives) -> <map(insert(|p))> assignableAlt
+		where
+			assignableAlt := <collect-one(is-assignableAlt)> alternatives
+	
 	insert(|p):
 		u@UnorderedGroup(_) -> <oncetd(replace(|u))> p
+		
+	insert(|p):
+		value -> <oncetd(replace(|value))> p
+		where
+			<?Keyword(_) + ?RuleCall(_) + ?CrossReference(_,_)> value
 	
 	replace(|u):
 		Alternatives(unordered-groups) -> Alternatives([u])
 		where
 			<gt> (<length> unordered-groups, 1)
-	
+			
+	replace(|value):
+		AssignmentAbstractToken(a, n, t, u, b) -> AssignmentAbstractToken(a, n, t, value, b)
+		where
+			<?AssignableAlternatives(_)> u
+			
 	is-double-alt:
 		Alternatives(unordered-groups) -> unordered-groups
 		where
 			<gt> (<length> unordered-groups, 1)
+			
+	is-assignableAlt:
+		AssignableAlternatives(values) -> values
