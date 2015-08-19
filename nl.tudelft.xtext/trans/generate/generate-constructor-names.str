@@ -84,9 +84,6 @@ rules
 	is-duplicated-sortcons(|ast):
 		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new_rule
 		where
-			<debug> "begin";
-			<debug> a;
-			<debug> "end";
 			<not(?[_] + ?[])> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), _, _))> ast;
 			suffix := <map(get-element)> elements;
 			new_cons := <concat-strings> [cons| suffix];
@@ -102,16 +99,15 @@ rules
 	remove-stupid:
 		ast -> new_ast
 		where
-			(name, cons) := <debug><fetch-elem(is-converted-subrule)> ast;
-			<debug> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); debug; ?[_]> ast;
-			<debug> ast;
+			(name, cons) := <fetch-elem(is-converted-subrule)> ast;
+			<collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); ?[_]> ast;
 			new_ast := <try(remove-stupid)> <topdown(try((SortDef(name) -> SortDef(cons)) + (Sort(name) -> Sort(cons)) + (string-replace(|name, cons))))> ast
 	
 	remove-stupid:
 		ast -> new_ast
 		where
-			(name, cons) := <debug><fetch-elem(is-converted-subrule)> ast;
-			<debug> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); debug; not(?[_])> ast;
+			(name, cons) := <fetch-elem(is-converted-subrule)> ast;
+			<collect-all(?SdfProductionWithCons(SortCons(SortDef(name), _), _, _) + ?SdfProduction(SortDef(name), _,_)); not(?[_])> ast;
 			new_name := <string-replace(|"SR", "SubRule")> name;
 			new_ast := <try(remove-stupid)> <topdown(try((SortDef(name) -> SortDef(new_name)) + (Sort(name) -> Sort(new_name)) + (string-replace(|name, new_name))))> ast
 			
@@ -119,7 +115,6 @@ rules
 	is-converted-subrule:
 		SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), elements, attr) -> (name, cons)
 		where
-			<debug> name;
 			<string-tokenize(|['-']); (fetch("SR")+fetch("KW"))>  name;
 			<not(equal)> (cons, name)
 			
