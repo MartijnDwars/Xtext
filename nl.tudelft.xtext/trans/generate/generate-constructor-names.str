@@ -202,3 +202,17 @@ rules
 	to-alpha:
 		"]" -> "CloseBr"				
 	
+	//Functions to remove invalid and oversized constructor names
+	remove-invalid-sortcons:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new-rule
+		where
+			<not(is-alphanum)> <explode-string> cons;
+			new-cons := <newname> "InvalidConstructor-";
+			new-rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new-cons)), e, attr)
+	
+	remove-invalid-sortcons:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new-rule
+		where
+			<gt>(<string-length> cons, <add>(<string-length> name, 15));
+			new-cons := <newname> "OversizedConstructor-";
+			new-rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new-cons)), e, attr)
