@@ -19,7 +19,7 @@ rules
     ])
     with
       cfs* := <collect(?ContextFreeSyntax(_))> sdf-sections;
-      cfs-productions := <map(try(remove-invalid-sortcons))> <nub> <try(remove-stupid)> <remove-duplicate-sortcons> <map(try(nested-complex-list))> <try(remove-stupid)> <map(try(add-missing-constructor))> <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> cfs*;
+      cfs-productions := <map(try(remove-invalid-sortcons))> <nub> <try(remove-stupid)> <remove-duplicate-sortcons> <map(try(nested-complex-list))> <try(remove-stupid)> <map(try(add-missing-constructor))> <map(try(add-bracket))> <collect(?SdfProduction(_, _, _)+?SdfProductionWithCons(_,_,_))> cfs*;
 
       lex* := <collect(?LexicalSyntax(_))> sdf-sections;
       lex-productions := <nub> <filter(not(is-self-injection))> <collect(?SdfProduction(_, _, _))> lex*;
