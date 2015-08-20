@@ -75,7 +75,7 @@ rules
 		Lit(quoted-word) -> output
 		where
 			word := <un-double-quote> quoted-word;
-			output := <first-to-uc> <to-alpha + (explode-string; is-alpha)> word
+			output := <first-to-uc> <to-alpha + (explode-string; is-alpha; implode-string)> word
 	
 	remove-duplicate-sortcons:
 		ast -> new_ast
