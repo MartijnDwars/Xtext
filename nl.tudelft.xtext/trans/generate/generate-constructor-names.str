@@ -47,7 +47,8 @@ rules
 		where
 			<string-tokenize(|['-']); fetch("SR")> cons;
 			keywords := <map(get-element)> elements;
-			new_cons := <concat-strings> keywords 
+			new_cons := <concat-strings> keywords;
+			<lt> (<string-length> new_cons, 25)
 	
 	get-element:
 		Label(_, element) -> <get-element-content> element
@@ -87,6 +88,7 @@ rules
 			<not(?[_] + ?[])> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), _, _))> ast;
 			suffix := <map(get-element)> elements;
 			new_cons := <concat-strings> [cons| suffix];
+			<lt> (<string-length> new_cons, 25);
 			new_rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), e, attr)
 	
 	is-duplicated-sortcons(|ast):
