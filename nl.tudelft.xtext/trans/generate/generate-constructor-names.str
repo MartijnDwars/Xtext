@@ -47,7 +47,8 @@ rules
 		where
 			<string-tokenize(|['-']); fetch("SR")> cons;
 			keywords := <map(get-element)> elements;
-			new_cons := <concat-strings> keywords 
+			new_cons := <concat-strings> keywords;
+			<lt> (<string-length> new_cons, 25)
 	
 	get-element:
 		Label(_, element) -> <get-element-content> element
@@ -74,7 +75,7 @@ rules
 		Lit(quoted-word) -> output
 		where
 			word := <un-double-quote> quoted-word;
-			output := <first-to-uc> <to-alpha + is-alpha> word
+			output := <first-to-uc> <to-alpha + (explode-string; is-alpha)> word
 	
 	remove-duplicate-sortcons:
 		ast -> new_ast
@@ -87,6 +88,7 @@ rules
 			<not(?[_] + ?[])> <collect-all(?SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), _, _))> ast;
 			suffix := <map(get-element)> elements;
 			new_cons := <concat-strings> [cons| suffix];
+			<lt> (<string-length> new_cons, 25);
 			new_rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new_cons)), e, attr)
 	
 	is-duplicated-sortcons(|ast):
@@ -202,3 +204,17 @@ rules
 	to-alpha:
 		"]" -> "CloseBr"				
 	
+	//Functions to remove invalid and oversized constructor names
+	remove-invalid-sortcons:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new-rule
+		where
+			<not(is-alphanum)> <explode-string> cons;
+			new-cons := <newname> "InvalidConstructor-";
+			new-rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new-cons)), e, attr)
+	
+	remove-invalid-sortcons:
+		a@SdfProductionWithCons(SortCons(SortDef(name), Constructor(cons)), e@Rhs(elements), attr) -> new-rule
+		where
+			<gt>(<string-length> cons, <add>(<string-length> name, 15));
+			new-cons := <newname> "OversizedConstructor-";
+			new-rule := SdfProductionWithCons(SortCons(SortDef(name), Constructor(new-cons)), e, attr)
