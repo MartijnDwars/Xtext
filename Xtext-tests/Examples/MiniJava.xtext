@@ -1,0 +1,82 @@
+grammar nl.tudelft.MiniJava with org.eclipse.xtext.common.Terminals
+
+generate miniJava "http://www.MiniJava"
+
+Program:
+	classes+=MainClass classes+=ClassDeclaration*
+;
+
+MainClass:
+	"class" name=ID "{" "public" "static" "void" "main" "(" "String" "[" "]" args=ID ")" "{" statements+=Statement "}" "}"
+;
+
+ClassDeclaration:
+	"class" name=ID ("extends" parent=ID)?  "{" vars+=VarDeclaration* methods+=MethodDeclaration* "}"
+;
+
+VarDeclaration:
+	type=Type name=ID ";"
+;
+
+MethodDeclaration:
+	"public" type=Type name=ID "(" ( args+=Argument ( "," args+=Argument )* )? ")" "{"  vars+=VarDeclaration* statements+=Statement* "return" return=Expression ";" "}"
+;
+
+Argument:
+	type=Type name=ID
+;
+
+Type:
+	intarray="int" "[" "]"
+|	boolean="boolean"
+|	int="int"
+|	name=ID
+;
+
+Statement:	
+	"{" statements+=Statement* "}"
+|	"if" "(" condition=Expression ")" if=Statement "else" else=Statement
+|	"while" "(" condition=Expression ")" while=Statement
+|	"System.out.println" "(" value=Expression ")" ";"
+|	name=ID "=" value=Expression ";"
+|	name=ID "[" index=Expression "]" "=" value=Expression ";"
+;
+
+Expression:
+	PrimaryExp
+;
+
+PrimaryExp returns Expression: 
+	SecondaryExp (({And.left=current} "&&") right=SecondaryExp)*
+;
+
+SecondaryExp returns Expression:
+	TertiaryExp (({Less.left=current} "<") right=TertiaryExp)*
+;
+
+TertiaryExp returns Expression:
+	 QuaternaryExp (({Add.left=current} "+" |{Sub.left=current}  "-") right=QuaternaryExp)*
+;
+
+QuaternaryExp returns Expression:
+	QuinaryExp (({Mul.left=current} "*") right=QuinaryExp)*
+;
+
+QuinaryExp returns Expression:
+	"new" "int" "[" size=Expression "]" 
+|	"new" class=[ClassDeclaration] "(" ")" 
+|	exp=FinalExp "[" index=Expression "]"
+|	exp=FinalExp "." "length"
+|	exp=FinalExp "." method=[MethodDeclaration] "(" ( param+=Expression ( "," param+=Expression )* )? ")"
+|	exp=FinalExp
+;
+
+FinalExp returns Expression:
+	value=INT
+|	true="true"
+|	false="false"
+|	name=ID
+|	this="this"
+|	"!" exp=Expression
+|	"(" exp=Expression ")"
+;
